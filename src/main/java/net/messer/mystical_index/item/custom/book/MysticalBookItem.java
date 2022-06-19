@@ -227,8 +227,6 @@ public class MysticalBookItem extends Item {
 
     @Override
     public void inventoryTick(ItemStack book, World world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(book, world, entity, slot, selected);
-
         forEachPage(book, page -> page.book$inventoryTick(book, world, entity, slot, selected));
     }
 

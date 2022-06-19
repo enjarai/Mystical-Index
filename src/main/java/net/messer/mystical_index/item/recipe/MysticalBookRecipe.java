@@ -148,6 +148,7 @@ public class MysticalBookRecipe extends SpecialCraftingRecipe {
                 pagesList.add(NbtString.of(Registry.ITEM.getId(pageItem).toString()));
             }
         }
+        nbt.put(MysticalBookItem.ATTRIBUTE_PAGES_TAG, pagesList);
 
         for (int i = 0; i < craftingInventory.size(); ++i) {
             var stack = craftingInventory.getStack(i);
