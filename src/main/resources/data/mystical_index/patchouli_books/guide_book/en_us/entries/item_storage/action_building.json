@@ -1,0 +1,9 @@
+{
+  "name": "Action: Building",
+  "icon": "mystical_index:building_action_page",
+  "category": "mystical_index:item_storage",
+  "sortnum": 3,
+  "pages": [
+
+  ]
+}

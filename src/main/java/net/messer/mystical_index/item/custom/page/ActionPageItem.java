@@ -3,6 +3,7 @@ package net.messer.mystical_index.item.custom.page;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.world.World;
@@ -16,7 +17,8 @@ public abstract class ActionPageItem extends PageItem implements TypeDependentPa
     }
 
     public MutableText getActionDisplayName() {
-        return new TranslatableText("item.mystical_index.page.tooltip.action." + id);
+        return new TranslatableText("item.mystical_index.page.tooltip.action." + id)
+                .fillStyle(Style.EMPTY.withColor(getColor()));
     }
 
     @Override

@@ -85,6 +85,9 @@ public class MysticalBookRecipe extends SpecialCraftingRecipe {
             var itemStack = craftingInventory.getStack(i);
             if (itemStack.isEmpty()) continue;
             if (itemStack.getItem() instanceof ActionPageItem page) {
+                if (typePage == null || !page.getCompatibleTypes(itemStack).contains(typePage)) {
+                    return false;
+                }
                 if (actionPage != null) {
                     return false;
                 }
@@ -122,7 +125,6 @@ public class MysticalBookRecipe extends SpecialCraftingRecipe {
     public ItemStack craft(CraftingInventory craftingInventory) {
         var book = new ItemStack(ModItems.MYSTICAL_BOOK);
         var nbt = book.getOrCreateNbt();
-        // TODO blend the page colors together, and put into book nbt.
         var typeColor = -1;
         var otherColors = new ArrayList<Integer>();
 

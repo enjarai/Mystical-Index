@@ -36,6 +36,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static net.messer.mystical_index.item.ModItems.*;
@@ -245,6 +246,15 @@ public class ItemStorageTypePage extends TypePageItem {
         saveOccupancy(bookNbt, getFullness(book), itemsList.size());
 
         return Optional.of(itemStack);
+    }
+
+    public Optional<ItemStack> tryRemoveFirstStack(ItemStack book, int amount, Predicate<ItemStack> condition) {
+        var stack = removeFirstStack(book, amount);
+        if (stack.isPresent() && !condition.test(stack.get())) {
+            tryAddItem(book, stack.get());
+            return Optional.empty();
+        }
+        return stack;
     }
 
     public List<ItemStack> extractItems(ItemStack book, ExtractionRequest request, boolean apply) {
