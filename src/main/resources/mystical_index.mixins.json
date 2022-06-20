@@ -6,7 +6,8 @@
   "mixins": [
     "ItemUsageContextAccessor",
     "ServerPlayNetworkHandlerMixin",
-    "compat.patchouli.LecternEventHandlerMixin"
+    "compat.patchouli.LecternEventHandlerMixin",
+    "PlayerInventoryMixin"
   ],
   "client": [
     "HandledScreenAccessor",

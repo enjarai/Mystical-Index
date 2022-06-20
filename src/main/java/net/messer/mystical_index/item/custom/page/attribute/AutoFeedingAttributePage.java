@@ -8,10 +8,8 @@ import net.messer.mystical_index.item.custom.page.TypePageItem;
 import net.messer.mystical_index.item.custom.page.type.FoodStorageTypePage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,7 +45,7 @@ public class AutoFeedingAttributePage extends AttributePageItem {
     public void book$inventoryTick(ItemStack book, World world, Entity entity, int slot, boolean selected) {
         super.book$inventoryTick(book, world, entity, slot, selected);
 
-        if(entity instanceof PlayerEntity player){
+        if(entity instanceof PlayerEntity player && !player.isCreative() && player.canConsume(false)){
             var usedBook = (MysticalBookItem) book.getItem();
 
             if (usedBook.getTypePage(book) instanceof FoodStorageTypePage foodPage) {

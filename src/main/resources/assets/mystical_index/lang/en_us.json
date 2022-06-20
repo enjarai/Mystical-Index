@@ -23,7 +23,9 @@
   "item.mystical_index.range_page": "Page of Range",
   "item.mystical_index.links_page": "Page of Linking",
   "item.mystical_index.feeding_action_page" : "Page of Feeding",
+  "item.mystical_index.auto_feeding_attribute_page" : "Page of Auto Feeding",
   "item.mystical_index.building_action_page" : "Page of Building",
+  "item.mystical_index.magnetism_attribute_page" : "Page of Magnetism",
   "item.mystical_index.food_storage_type_page" : "Type Page of Food Storage",
   "item.mystical_index.block_storage_type_page" : "Type Page of Block Storage",
   "item.mystical_index.page.tooltip.when_applied": "When bound into a book:",
@@ -37,5 +39,7 @@
   "item.mystical_index.page.tooltip.type.food_storage": " Food Storage",
   "item.mystical_index.page.tooltip.type.block_storage": " Block Storage",
   "item.mystical_index.page.tooltip.action.feeding": " Feeding",
-  "item.mystical_index.page.tooltip.action.building": " Building"
+  "item.mystical_index.page.tooltip.attribute.auto_feeding": " Auto Feeding",
+  "item.mystical_index.page.tooltip.action.building": " Building",
+  "item.mystical_index.page.tooltip.attribute.magnetism": " Magnetism"
 }

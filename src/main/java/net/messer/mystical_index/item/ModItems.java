@@ -35,6 +35,8 @@ public class ModItems {
     public static final BlockStorageTypePage BLOCK_STORAGE_TYPE_PAGE = registerPageItem("block_storage_type_page", new BlockStorageTypePage("block_storage"));
     public static final BuildingActionPage BUILDING_ACTION_PAGE = registerPageItem("building_action_page", new BuildingActionPage("building"));
 
+    public static final MagnetismAttributePage MAGNETISM_ATTRIBUTE_PAGE = registerPageItem("magnetism_attribute_page", new MagnetismAttributePage("magnetism"));
+
     private static <T extends PageItem> T registerPageItem(String name, T item) {
         var id = MysticalIndex.id(name);
         Registry.register(Registry.ITEM, id, item);
