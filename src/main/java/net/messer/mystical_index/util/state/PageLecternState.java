@@ -8,4 +8,7 @@ public class PageLecternState {
     public PageLecternState(MysticalLecternBlockEntity lectern) {
         this.lectern = lectern;
     }
+
+    public void onUnload() {
+    }
 }

@@ -5,6 +5,7 @@ import net.messer.mystical_index.block.entity.MysticalLecternBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -61,6 +62,12 @@ public abstract class PageItem extends Item {
     }
 
     public void lectern$onPlaced(MysticalLecternBlockEntity lectern) {
+    }
+
+    public void lectern$afterPlaced(MysticalLecternBlockEntity lectern) {
+    }
+
+    public void lectern$onRemoved(PlayerEntity player, MysticalLecternBlockEntity lectern) {
     }
 
     public void lectern$serverTick(World world, BlockPos pos, BlockState state, MysticalLecternBlockEntity lectern) {

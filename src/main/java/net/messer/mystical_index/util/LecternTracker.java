@@ -2,6 +2,7 @@ package net.messer.mystical_index.util;
 
 import net.messer.mystical_index.block.entity.MysticalLecternBlockEntity;
 import net.messer.mystical_index.item.custom.book.MysticalBookItem;
+import net.messer.mystical_index.item.custom.page.type.IndexSlaveTypePage;
 import net.messer.mystical_index.item.custom.page.type.IndexingTypePage;
 import net.messer.mystical_index.util.request.IndexInteractable;
 import net.minecraft.block.entity.BlockEntity;
@@ -51,7 +52,7 @@ public class LecternTracker {
             forEachIndexingLectern((book, lectern, page) -> {
                 if (page.hasRangedLinking(book)) {
                     var lPos = lectern.getPos();
-                    var range = page.getMaxRange(book, true);
+                    var range = page.getMaxRange(book, false);
 
                     if (lPos.getX() - range <= pos.getX() && lPos.getY() - range <= pos.getY() && lPos.getZ() - range <= pos.getZ() &&
                             lPos.getX() + range >= pos.getX() && lPos.getY() + range >= pos.getY() && lPos.getZ() + range >= pos.getZ()) {
@@ -66,7 +67,17 @@ public class LecternTracker {
     public static void unRegisterFromLectern(IndexInteractable interactable) {
         forEachIndexingLectern((book, lectern, page) -> {
             if (page.hasRangedLinking(book)) {
-                page.getLecternIndex(lectern).interactables.remove(interactable);
+                page.getLecternIndex(lectern).remove(interactable);
+            }
+        });
+    }
+
+    public static void initSlaves(MysticalLecternBlockEntity lectern) {
+        forEachSlaveLectern((book, slave, page) -> {
+            var masterPos = page.getMasterPos(book);
+            if (masterPos != null && masterPos.equals(lectern.getPos()) &&
+                    slave.typeState instanceof IndexSlaveTypePage.IndexSlaveLecternState state) {
+                state.loadIndexes(book, page);
             }
         });
     }
@@ -75,6 +86,15 @@ public class LecternTracker {
         for (MysticalLecternBlockEntity lectern : indexLecterns) {
             var book = lectern.getBook();
             if (((MysticalBookItem) book.getItem()).getTypePage(book) instanceof IndexingTypePage page) {
+                consumer.accept(book, lectern, page);
+            }
+        }
+    }
+
+    private static void forEachSlaveLectern(TriConsumer<ItemStack, MysticalLecternBlockEntity, IndexSlaveTypePage> consumer) {
+        for (MysticalLecternBlockEntity lectern : indexLecterns) {
+            var book = lectern.getBook();
+            if (((MysticalBookItem) book.getItem()).getTypePage(book) instanceof IndexSlaveTypePage page) {
                 consumer.accept(book, lectern, page);
             }
         }

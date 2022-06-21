@@ -5,6 +5,7 @@ import net.messer.mystical_index.block.entity.MysticalLecternBlockEntity;
 import net.messer.mystical_index.item.custom.page.AttributePageItem;
 import net.messer.mystical_index.item.custom.page.TypePageItem;
 import net.messer.mystical_index.util.Colors;
+import net.messer.mystical_index.util.LecternTracker;
 import net.messer.mystical_index.util.WorldEffects;
 import net.messer.mystical_index.util.request.ExtractionRequest;
 import net.messer.mystical_index.util.request.IndexInteractable;
@@ -121,7 +122,7 @@ public class IndexingTypePage extends TypePageItem {
 
             if (pos.isWithinDistance(interactablePos, getMaxRange(book, true)) &&
                     world.getBlockEntity(interactablePos) instanceof IndexInteractable interactable) {
-                index.interactables.add(interactable);
+                index.add(interactable);
             }
         }
         return index;
@@ -137,8 +138,19 @@ public class IndexingTypePage extends TypePageItem {
         }
     }
 
+    /**
+     * Returns the actual index of this lectern, should be used when adding/removing links or connections.
+     * <b>DO NOT USE FOR INSERTION/EXTRACTION!</b> Use {@link #getInteractionLecternIndex(MysticalLecternBlockEntity)} instead.
+     */
     public LibraryIndex getLecternIndex(MysticalLecternBlockEntity lectern) {
         return ((IndexingLecternState) lectern.typeState).getIndex();
+    }
+
+    /**
+     * Returns the index that is available for interaction, should be used for insertion/extraction.
+     */
+    public LibraryIndex getInteractionLecternIndex(MysticalLecternBlockEntity lectern) {
+        return getLecternIndex(lectern);
     }
 
     public InsertionRequest tryInsertItemStack(LibraryIndex index, ItemStack itemStack, Vec3d pos) {
@@ -282,7 +294,7 @@ public class IndexingTypePage extends TypePageItem {
         var world = player.getWorld();
         var blockPos = lectern.getPos();
 
-        var index = getLecternIndex(lectern);
+        var index = getInteractionLecternIndex(lectern);
         var request = tryExtractItemStacks(index, message, Vec3d.ofCenter(blockPos));
 
         var itemPos = Vec3d.ofCenter(blockPos, 1);
@@ -351,7 +363,7 @@ public class IndexingTypePage extends TypePageItem {
         ) {
 
             var itemStack = itemEntity.getStack();
-            var index = getLecternIndex(lectern);
+            var index = getInteractionLecternIndex(lectern);
 
             var request = tryInsertItemStack(index, itemStack, Vec3d.ofCenter(pos));
             if (request.hasAffected()) WorldEffects.lecternPlonk(world, entity.getPos(), 0.6f, true);
@@ -373,6 +385,11 @@ public class IndexingTypePage extends TypePageItem {
         properties.add(new TranslatableText("item.mystical_index.mystical_book.tooltip.type.indexing.linked_range",
                 getMaxRange(book, true))
                 .formatted(Formatting.YELLOW));
+    }
+
+    @Override
+    public void lectern$afterPlaced(MysticalLecternBlockEntity lectern) {
+        LecternTracker.initSlaves(lectern);
     }
 
     public static class IndexingLecternState extends PageLecternState {

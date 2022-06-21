@@ -18,6 +18,12 @@
     },
     {
       "predicate": {
+        "index_slave_type": 1
+      },
+      "model": "mystical_index:item/book/index_slave_type"
+    },
+    {
+      "predicate": {
         "food_storage_type": 1
       },
       "model": "mystical_index:item/book/food_storage_type"

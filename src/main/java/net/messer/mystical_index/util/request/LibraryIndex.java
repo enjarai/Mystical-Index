@@ -14,14 +14,11 @@ import static net.messer.mystical_index.block.ModTags.INDEX_INTRACTABLE;
 
 public class LibraryIndex implements IndexInteractable {
     public static final LibraryIndex EMPTY = new LibraryIndex();
-    public final Set<IndexInteractable> interactables;
+
+    private final Set<IndexInteractable> interactables;
 
     public LibraryIndex() {
         this.interactables = new HashSet<>();
-    }
-
-    public LibraryIndex(Set<IndexInteractable> interactables) {
-        this.interactables = interactables;
     }
 
     public boolean isEmpty() {
@@ -51,9 +48,21 @@ public class LibraryIndex implements IndexInteractable {
         return result;
     }
 
+    public void add(IndexInteractable interactable) {
+        add(interactable, i -> {});
+    }
+
     public void add(IndexInteractable interactable, Consumer<IndexInteractable> callback) {
         interactables.add(interactable);
         callback.accept(interactable);
+    }
+
+    public boolean remove(IndexInteractable interactable) {
+        return interactables.remove(interactable);
+    }
+
+    public void merge(LibraryIndex other) {
+        interactables.addAll(other.interactables);
     }
 
     @Override

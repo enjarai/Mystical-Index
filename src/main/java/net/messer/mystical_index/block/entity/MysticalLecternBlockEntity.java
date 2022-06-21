@@ -79,6 +79,8 @@ public class MysticalLecternBlockEntity extends LecternBlockEntity { // TODO sep
 
         if (typePage != null) typeState = typePage.lectern$getState(this);
         if (actionPage != null) actionState = actionPage.lectern$getState(this);
+
+        bookItem.lectern$afterPlaced(this);
     }
 
     public static void serverTick(World world, BlockPos pos, BlockState state, MysticalLecternBlockEntity lectern) {

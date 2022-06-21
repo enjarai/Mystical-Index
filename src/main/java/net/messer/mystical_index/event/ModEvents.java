@@ -3,7 +3,9 @@ package net.messer.mystical_index.event;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents;
 import net.messer.mystical_index.block.entity.LibraryBlockEntity;
 import net.messer.mystical_index.block.entity.MysticalLecternBlockEntity;
+import net.messer.mystical_index.item.custom.book.MysticalBookItem;
 import net.messer.mystical_index.util.LecternTracker;
+import net.messer.mystical_index.util.request.IndexInteractable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
 
@@ -22,6 +24,12 @@ public class ModEvents {
     private static void onUnloadBlockEntity(BlockEntity blockEntity, ServerWorld world) {
         if (blockEntity instanceof MysticalLecternBlockEntity lectern) {
             LecternTracker.removeIndexLectern(lectern);
+
+            if (lectern.actionState != null) lectern.actionState.onUnload();
+            if (lectern.typeState != null) lectern.typeState.onUnload();
+        }
+        if (blockEntity instanceof IndexInteractable interactable) {
+            LecternTracker.unRegisterFromLectern(interactable);
         }
     }
 }

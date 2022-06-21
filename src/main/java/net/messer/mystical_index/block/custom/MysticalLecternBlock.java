@@ -27,6 +27,7 @@ import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +47,12 @@ public class MysticalLecternBlock extends LecternBlock {
     public void afterBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack stack) {
         if (blockEntity instanceof MysticalLecternBlockEntity lectern) {
             LecternTracker.removeIndexLectern(lectern);
+
+            if (state.get(HAS_BOOK) && lectern.getBook().getItem() instanceof MysticalBookItem book) {
+                book.lectern$onRemoved(player, lectern);
+            }
         }
+
         super.afterBreak(world, player, pos, state, blockEntity, stack);
     }
 
@@ -80,6 +86,10 @@ public class MysticalLecternBlock extends LecternBlock {
                 if (blockEntity instanceof MysticalLecternBlockEntity lecternBlockEntity) {
                     var book = lecternBlockEntity.getBook();
                     player.getInventory().offerOrDrop(book);
+
+                    if (book.getItem() instanceof MysticalBookItem bookItem) {
+                        bookItem.lectern$onRemoved(player, lecternBlockEntity);
+                    }
 
                     world.setBlockState(pos, Blocks.LECTERN.getStateWithProperties(state).with(LecternBlock.HAS_BOOK, false));
 

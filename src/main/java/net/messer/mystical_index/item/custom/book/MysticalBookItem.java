@@ -313,6 +313,14 @@ public class MysticalBookItem extends Item {
         forEachPage(lectern.getBook(), page -> page.lectern$onPlaced(lectern));
     }
 
+    public void lectern$afterPlaced(MysticalLecternBlockEntity lectern) {
+        forEachPage(lectern.getBook(), page -> page.lectern$afterPlaced(lectern));
+    }
+
+    public void lectern$onRemoved(PlayerEntity player, MysticalLecternBlockEntity lectern) {
+        forEachPage(lectern.getBook(), page -> page.lectern$onRemoved(player, lectern));
+    }
+
     @Override
     public Text getName(ItemStack book) {
         var page = getTypePage(book);
