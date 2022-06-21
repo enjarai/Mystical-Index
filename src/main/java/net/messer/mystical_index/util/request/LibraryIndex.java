@@ -13,8 +13,7 @@ import java.util.function.Consumer;
 import static net.messer.mystical_index.block.ModTags.INDEX_INTRACTABLE;
 
 public class LibraryIndex implements IndexInteractable {
-    public static final int ITEM_SEARCH_RANGE = 5; // TODO: config // TODO: higher range for lectern based somehow, extenders?
-    public static final int LECTERN_SEARCH_RANGE = 8;
+    public static final LibraryIndex EMPTY = new LibraryIndex();
     public final Set<IndexInteractable> interactables;
 
     public LibraryIndex() {
@@ -25,14 +24,6 @@ public class LibraryIndex implements IndexInteractable {
         this.interactables = interactables;
     }
 
-//    public ContentsIndex getContents() {
-//        ContentsIndex result = new ContentsIndex();
-//        for (IndexInteractable entity : interactables) {
-//            result.merge(entity.getContents());
-//        }
-//        return result;
-//    }
-
     public boolean isEmpty() {
         return interactables.isEmpty();
     }
@@ -42,23 +33,14 @@ public class LibraryIndex implements IndexInteractable {
     }
 
     public static LibraryIndex fromRange(World world, BlockPos pos, int searchRange, boolean particles) {
-//        // Check if we have an index cached for this location
-//        Optional<LibraryIndex> cachedIndex = IndexCache.get(pos, world, searchRange);
-//        if (cachedIndex.isPresent())
-//            return cachedIndex.get();
-
-        // If not, iterate over nearby blocks and generate the index
+        // Iterate over nearby blocks and generate the index
         var result = new LibraryIndex();
         for (int x = -searchRange; x <= searchRange; x++) {
             for (int z = -searchRange; z <= searchRange; z++) {
                 for (int y = -searchRange; y <= searchRange; y++) {
                     BlockPos testPos = pos.add(x, y, z);
 
-//                    if (ModTags.INDEX_INTRACTABLE.contains(world.getBlockState(testPos).getBlock()) &&
-//                            world.getBlockEntity(testPos) instanceof IndexInteractable entity) {
-//                        result.add(entity, particles ? WorldEffects::registrationParticles : i -> {});
-
-                    if(world.getBlockState(testPos).isIn(INDEX_INTRACTABLE) &&
+                    if (world.getBlockState(testPos).isIn(INDEX_INTRACTABLE) &&
                             world.getBlockEntity(testPos) instanceof IndexInteractable entity) {
                         result.add(entity, particles ? WorldEffects::registrationParticles : i -> {});
                     }
@@ -66,8 +48,6 @@ public class LibraryIndex implements IndexInteractable {
             }
         }
 
-        // Cache the generated index and return it
-//        IndexCache.put(pos, world, searchRange, result);
         return result;
     }
 
@@ -86,26 +66,4 @@ public class LibraryIndex implements IndexInteractable {
 
         return builder.build();
     }
-
-    //    @Override
-//    public List<ItemStack> extractItems(ExtractionRequest request, boolean apply) {
-//        ImmutableList.Builder<ItemStack> builder = ImmutableList.builder();
-//
-//        for (IndexInteractable entity : interactables) {
-//            if (request.isSatisfied()) break;
-//
-//            builder.addAll(entity.extractItems(request, apply));
-//        }
-//
-//        return builder.build();
-//    }
-//
-//    @Override
-//    public void insertStack(InsertionRequest request) {
-//        for (IndexInteractable entity : interactables) {
-//            if (request.isSatisfied()) break;
-//
-//            entity.insertStack(request);
-//        }
-//    }
 }

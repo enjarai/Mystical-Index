@@ -409,11 +409,6 @@ public class ItemStorageTypePage extends TypePageItem {
                         typesFullRatio == 1 ? Formatting.RED : Formatting.GOLD));
     }
 
-//    @Override
-//    public boolean book$hasGlint(ItemStack book) {
-//        return !isEmpty(book);
-//    }
-
     @Override
     public boolean book$onInventoryScroll(ItemStack book, PlayerEntity player, byte scrollDirection) {
         var nbt = book.getOrCreateNbt();

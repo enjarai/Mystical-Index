@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import static net.messer.mystical_index.block.ModBlocks.LIBRARY;
 import static net.messer.mystical_index.block.custom.MysticalLecternBlock.LECTERN_INPUT_AREA_SHAPE;
 import static net.messer.mystical_index.block.entity.MysticalLecternBlockEntity.LECTERN_DETECTION_RADIUS;
 import static net.messer.mystical_index.item.ModItems.INDEXING_TYPE_PAGE;
@@ -61,11 +62,6 @@ public class IndexingTypePage extends TypePageItem {
     @Override
     public int getColor() {
         return 0xaa22aa;
-    }
-
-    @Override
-    public MutableText getTypeDisplayName() {
-        return super.getTypeDisplayName().formatted(Formatting.DARK_PURPLE);
     }
 
     public static final String LINKED_BLOCKS_TAG = "linked_blocks";
@@ -87,7 +83,7 @@ public class IndexingTypePage extends TypePageItem {
         attributes.putInt(MAX_RANGE_LINKED_TAG, 20);
     }
 
-    private static NbtList blockPosToList(BlockPos pos) {
+    protected static NbtList blockPosToList(BlockPos pos) {
         var list = new NbtList();
         list.add(0, NbtInt.of(pos.getX()));
         list.add(1, NbtInt.of(pos.getY()));
@@ -95,7 +91,7 @@ public class IndexingTypePage extends TypePageItem {
         return list;
     }
 
-    private static BlockPos blockPosFromList(NbtList list) {
+    protected static BlockPos blockPosFromList(NbtList list) {
         return new BlockPos(list.getInt(0), list.getInt(1), list.getInt(2));
     }
 
@@ -163,9 +159,13 @@ public class IndexingTypePage extends TypePageItem {
         return request;
     }
 
+    public boolean isLinkableBlock(ItemStack book, BlockState state) {
+        return state.isOf(LIBRARY);
+    }
+
     @Override
     public boolean book$onStackClicked(ItemStack book, Slot slot, ClickType clickType, PlayerEntity player) {
-        if (clickType != ClickType.RIGHT || !slot.hasStack()) {
+        if (clickType != ClickType.RIGHT || !slot.hasStack() || player.getWorld().isClient()) {
             return false;
         }
 
@@ -177,7 +177,7 @@ public class IndexingTypePage extends TypePageItem {
 
     @Override
     public boolean book$onClicked(ItemStack book, ItemStack cursorStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
-        if (clickType != ClickType.RIGHT || cursorStack.isEmpty() || !slot.canTakePartial(player)) {
+        if (clickType != ClickType.RIGHT || cursorStack.isEmpty() || !slot.canTakePartial(player) || player.getWorld().isClient()) {
             return false;
         }
 
@@ -195,7 +195,7 @@ public class IndexingTypePage extends TypePageItem {
         var book = context.getStack();
 
         // Try linking library to book
-        if (blockState.isOf(ModBlocks.LIBRARY) && context.getPlayer() != null && context.getPlayer().isSneaking()) {
+        if (isLinkableBlock(book, blockState) && context.getPlayer() != null && context.getPlayer().isSneaking()) {
 
             var nbt = book.getOrCreateNbt();
             var librariesList = nbt.getList(LINKED_BLOCKS_TAG, NbtElement.LIST_TYPE);
@@ -374,11 +374,6 @@ public class IndexingTypePage extends TypePageItem {
                 getMaxRange(book, true))
                 .formatted(Formatting.YELLOW));
     }
-
-//    @Override
-//    public boolean book$hasGlint(ItemStack book) {
-//        return getLinks(book) > 0;
-//    }
 
     public static class IndexingLecternState extends PageLecternState {
         private final LibraryIndex index;

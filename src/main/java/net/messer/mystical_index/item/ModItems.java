@@ -7,10 +7,7 @@ import net.messer.mystical_index.item.custom.page.PageItem;
 import net.messer.mystical_index.item.custom.page.action.BuildingActionPage;
 import net.messer.mystical_index.item.custom.page.action.FeedingActionPage;
 import net.messer.mystical_index.item.custom.page.attribute.*;
-import net.messer.mystical_index.item.custom.page.type.BlockStorageTypePage;
-import net.messer.mystical_index.item.custom.page.type.FoodStorageTypePage;
-import net.messer.mystical_index.item.custom.page.type.IndexingTypePage;
-import net.messer.mystical_index.item.custom.page.type.ItemStorageTypePage;
+import net.messer.mystical_index.item.custom.page.type.*;
 import net.messer.mystical_index.util.PageRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
@@ -23,12 +20,6 @@ public class ModItems {
     public static final ItemStorageTypePage ITEM_STORAGE_TYPE_PAGE = registerPageItem("item_storage_type_page", new ItemStorageTypePage("item_storage"));
     public static final StacksPage STACKS_PAGE = registerPageItem("stacks_page", new StacksPage("stacks"));
     public static final TypesPage TYPES_PAGE = registerPageItem("types_page", new TypesPage("types"));
-
-    public static final IndexingTypePage INDEXING_TYPE_PAGE = registerPageItem("indexing_type_page", new IndexingTypePage("indexing"));
-    public static final RangePage RANGE_PAGE = registerPageItem("range_page", new RangePage("range"));
-    public static final LinksPage LINKS_PAGE = registerPageItem("links_page", new LinksPage("links"));
-
-
     public static final FoodStorageTypePage FOOD_STORAGE_TYPE_PAGE = registerPageItem("food_storage_type_page", new FoodStorageTypePage("food_storage"));
     public static final FeedingActionPage FEEDING_ACTION_PAGE = registerPageItem("feeding_action_page", new FeedingActionPage("feeding"));
     public static final AutoFeedingAttributePage AUTO_FEEDING_ATTRIBUTE_PAGE = registerPageItem("auto_feeding_attribute_page", new AutoFeedingAttributePage("auto_feeding"));
@@ -36,6 +27,11 @@ public class ModItems {
     public static final BuildingActionPage BUILDING_ACTION_PAGE = registerPageItem("building_action_page", new BuildingActionPage("building"));
 
     public static final MagnetismAttributePage MAGNETISM_ATTRIBUTE_PAGE = registerPageItem("magnetism_attribute_page", new MagnetismAttributePage("magnetism"));
+
+    public static final IndexingTypePage INDEXING_TYPE_PAGE = registerPageItem("indexing_type_page", new IndexingTypePage("indexing"));
+    public static final RangePage RANGE_PAGE = registerPageItem("range_page", new RangePage("range"));
+    public static final LinksPage LINKS_PAGE = registerPageItem("links_page", new LinksPage("links"));
+    public static final IndexSlaveTypePage INDEX_SLAVE_TYPE_PAGE = registerPageItem("index_slave_type_page", new IndexSlaveTypePage("index_slave"));
 
     private static <T extends PageItem> T registerPageItem(String name, T item) {
         var id = MysticalIndex.id(name);
