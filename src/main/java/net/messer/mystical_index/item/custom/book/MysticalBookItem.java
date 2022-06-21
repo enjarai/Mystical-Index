@@ -3,10 +3,7 @@ package net.messer.mystical_index.item.custom.book;
 import net.messer.mystical_index.block.ModBlocks;
 import net.messer.mystical_index.block.custom.MysticalLecternBlock;
 import net.messer.mystical_index.block.entity.MysticalLecternBlockEntity;
-import net.messer.mystical_index.item.custom.page.ActionPageItem;
-import net.messer.mystical_index.item.custom.page.InteractingPage;
-import net.messer.mystical_index.item.custom.page.PageItem;
-import net.messer.mystical_index.item.custom.page.TypePageItem;
+import net.messer.mystical_index.item.custom.page.*;
 import net.messer.mystical_index.util.PageRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -32,9 +29,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -67,6 +62,32 @@ public class MysticalBookItem extends Item {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Nullable
+    public AttributePageItem getAttributePage(ItemStack book, String id){
+        List<AttributePageItem> attributePagesList = new ArrayList<>();
+
+        book.getOrCreateNbt().getList(ATTRIBUTE_PAGES_TAG, NbtElement.STRING_TYPE).forEach(element -> {
+            var pageName = element.asString();
+            var pageId = Identifier.tryParse(pageName);
+            if (pageId != null) {
+                var page = PageRegistry.getPage(pageId);
+                if (page != null) {
+                    attributePagesList.add((AttributePageItem) page);
+                }
+            }
+        });
+
+        if(attributePagesList.size() <= 0)
+            return null;
+
+        for (AttributePageItem page : attributePagesList) {
+            if (page.id == id) {
+                return page;
+            }
+        }
+        return null;
     }
 
     /**

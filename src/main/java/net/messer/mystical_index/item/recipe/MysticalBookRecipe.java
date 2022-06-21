@@ -27,12 +27,12 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class MysticalBookRecipe extends SpecialCraftingRecipe {
-    private static final Ingredient BINDING = Ingredient.ofItems(Items.LEATHER);
+    private static final Ingredient BINDING = Ingredient.ofItems(Items.BOOK);
     // Defines how many pages are supported by each catalyst item.
     private static final Map<Item, Integer> CATALYSTS = Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(Items.AMETHYST_SHARD, 2);
-        hashMap.put(Items.EMERALD, 4);
-        hashMap.put(Items.DIAMOND, 6);
+        hashMap.put(Items.DIAMOND, 4);
+        hashMap.put(Items.NETHERITE_SCRAP, 6);
     });
     private static final Ingredient CATALYST = Ingredient.ofItems(CATALYSTS.keySet().toArray(new Item[0]));
 
