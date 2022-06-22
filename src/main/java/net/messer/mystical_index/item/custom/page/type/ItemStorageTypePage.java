@@ -162,10 +162,15 @@ public class ItemStorageTypePage extends TypePageItem {
         return isFilteredTo(book, itemStack);
     }
 
+    protected int getBaseInsertPriority(ItemStack book) {
+        return 0;
+    }
+
     public int getInsertPriority(ItemStack book, ItemStack stack) {
         if (!canInsertFiltered(book, stack)) return -1;
-        if (isFilteredTo(book, stack)) return 1;
-        return 0;
+        var base = getBaseInsertPriority(book);
+        if (isFilteredTo(book, stack)) return base + 100;
+        return base;
     }
 
     public int tryAddItem(ItemStack book, ItemStack stack) {
@@ -464,6 +469,11 @@ public class ItemStorageTypePage extends TypePageItem {
     public static abstract class ItemStorageAttributePage extends AttributePageItem {
         public ItemStorageAttributePage(String id) {
             super(id);
+        }
+
+        @Override
+        public @Nullable MutableText getAttributeDisplayName() {
+            return null;
         }
 
         @Override

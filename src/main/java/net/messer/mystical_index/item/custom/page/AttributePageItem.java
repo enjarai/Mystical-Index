@@ -41,11 +41,13 @@ public abstract class AttributePageItem extends PageItem implements TypeDependen
         appendAttributes(page, book.getOrCreateSubNbt(ATTRIBUTES_TAG));
     }
 
+    @Nullable
     public MutableText getAttributeDisplayName() {
         return new TranslatableText("item.mystical_index.page.tooltip.attribute." + id)
                 .fillStyle(Style.EMPTY.withColor(getColor()));
     }
 
+    @Nullable
     public MutableText book$getAttributeDisplayName() {
         return getAttributeDisplayName();
     }
@@ -54,13 +56,15 @@ public abstract class AttributePageItem extends PageItem implements TypeDependen
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
 
-        tooltip.add(getAttributeDisplayName());
+        var name = getAttributeDisplayName();
+        if (name != null) tooltip.add(name);
     }
 
     @Override
     public void book$appendPropertiesTooltip(ItemStack book, @Nullable World world, List<Text> properties, TooltipContext context) {
         super.book$appendPropertiesTooltip(book, world, properties, context);
 
-        properties.add(book$getAttributeDisplayName());
+        var name = book$getAttributeDisplayName();
+        if (name != null) properties.add(name);
     }
 }

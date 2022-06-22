@@ -1,6 +1,5 @@
 package net.messer.mystical_index.item.custom.page.type;
 
-import net.messer.mystical_index.block.ModBlocks;
 import net.messer.mystical_index.block.entity.MysticalLecternBlockEntity;
 import net.messer.mystical_index.item.custom.page.AttributePageItem;
 import net.messer.mystical_index.item.custom.page.TypePageItem;
@@ -413,6 +412,11 @@ public class IndexingTypePage extends TypePageItem {
     public static abstract class IndexingAttributePage extends AttributePageItem {
         public IndexingAttributePage(String id) {
             super(id);
+        }
+
+        @Override
+        public @Nullable MutableText getAttributeDisplayName() {
+            return null;
         }
 
         @Override

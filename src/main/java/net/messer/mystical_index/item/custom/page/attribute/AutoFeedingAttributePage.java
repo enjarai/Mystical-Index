@@ -28,7 +28,7 @@ public class AutoFeedingAttributePage extends AttributePageItem {
 
     @Override
     public int getColor() {
-        return 0;
+        return 0x550033;
     }
 
     @Override

@@ -3,7 +3,6 @@ package net.messer.mystical_index.event;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents;
 import net.messer.mystical_index.block.entity.LibraryBlockEntity;
 import net.messer.mystical_index.block.entity.MysticalLecternBlockEntity;
-import net.messer.mystical_index.item.custom.book.MysticalBookItem;
 import net.messer.mystical_index.util.LecternTracker;
 import net.messer.mystical_index.util.request.IndexInteractable;
 import net.minecraft.block.entity.BlockEntity;

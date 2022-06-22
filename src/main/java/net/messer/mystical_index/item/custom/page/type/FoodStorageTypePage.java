@@ -9,7 +9,7 @@ import java.util.List;
 
 import static net.messer.mystical_index.item.ModItems.FOOD_STORAGE_TYPE_PAGE;
 
-public class FoodStorageTypePage extends ItemStorageTypePage{
+public class FoodStorageTypePage extends ItemStorageTypePage {
     public FoodStorageTypePage(String id) {
         super(id);
     }
@@ -22,6 +22,11 @@ public class FoodStorageTypePage extends ItemStorageTypePage{
     @Override
     public MutableText getTypeDisplayName() {
         return super.getTypeDisplayName().formatted(Formatting.DARK_GREEN);
+    }
+
+    @Override
+    protected int getBaseInsertPriority(ItemStack book) {
+        return 2;
     }
 
     @Override

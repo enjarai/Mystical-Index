@@ -1,6 +1,5 @@
 package net.messer.mystical_index.item.custom.page.attribute;
 
-import net.messer.mystical_index.item.ModItems;
 import net.messer.mystical_index.item.custom.page.AttributePageItem;
 import net.messer.mystical_index.item.custom.page.TypePageItem;
 import net.minecraft.entity.Entity;
@@ -13,6 +12,8 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
+import static net.messer.mystical_index.item.ModItems.*;
+
 public class MagnetismAttributePage extends AttributePageItem {
     public MagnetismAttributePage(String id) {
         super(id);
@@ -24,12 +25,12 @@ public class MagnetismAttributePage extends AttributePageItem {
 
     @Override
     public int getColor() {
-        return 0;
+        return 0x4b6ca5;
     }
 
     @Override
     public List<TypePageItem> getCompatibleTypes(ItemStack page) {
-        return List.of(ModItems.ITEM_STORAGE_TYPE_PAGE);
+        return List.of(ITEM_STORAGE_TYPE_PAGE, FOOD_STORAGE_TYPE_PAGE, BLOCK_STORAGE_TYPE_PAGE);
     }
 
     @Override

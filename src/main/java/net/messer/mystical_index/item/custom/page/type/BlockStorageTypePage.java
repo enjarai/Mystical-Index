@@ -5,12 +5,10 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
-import net.minecraft.util.Formatting;
 
 import java.util.List;
 
 import static net.messer.mystical_index.item.ModItems.BLOCK_STORAGE_TYPE_PAGE;
-import static net.messer.mystical_index.item.ModItems.FOOD_STORAGE_TYPE_PAGE;
 
 public class BlockStorageTypePage extends ItemStorageTypePage {
     public BlockStorageTypePage(String id) {
@@ -19,7 +17,7 @@ public class BlockStorageTypePage extends ItemStorageTypePage {
 
     @Override
     public int getColor() {
-        return 0x444444;
+        return 0x888888;
     }
 
     @Override
@@ -30,6 +28,11 @@ public class BlockStorageTypePage extends ItemStorageTypePage {
     @Override
     public MutableText getTypeDisplayName() {
         return super.getTypeDisplayName().fillStyle(Style.EMPTY.withColor(getColor()));
+    }
+
+    @Override
+    protected int getBaseInsertPriority(ItemStack book) {
+        return 1;
     }
 
     @Override
