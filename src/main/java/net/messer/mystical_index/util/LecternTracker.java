@@ -6,6 +6,7 @@ import net.messer.mystical_index.item.custom.page.type.IndexSlaveTypePage;
 import net.messer.mystical_index.item.custom.page.type.IndexingTypePage;
 import net.messer.mystical_index.util.request.IndexInteractable;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Vec3d;
@@ -28,7 +29,7 @@ public class LecternTracker {
     }
 
     @Nullable
-    public static MysticalLecternBlockEntity findNearestLectern(ServerPlayerEntity player, double maxDistance) {
+    public static MysticalLecternBlockEntity findNearestLectern(PlayerEntity player, double maxDistance) {
         double closestFound = -1.0;
         MysticalLecternBlockEntity result = null;
         for (MysticalLecternBlockEntity lectern : indexLecterns) {

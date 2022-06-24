@@ -273,7 +273,7 @@ public class MysticalBookItem extends Item {
                 page -> page.book$hasGlint(book), false);
     }
 
-    public boolean interceptsChatMessage(ItemStack book, ServerPlayerEntity player, String message) {
+    public boolean interceptsChatMessage(ItemStack book, PlayerEntity player, String message) {
         return forInteractingPages(book, result -> result,
                 page -> page.book$interceptsChatMessage(book, player, message), false);
     }
@@ -311,7 +311,7 @@ public class MysticalBookItem extends Item {
                 page -> page.book$getTooltipData(book), Optional.empty());
     }
 
-    public boolean lectern$interceptsChatMessage(MysticalLecternBlockEntity lectern, ServerPlayerEntity player, String message) {
+    public boolean lectern$interceptsChatMessage(MysticalLecternBlockEntity lectern, PlayerEntity player, String message) {
         return forInteractingPages(lectern.getBook(), result -> result,
                 page -> page.lectern$interceptsChatMessage(lectern, player, message), false);
     }

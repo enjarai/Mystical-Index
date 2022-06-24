@@ -261,7 +261,7 @@ public class IndexingTypePage extends TypePageItem {
     }
 
     @Override
-    public boolean book$interceptsChatMessage(ItemStack book, ServerPlayerEntity player, String message) {
+    public boolean book$interceptsChatMessage(ItemStack book, PlayerEntity player, String message) {
         return true;
     }
 
@@ -284,7 +284,7 @@ public class IndexingTypePage extends TypePageItem {
     }
 
     @Override
-    public boolean lectern$interceptsChatMessage(MysticalLecternBlockEntity lectern, ServerPlayerEntity player, String message) {
+    public boolean lectern$interceptsChatMessage(MysticalLecternBlockEntity lectern, PlayerEntity player, String message) {
         return true;
     }
 

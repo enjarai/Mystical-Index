@@ -1,4 +1,10 @@
 {
+  "gui.mystical_index.intercepting.book[0]": "Chat messages are currently",
+  "gui.mystical_index.intercepting.book[1]": "being intercepted by",
+  "gui.mystical_index.intercepting.book[2]": "a Mystical Book.",
+  "gui.mystical_index.intercepting.lectern[0]": "Chat messages are currently",
+  "gui.mystical_index.intercepting.lectern[1]": "being intercepted by",
+  "gui.mystical_index.intercepting.lectern[2]": "a nearby Lectern.",
   "item.mystical_index.library": "Library",
   "block.mystical_index.library": "Library",
   "chat.mystical_index.no_match": "No match",

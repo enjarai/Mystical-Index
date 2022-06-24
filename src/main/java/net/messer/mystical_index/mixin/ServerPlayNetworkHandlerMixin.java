@@ -32,6 +32,8 @@ public abstract class ServerPlayNetworkHandlerMixin {
         String message = packet.getChatMessage();
 
         if (!(message.startsWith("/") || player.isSpectator())) {
+            // TODO: unify with ChatInterception.shouldIntercept()
+
             ItemStack book = null;
             for (Hand hand : Hand.values()) {
                 book = player.getStackInHand(hand);

@@ -5,11 +5,12 @@
   "compatibilityLevel": "JAVA_16",
   "mixins": [
     "ItemUsageContextAccessor",
+    "PlayerInventoryMixin",
     "ServerPlayNetworkHandlerMixin",
-    "compat.patchouli.LecternEventHandlerMixin",
-    "PlayerInventoryMixin"
+    "compat.patchouli.LecternEventHandlerMixin"
   ],
   "client": [
+    "ChatScreenMixin",
     "HandledScreenAccessor",
     "TooltipComponentMixin"
   ],

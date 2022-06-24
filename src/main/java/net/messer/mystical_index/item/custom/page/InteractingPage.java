@@ -10,7 +10,6 @@ import net.minecraft.inventory.StackReference;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.screen.slot.Slot;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -44,7 +43,7 @@ public interface InteractingPage {
      * This should be a check to see if a chat message should be intercepted.
      * <b>It is not run on the main server thread, so most world operations are off-limits.</b>
      */
-    default boolean book$interceptsChatMessage(ItemStack book, ServerPlayerEntity player, String message) {
+    default boolean book$interceptsChatMessage(ItemStack book, PlayerEntity player, String message) {
         return false;
     }
 
@@ -77,7 +76,7 @@ public interface InteractingPage {
      * This should be a check to see if a chat message should be intercepted.
      * <b>It is not run on the main server thread, so most world operations are off-limits.</b>
      */
-    default boolean lectern$interceptsChatMessage(MysticalLecternBlockEntity lectern, ServerPlayerEntity player, String message) {
+    default boolean lectern$interceptsChatMessage(MysticalLecternBlockEntity lectern, PlayerEntity player, String message) {
         return false;
     }
 

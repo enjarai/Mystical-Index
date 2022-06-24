@@ -89,10 +89,6 @@ public class MysticalLecternBlockEntity extends LecternBlockEntity { // TODO sep
                 if (lectern.tick == 0) {
                     lectern.initState();
                 }
-
-                LecternTracker.addIndexLectern(lectern);
-            } else {
-                LecternTracker.removeIndexLectern(lectern);
             }
         } else {
             if (state.get(HAS_BOOK)) {
@@ -118,8 +114,14 @@ public class MysticalLecternBlockEntity extends LecternBlockEntity { // TODO sep
 
         lectern.tick++;
 
-        if (state.get(HAS_BOOK) && lectern.getBook().getItem() instanceof MysticalBookItem book) {
-            book.lectern$serverTick(world, pos, state, lectern);
+        if (state.get(HAS_BOOK)) {
+            if (lectern.getBook().getItem() instanceof MysticalBookItem book) {
+                book.lectern$serverTick(world, pos, state, lectern);
+            }
+
+            LecternTracker.addIndexLectern(lectern);
+        } else {
+            LecternTracker.removeIndexLectern(lectern);
         }
     }
 
