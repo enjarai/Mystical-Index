@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "cec",
+    "gpg",
+    "cec"
+  ],
+  "key": {
+    "p": {
+      "item": "minecraft:paper"
+    },
+    "a": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "g": {
+      "item": "minecraft:gold_ingot"
+    },
+    "c": {
+      "item": "minecraft:chest"
+    }
+  },
+  "result": {
+    "item": "mystical_index:item_storage_type_page"
+  }
+}
