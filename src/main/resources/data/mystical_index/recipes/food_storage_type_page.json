@@ -1,25 +1,25 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "cec",
-    "gpg",
-    "cec"
+    "aga",
+    "epe",
+    "aga"
   ],
   "key": {
     "p": {
       "item": "mystical_index:empty_paper"
     },
     "a": {
-      "item": "minecraft:amethyst_shard"
+      "item": "minecraft:golden_apple"
+    },
+    "e": {
+      "item": "minecraft:ender_pearl"
     },
     "g": {
       "item": "minecraft:gold_ingot"
-    },
-    "c": {
-      "item": "minecraft:chest"
     }
   },
   "result": {
-    "item": "mystical_index:item_storage_type_page"
+    "item": "mystical_index:food_storage_type_page"
   }
 }
