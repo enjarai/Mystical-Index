@@ -1,0 +1,30 @@
+{
+  "display": {
+    "icon": {
+      "item": "mystical_index:mystical_book"
+    },
+    "title": "Foreword",
+    "description": "Who knew reading could be so fun?",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mystical_index:empty_page"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "loot": [
+      "mystical_index:grant_book_to_player"
+    ]
+  }
+}

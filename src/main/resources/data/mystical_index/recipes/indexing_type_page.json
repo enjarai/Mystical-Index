@@ -7,10 +7,10 @@
   ],
   "key": {
     "p": {
-      "item": "mystical_index:empty_paper"
+      "item": "mystical_index:empty_page"
     },
     "c": {
-      "item": "minecraft:"
+      "item": "minecraft:book"
     },
     "e": {
       "item": "minecraft:ender_pearl"

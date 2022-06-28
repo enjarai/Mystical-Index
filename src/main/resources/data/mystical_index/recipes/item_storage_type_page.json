@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "cec",
-    "gpg",
-    "cec"
+    "cgc",
+    "epe",
+    "cgc"
   ],
   "key": {
     "p": {
-      "item": "mystical_index:empty_paper"
+      "item": "mystical_index:empty_page"
     },
-    "a": {
-      "item": "minecraft:amethyst_shard"
+    "e": {
+      "item": "minecraft:ender_pearl"
     },
     "g": {
       "item": "minecraft:gold_ingot"
