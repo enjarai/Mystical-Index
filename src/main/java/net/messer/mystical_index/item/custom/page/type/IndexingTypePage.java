@@ -49,6 +49,7 @@ import static net.messer.mystical_index.block.ModBlocks.LIBRARY;
 import static net.messer.mystical_index.block.custom.MysticalLecternBlock.LECTERN_INPUT_AREA_SHAPE;
 import static net.messer.mystical_index.block.entity.MysticalLecternBlockEntity.LECTERN_DETECTION_RADIUS;
 import static net.messer.mystical_index.item.ModItems.INDEXING_TYPE_PAGE;
+import static net.minecraft.block.LecternBlock.HAS_BOOK;
 
 public class IndexingTypePage extends TypePageItem {
     public static final String MAX_RANGE_TAG = "max_range";
@@ -142,7 +143,10 @@ public class IndexingTypePage extends TypePageItem {
      * <b>DO NOT USE FOR INSERTION/EXTRACTION!</b> Use {@link #getInteractionLecternIndex(MysticalLecternBlockEntity)} instead.
      */
     public LibraryIndex getLecternIndex(MysticalLecternBlockEntity lectern) {
-        return ((IndexingLecternState) lectern.typeState).getIndex();
+        if (lectern.getCachedState().get(HAS_BOOK)) {
+            return ((IndexingLecternState) lectern.typeState).getIndex();
+        }
+        return LibraryIndex.EMPTY;
     }
 
     /**

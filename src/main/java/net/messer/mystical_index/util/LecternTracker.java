@@ -94,9 +94,9 @@ public class LecternTracker {
 
     private static void forEachSlaveLectern(TriConsumer<ItemStack, MysticalLecternBlockEntity, IndexSlaveTypePage> consumer) {
         for (MysticalLecternBlockEntity lectern : indexLecterns) {
-            var book = lectern.getBook();
-            if (((MysticalBookItem) book.getItem()).getTypePage(book) instanceof IndexSlaveTypePage page) {
-                consumer.accept(book, lectern, page);
+            var stack = lectern.getBook();
+            if (stack.getItem() instanceof MysticalBookItem book && book.getTypePage(stack) instanceof IndexSlaveTypePage page) {
+                consumer.accept(stack, lectern, page);
             }
         }
     }

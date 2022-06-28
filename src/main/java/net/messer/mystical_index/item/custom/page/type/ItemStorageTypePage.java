@@ -106,7 +106,10 @@ public class ItemStorageTypePage extends TypePageItem {
     }
 
     private int getItemOccupancy(Item item) {
-        return 64 / item.getMaxCount();
+        if (item.getMaxCount() == 1) {
+            return 8;
+        }
+        return 1;
     }
 
     private Optional<NbtCompound> canMergeStack(ItemStack stack, NbtList items) {
