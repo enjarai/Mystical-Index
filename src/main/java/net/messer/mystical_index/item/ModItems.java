@@ -1,5 +1,6 @@
 package net.messer.mystical_index.item;
 
+import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.messer.mystical_index.MysticalIndex;
 import net.messer.mystical_index.item.custom.book.MysticalBookItem;
@@ -10,12 +11,20 @@ import net.messer.mystical_index.item.custom.page.attribute.*;
 import net.messer.mystical_index.item.custom.page.type.*;
 import net.messer.mystical_index.util.PageRegistry;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import vazkii.patchouli.api.PatchouliAPI;
+import vazkii.patchouli.common.base.PatchouliAPIImpl;
+import vazkii.patchouli.common.item.PatchouliItems;
 
 public class ModItems {
+    public static final ItemGroup MYSTICAL_INDEX_GROUP = FabricItemGroupBuilder.build(
+            MysticalIndex.id("mystical_index"),
+            () -> PatchouliAPI.get().getBookStack(MysticalIndex.id("guide_book")));
+
     public static final MysticalBookItem MYSTICAL_BOOK = registerItem("mystical_book", new MysticalBookItem(new FabricItemSettings().maxCount(1)));
-    public static final Item EMPTY_PAGE = registerItem("empty_page", new Item(new FabricItemSettings()));
+    public static final Item EMPTY_PAGE = registerItem("empty_page", new Item(new FabricItemSettings().group(MYSTICAL_INDEX_GROUP)));
 
     // Type Pages
     public static final ItemStorageTypePage ITEM_STORAGE_TYPE_PAGE = registerPageItem("item_storage_type_page", new ItemStorageTypePage("item_storage"));

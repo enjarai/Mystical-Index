@@ -2,7 +2,8 @@
   "name": "Page Types",
   "icon": "mystical_index:indexing_type_page",
   "category": "mystical_index:general",
+  "sortnum": 1,
   "pages": [
-
+    "Mystical Pages can have many different and complex abilities, so they are categorized into three main types based on functionality:$(br2)- Type pages$(br)- Attribute pages$(br)- Action pages"
   ]
 }

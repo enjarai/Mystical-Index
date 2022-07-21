@@ -83,6 +83,8 @@ public class WorldEffects {
         }
     }
 
+    // If ever in need of epic sounds from vanilla, use these:
+    // https://discord.com/channels/507304429255393322/511324119728521285/996159997325090897
     public static void lecternPlonk(World world, Vec3d pos, float pitch, boolean particles) {
         world.playSound(null, pos.getX(), pos.getY(), pos.getZ(),
                 SoundEvents.BLOCK_AMETHYST_BLOCK_STEP, SoundCategory.BLOCKS,

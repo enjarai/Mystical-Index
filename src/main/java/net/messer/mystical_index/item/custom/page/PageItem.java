@@ -22,13 +22,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static net.messer.mystical_index.item.ModItems.MYSTICAL_INDEX_GROUP;
 import static net.messer.mystical_index.item.custom.page.AttributePageItem.ATTRIBUTES_TAG;
 
 public abstract class PageItem extends Item {
     public final String id;
 
     public PageItem(String id) {
-        super(new FabricItemSettings().group(ItemGroup.TOOLS));
+        super(new FabricItemSettings().group(MYSTICAL_INDEX_GROUP));
         this.id = id;
     }
 

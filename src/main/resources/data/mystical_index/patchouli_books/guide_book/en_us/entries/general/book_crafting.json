@@ -1,0 +1,12 @@
+{
+  "name": "Book Crafting",
+  "icon": "minecraft:writable_book",
+  "category": "mystical_index:general",
+  "pages": [
+    "test",
+    {
+      "type": "patchouli:crafting",
+      "recipe": "mystical_index:custom_book"
+    }
+  ]
+}

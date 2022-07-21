@@ -12,6 +12,8 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import static net.messer.mystical_index.item.ModItems.MYSTICAL_INDEX_GROUP;
+
 public class ModBlocks {
 
     public static final Block LIBRARY = registerBlock("library",
@@ -30,7 +32,7 @@ public class ModBlocks {
 
     private static BlockItem registerBlockItem(String name, Block block) {
         return Registry.register(Registry.ITEM, new Identifier(MysticalIndex.MOD_ID, name),
-                new BlockItem(block, new FabricItemSettings().group(ItemGroup.MISC).maxCount(64)));
+                new BlockItem(block, new FabricItemSettings().group(MYSTICAL_INDEX_GROUP).maxCount(64)));
     }
 
     public static void registerModBlocks(){
