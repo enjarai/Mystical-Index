@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ama",
+    "mpm",
+    "ama"
+  ],
+  "key": {
+    "p": {
+      "item": "mystical_index:item_storage_type_page"
+    },
+    "a": {
+      "item": "minecraft:golden_apple"
+    },
+    "m": {
+      "item": "minecraft:glistering_melon_slice"
+    }
+  },
+  "result": {
+    "item": "mystical_index:food_storage_type_page"
+  }
+}

@@ -6,6 +6,7 @@ import net.fabricmc.api.ModInitializer;
 import net.messer.config.MysticalConfig;
 import net.messer.mystical_index.block.ModBlockEntities;
 import net.messer.mystical_index.block.ModBlocks;
+import net.messer.mystical_index.event.LootTableEvent;
 import net.messer.mystical_index.event.ModEvents;
 import net.messer.mystical_index.event.ServerNetworkListeners;
 import net.messer.mystical_index.item.ModItems;
@@ -34,6 +35,7 @@ public class MysticalIndex implements ModInitializer {
 		ModBlocks.registerModBlocks();
 		ModBlockEntities.registerBlockEntities();
 		ModRecipes.registerModRecipes();
+		LootTableEvent.registerLootTable();
 
 		ModEvents.register();
 		ServerNetworkListeners.registerListeners();

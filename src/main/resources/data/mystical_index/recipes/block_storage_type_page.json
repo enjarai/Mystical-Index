@@ -7,19 +7,19 @@
   ],
   "key": {
     "p": {
-      "item": "mystical_index:empty_page"
+      "item": "mystical_index:item_storage_type_page"
+    },
+    "c": {
+      "tag": "minecraft:stone_tool_materials"
     },
     "e": {
       "item": "minecraft:ender_pearl"
     },
     "g": {
       "item": "minecraft:gold_ingot"
-    },
-    "c": {
-      "item": "minecraft:chest"
     }
   },
   "result": {
-    "item": "mystical_index:item_storage_type_page"
+    "item": "mystical_index:block_storage_type_page"
   }
 }
