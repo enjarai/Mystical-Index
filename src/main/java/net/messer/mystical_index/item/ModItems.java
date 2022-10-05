@@ -15,8 +15,6 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import vazkii.patchouli.api.PatchouliAPI;
-import vazkii.patchouli.common.base.PatchouliAPIImpl;
-import vazkii.patchouli.common.item.PatchouliItems;
 
 public class ModItems {
     public static final ItemGroup MYSTICAL_INDEX_GROUP = FabricItemGroupBuilder.build(

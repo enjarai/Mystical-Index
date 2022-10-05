@@ -39,8 +39,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -143,8 +143,8 @@ public class IndexingTypePage extends TypePageItem {
      * <b>DO NOT USE FOR INSERTION/EXTRACTION!</b> Use {@link #getInteractionLecternIndex(MysticalLecternBlockEntity)} instead.
      */
     public LibraryIndex getLecternIndex(MysticalLecternBlockEntity lectern) {
-        if (lectern.getCachedState().get(HAS_BOOK)) {
-            return ((IndexingLecternState) lectern.typeState).getIndex();
+        if (lectern.getCachedState().get(HAS_BOOK) && lectern.typeState instanceof IndexingLecternState state) {
+            return state.getIndex();
         }
         return LibraryIndex.EMPTY;
     }

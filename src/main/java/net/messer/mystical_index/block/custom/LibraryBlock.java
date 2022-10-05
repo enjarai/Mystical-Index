@@ -19,7 +19,8 @@ import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 @SuppressWarnings("deprecation")
 public class LibraryBlock extends BlockWithEntity implements BlockEntityProvider {

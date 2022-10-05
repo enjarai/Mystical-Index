@@ -24,21 +24,23 @@ public enum ChatInterception {
     }
 
     public static ChatInterception shouldIntercept(PlayerEntity player, String message) {
-        ItemStack book = null;
+        ItemStack stack = null;
         for (Hand hand : Hand.values()) {
-            book = player.getStackInHand(hand);
-            if (book.isOf(ModItems.MYSTICAL_BOOK)) {
+            stack = player.getStackInHand(hand);
+            if (stack.isOf(ModItems.MYSTICAL_BOOK)) {
                 break;
             }
         }
 
-        if (book != null && book.isOf(ModItems.MYSTICAL_BOOK) &&
-                ((MysticalBookItem) book.getItem()).interceptsChatMessage(book, player, message)) {
+        if (stack != null &&
+                stack.getItem() instanceof MysticalBookItem book &&
+                book.interceptsChatMessage(stack, player, message)) {
             return BOOK;
         } else {
             MysticalLecternBlockEntity lectern = LecternTracker.findNearestLectern(player, LECTERN_DETECTION_RADIUS);
             if (lectern != null &&
-                    ((MysticalBookItem) lectern.getBook().getItem()).lectern$interceptsChatMessage(lectern, player, message)) {
+                    lectern.getBook().getItem() instanceof MysticalBookItem book &&
+                    book.lectern$interceptsChatMessage(lectern, player, message)) {
                 return LECTERN;
             }
         }

@@ -10,7 +10,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 import static net.messer.mystical_index.block.ModBlocks.MYSTICAL_LECTERN;
 

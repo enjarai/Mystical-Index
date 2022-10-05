@@ -8,11 +8,10 @@ import net.messer.mystical_index.util.request.IndexInteractable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import org.apache.logging.log4j.util.TriConsumer;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -85,9 +84,9 @@ public class LecternTracker {
 
     private static void forEachIndexingLectern(TriConsumer<ItemStack, MysticalLecternBlockEntity, IndexingTypePage> consumer) {
         for (MysticalLecternBlockEntity lectern : indexLecterns) {
-            var book = lectern.getBook();
-            if (((MysticalBookItem) book.getItem()).getTypePage(book) instanceof IndexingTypePage page) {
-                consumer.accept(book, lectern, page);
+            var stack = lectern.getBook();
+            if (stack.getItem() instanceof MysticalBookItem book && book.getTypePage(stack) instanceof IndexingTypePage page) {
+                consumer.accept(stack, lectern, page);
             }
         }
     }

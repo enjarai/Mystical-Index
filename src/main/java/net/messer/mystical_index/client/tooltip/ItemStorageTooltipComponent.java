@@ -1,32 +1,31 @@
 package net.messer.mystical_index.client.tooltip;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.messer.mystical_index.MysticalIndex;
+import net.messer.mystical_index.client.render.ItemCirclesRenderer2D;
 import net.messer.mystical_index.util.BigStack;
 import net.messer.mystical_index.util.MathUtil;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
 
-import java.util.List;
-import java.util.Map;
+import static net.messer.mystical_index.client.render.ItemCirclesRenderer.SECONDARY_CIRCLE_ITEM_COUNT;
+import static net.messer.mystical_index.client.render.ItemCirclesRenderer.TERNARY_CIRCLE_ITEM_COUNT;
 
 @Environment(EnvType.CLIENT)
 public class ItemStorageTooltipComponent extends DrawableHelper implements TooltipComponent {
-    private static final Identifier CIRCLES_TEXTURE = MysticalIndex.id("textures/gui/circles.png");
-    private static final int CIRCLE_TEXTURES_SIZE = 256;
-    private static final Map<Integer, Identifier> CIRCLE_TEXTURES = Map.of(
-            24, MysticalIndex.id("textures/gui/circle_24.png"),
-            48, MysticalIndex.id("textures/gui/circle_48.png")
-    );
-    private static final int SECONDARY_CIRCLE_ITEM_COUNT = 7;
-    private static final int TERNARY_CIRCLE_ITEM_COUNT = 19;
 
+    private final ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
+    private final TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+    private final ItemCirclesRenderer2D<BigStack> circleRenderer = new ItemCirclesRenderer2D<>() {
+        @Override
+        protected void drawItem(MatrixStack matrices, double x, double y, double z, BigStack stack) {
+            ItemStorageTooltipComponent.this.drawItem(matrices, (int) x, (int) y, stack);
+        }
+    };
     private final ItemStorageTooltipData data;
 
     public ItemStorageTooltipComponent(ItemStorageTooltipData data) {
@@ -59,50 +58,12 @@ public class ItemStorageTooltipComponent extends DrawableHelper implements Toolt
         var centerY = y + getHeight() / 2;
 
         var stacks = data.contents.getAll();
-        var primary = stacks.get(0);
-        var secondary = stacks.size() > 1 ?
-                stacks.subList(1, Math.min(SECONDARY_CIRCLE_ITEM_COUNT, stacks.size())) : null;
-        var ternary = stacks.size() > SECONDARY_CIRCLE_ITEM_COUNT ?
-                stacks.subList(SECONDARY_CIRCLE_ITEM_COUNT, Math.min(TERNARY_CIRCLE_ITEM_COUNT, stacks.size())) : null;
 
-        if (secondary != null) drawItemCircle(textRenderer, centerX, centerY, matrices, itemRenderer, 24, secondary);
-        if (ternary != null) drawItemCircle(textRenderer, centerX, centerY, matrices, itemRenderer, 48, ternary);
-        drawItem(textRenderer, centerX, centerY, matrices, itemRenderer, primary, true);
+        circleRenderer.render(centerX, centerY, z, matrices, stacks);
     }
 
-    private void drawItemCircle(TextRenderer textRenderer, int x, int y, MatrixStack matrices, ItemRenderer itemRenderer, int radius, List<BigStack> items) {
-        var itemCount = items.size();
-        var circleTexture = CIRCLE_TEXTURES.get(radius);
-
-        RenderSystem.setShaderTexture(0, circleTexture);
-        RenderSystem.disableDepthTest();
-        RenderSystem.enableBlend();
-
-        drawTexture(
-                matrices,
-                x - CIRCLE_TEXTURES_SIZE / 2, y - CIRCLE_TEXTURES_SIZE / 2,
-                0, 0, CIRCLE_TEXTURES_SIZE, CIRCLE_TEXTURES_SIZE
-        );
-
-        for (int i = 0; i < itemCount; i++) {
-            var bigStack = items.get(i);
-            var offset = (2 * Math.PI) / itemCount * i - (Math.PI / 2);
-
-            var itemX = (int) (radius * Math.cos(offset)) + x;
-            var itemY = (int) (radius * Math.sin(offset)) + y;
-
-            drawItem(textRenderer, itemX, itemY, matrices, itemRenderer, bigStack, false);
-        }
-    }
-
-    private void drawItem(TextRenderer textRenderer, int x, int y, MatrixStack matrices, ItemRenderer itemRenderer, BigStack stack, boolean isPrimary) {
+    private void drawItem(MatrixStack matrices, int x, int y, BigStack stack) {
         var count = stack.getAmount();
-
-        RenderSystem.setShaderTexture(0, CIRCLES_TEXTURE);
-        RenderSystem.disableDepthTest();
-        RenderSystem.enableBlend();
-
-        drawTexture(matrices, x - 12, y - 12, isPrimary ? 24 : 0, 0, 24, 24);
 
         itemRenderer.renderInGuiWithOverrides(stack.getItemStack(), x - 8, y - 8);
         itemRenderer.renderGuiItemOverlay(textRenderer, stack.getItemStack(), x - 8, y - 8,

@@ -1,8 +1,8 @@
 package net.messer.mystical_index.item.custom.page;
 
 import net.minecraft.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public interface ActionDependablePage {
