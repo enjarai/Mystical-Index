@@ -1,22 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "cgc",
+    " d ",
     "epe",
-    "cgc"
+    " e "
   ],
   "key": {
     "p": {
       "item": "mystical_index:empty_page"
     },
-    "c": {
-      "item": "minecraft:book"
+    "d": {
+      "item": "minecraft:diamond"
     },
     "e": {
-      "item": "minecraft:ender_pearl"
-    },
-    "g": {
-      "item": "minecraft:gold_ingot"
+      "item": "mystical_index:ender_pearl_shard"
     }
   },
   "result": {

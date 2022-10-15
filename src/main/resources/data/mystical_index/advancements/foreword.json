@@ -1,12 +1,14 @@
 {
   "display": {
     "icon": {
-      "item": "mystical_index:mystical_book"
+      "item": "patchouli:guide_book",
+      "nbt": "{\"patchouli:book\": \"mystical_index:guide_book\"}"
     },
     "title": "Foreword",
-    "description": "Who knew reading could be so fun?",
+    "description": "Welcome to the domain of mystical books!",
     "show_toast": true,
-    "announce_to_chat": true
+    "announce_to_chat": true,
+    "background": "minecraft:block/bookshelf_side"
   },
   "criteria": {
     "requirement": {
@@ -15,7 +17,7 @@
         "items": [
           {
             "items": [
-              "mystical_index:empty_page"
+              "mystical_index:tattered_page"
             ]
           }
         ]

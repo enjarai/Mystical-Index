@@ -11,6 +11,9 @@
     },
     "a": {
       "item": "minecraft:amethyst_shard"
+    },
+    "e": {
+      "item": "mystical_index:ender_pearl_shard"
     }
   },
   "result": {

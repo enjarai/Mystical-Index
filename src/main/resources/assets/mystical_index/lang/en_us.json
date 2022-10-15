@@ -23,6 +23,8 @@
   "item.mystical_index.mystical_book.tooltip.type.indexing.linked_range": " %d Max Linked Range",
   "item.mystical_index.mystical_book.tooltip.type.indexing.links": " %d/%d Links",
   "item.mystical_index.empty_page": "Blank Page",
+  "item.mystical_index.tattered_page": "Tattered Page",
+  "item.mystical_index.ender_pearl_shard": "Ender Pearl Shard",
   "item.mystical_index.item_storage_type_page": "Type Page of Item Storage",
   "item.mystical_index.stacks_page": "Page of Stacking",
   "item.mystical_index.types_page": "Page of Types",

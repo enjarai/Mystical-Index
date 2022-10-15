@@ -1,22 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "cgc",
-    "epe",
-    "cgc"
+    " b ",
+    "ipi",
+    " i "
   ],
   "key": {
     "p": {
       "item": "mystical_index:item_storage_type_page"
     },
-    "c": {
-      "tag": "minecraft:stone_tool_materials"
+    "i": {
+      "item": "minecraft:gold_nugget"
     },
-    "e": {
-      "item": "minecraft:ender_pearl"
-    },
-    "g": {
-      "item": "minecraft:gold_ingot"
+    "b": {
+      "tag": "mystical_index:block_items"
     }
   },
   "result": {

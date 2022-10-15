@@ -9,6 +9,7 @@ import net.messer.mystical_index.item.custom.page.AttributePageItem;
 import net.messer.mystical_index.item.custom.page.PageItem;
 import net.messer.mystical_index.item.custom.page.TypePageItem;
 import net.messer.mystical_index.util.Colors;
+import net.messer.mystical_index.util.PageRegistry;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -36,6 +37,9 @@ public class MysticalBookRecipe extends SpecialCraftingRecipe {
         hashMap.put(Items.NETHERITE_SCRAP, 6);
     });
     private static final Ingredient CATALYST = Ingredient.ofItems(CATALYSTS.keySet().toArray(new Item[0]));
+    private static final Ingredient TYPE_PAGES = Ingredient.ofItems(PageRegistry.getPages(TypePageItem.class).toArray(new Item[0]));
+    private static final Ingredient ATTRIBUTE_PAGES = Ingredient.ofItems(PageRegistry.getPages(AttributePageItem.class).toArray(new Item[0]));
+    private static final Ingredient ACTION_PAGES = Ingredient.ofItems(PageRegistry.getPages(ActionPageItem.class).toArray(new Item[0]));
 
     public MysticalBookRecipe(Identifier identifier) {
         super(identifier);
@@ -172,7 +176,11 @@ public class MysticalBookRecipe extends SpecialCraftingRecipe {
 
     @Override
     public DefaultedList<Ingredient> getIngredients() {
-        return DefaultedList.copyOf(Ingredient.EMPTY, BINDING, CATALYST);
+        return DefaultedList.copyOf(
+                BINDING, CATALYST, TYPE_PAGES,
+                ATTRIBUTE_PAGES, ATTRIBUTE_PAGES,
+                ATTRIBUTE_PAGES, ACTION_PAGES
+        ); // TODO make sure combinations shown are valid, maybe mixin into patchouli?
     }
 
     @Override

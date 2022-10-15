@@ -22,6 +22,9 @@
     ],
     "client": [
       "net.messer.mystical_index.MysticalIndexClient"
+    ],
+    "fabric-datagen": [
+      "net.messer.mystical_index.ModDataGen"
     ]
   },
   "mixins": [

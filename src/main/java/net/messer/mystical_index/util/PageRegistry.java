@@ -5,6 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class PageRegistry {
     public static final HashMap<Identifier, PageItem> REGISTERED_PAGES = new HashMap<>();
@@ -16,5 +17,12 @@ public class PageRegistry {
 
     public static PageItem getPage(Identifier itemId) {
         return REGISTERED_PAGES.get(itemId);
+    }
+
+    public static <T extends PageItem> List<T> getPages(Class<T> clazz) {
+        return REGISTERED_PAGES.values().stream()
+                .filter(clazz::isInstance)
+                .map(clazz::cast)
+                .toList();
     }
 }

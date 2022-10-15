@@ -20,7 +20,7 @@ public abstract class LecternEventHandlerMixin {
             at = @At(value = "HEAD"),
             cancellable = true
     )
-    private static void plsDontOverrideOurOnUseFunctionThanks(PlayerEntity player, World world, Hand hand, BlockHitResult hit, CallbackInfoReturnable<ActionResult> cir) {
+    private static void mysticalIndex$plsDontOverrideOurOnUseFunctionThanks(PlayerEntity player, World world, Hand hand, BlockHitResult hit, CallbackInfoReturnable<ActionResult> cir) {
         if (world.getBlockState(hit.getBlockPos()).isOf(MYSTICAL_LECTERN)) {
             cir.setReturnValue(ActionResult.PASS);
         }

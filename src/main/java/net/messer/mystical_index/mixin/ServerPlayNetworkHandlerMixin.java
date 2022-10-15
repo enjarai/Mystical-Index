@@ -28,7 +28,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
     private MinecraftServer server;
 
     @Inject(method = "onChatMessage", at = @At(value = "INVOKE", target = "Ljava/lang/String;startsWith(Ljava/lang/String;)Z"), cancellable = true)
-    public void onMessage(ChatMessageC2SPacket packet, CallbackInfo info) {
+    public void mysticalIndex$onMessage(ChatMessageC2SPacket packet, CallbackInfo info) {
         String message = packet.getChatMessage();
 
         if (!(message.startsWith("/") || player.isSpectator())) {

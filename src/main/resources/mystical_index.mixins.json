@@ -4,6 +4,7 @@
   "package": "net.messer.mystical_index.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
+    "EnderPearlEntityMixin",
     "ItemUsageContextAccessor",
     "PlayerInventoryMixin",
     "ServerPlayNetworkHandlerMixin",

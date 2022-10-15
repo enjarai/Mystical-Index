@@ -11,12 +11,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ChatScreen.class)
-public class ChatScreenMixin {
+public abstract class ChatScreenMixin {
     @Inject(
             method = "render",
             at = @At(value = "HEAD")
     )
-    private void renderInterceptionWidget(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    private void mysticalIndex$renderInterceptionWidget(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         var interception = ChatInterception.shouldIntercept(MinecraftClient.getInstance().player, "");
 
         if (interception != null) {

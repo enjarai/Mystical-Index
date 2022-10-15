@@ -15,7 +15,7 @@ public interface TooltipComponentMixin {
             at = @At("HEAD"),
             cancellable = true
     )
-    private static void ofMod(TooltipData data, CallbackInfoReturnable<TooltipComponent> cir) {
+    private static void mysticalIndex$ofMod(TooltipData data, CallbackInfoReturnable<TooltipComponent> cir) {
         if (data instanceof ConvertibleTooltipData convertible) {
             cir.setReturnValue(convertible.getComponent());
         }
