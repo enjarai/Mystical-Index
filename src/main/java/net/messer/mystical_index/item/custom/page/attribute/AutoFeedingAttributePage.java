@@ -57,9 +57,7 @@ public class AutoFeedingAttributePage extends AttributePageItem {
 
                     return player.canConsume(foodComponent.isAlwaysEdible());
                 });
-                if (stack.isPresent()) {
-                    player.eatFood(world, stack.get());
-                }
+                stack.ifPresent(itemStack -> player.eatFood(world, itemStack));
             }
         }
     }

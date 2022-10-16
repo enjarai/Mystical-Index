@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " a ",
+    "rpr",
+    " r "
+  ],
+  "key": {
+    "p": {
+      "item": "mystical_index:empty_page"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    },
+    "a": {
+      "item": "minecraft:golden_apple"
+    }
+  },
+  "result": {
+    "item": "mystical_index:feeding_action_page"
+  }
+}

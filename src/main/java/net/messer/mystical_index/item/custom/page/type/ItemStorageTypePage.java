@@ -120,7 +120,7 @@ public class ItemStorageTypePage extends TypePageItem {
                 .findFirst();
     }
 
-    private boolean isFiltered(ItemStack book) {
+    public boolean isFiltered(ItemStack book) {
         return !book.getOrCreateSubNbt(FILTERS_TAG).getList(ITEM_FILTERS_TAG, NbtElement.STRING_TYPE).isEmpty();
     }
 

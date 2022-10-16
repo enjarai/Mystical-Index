@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " a ",
+    "gpg",
+    " g "
+  ],
+  "key": {
+    "p": {
+      "item": "mystical_index:empty_page"
+    },
+    "g": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "a": {
+      "item": "minecraft:enchanted_golden_apple"
+    }
+  },
+  "result": {
+    "item": "mystical_index:auto_feeding_attribute_page"
+  }
+}

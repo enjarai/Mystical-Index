@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " c ",
+    "gpg",
+    " g "
+  ],
+  "key": {
+    "p": {
+      "item": "mystical_index:empty_page"
+    },
+    "g": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "c": {
+      "item": "minecraft:chest"
+    }
+  },
+  "result": {
+    "item": "mystical_index:stacks_page"
+  }
+}

@@ -1,7 +1,9 @@
 package net.messer.mystical_index.item.custom.page.attribute;
 
+import net.messer.mystical_index.item.custom.book.MysticalBookItem;
 import net.messer.mystical_index.item.custom.page.AttributePageItem;
 import net.messer.mystical_index.item.custom.page.TypePageItem;
+import net.messer.mystical_index.item.custom.page.type.ItemStorageTypePage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -34,18 +36,23 @@ public class MagnetismAttributePage extends AttributePageItem {
     }
 
     @Override
-    public void book$inventoryTick(ItemStack book, World world, Entity entity, int slot, boolean selected) {
-        super.book$inventoryTick(book, world, entity, slot, selected);
+    public void book$inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        super.book$inventoryTick(stack, world, entity, slot, selected);
 
-        if(entity instanceof PlayerEntity player){
+        if (entity instanceof PlayerEntity player
+                && stack.getItem() instanceof MysticalBookItem book
+                && book.getTypePage(stack) instanceof ItemStorageTypePage typePage
+        ) {
             var pos = player.getPos();
             var target = pos.add(.05, .05, .05);
-            float pickUpRange = 5;
+            var pickUpRange = 5;
             var box = Box.from(target).expand(pickUpRange);
             var entityList = world.getNonSpectatingEntities(ItemEntity.class, box);
             entityList.forEach(item -> {
-                var velocity = item.getPos().relativize(target).normalize().multiply(0.1);
-                item.addVelocity(velocity.x, velocity.y, velocity.z);
+                if (!typePage.isFiltered(stack) || typePage.isFilteredTo(stack, item.getStack())) {
+                    var velocity = item.getPos().relativize(target).normalize().multiply(0.1);
+                    item.addVelocity(velocity.x, velocity.y, velocity.z);
+                }
             });
         }
     }
