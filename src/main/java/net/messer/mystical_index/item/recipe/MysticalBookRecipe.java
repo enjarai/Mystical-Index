@@ -29,13 +29,13 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class MysticalBookRecipe extends SpecialCraftingRecipe {
-    private static final Ingredient BINDING = Ingredient.ofItems(Items.BOOK);
+    private static final Ingredient BINDING = Ingredient.ofItems(Items.LEATHER);
     // Defines how many pages are supported by each catalyst item.
-    private static final Map<Item, Integer> CATALYSTS = Util.make(Maps.newHashMap(), hashMap -> {
-        hashMap.put(Items.AMETHYST_SHARD, 2);
-        hashMap.put(Items.DIAMOND, 4);
-        hashMap.put(Items.NETHERITE_SCRAP, 6);
-    });
+    private static final Map<Item, Integer> CATALYSTS = Map.of(
+        Items.AMETHYST_SHARD, 2,
+        Items.EMERALD, 4,
+        Items.DIAMOND, 6
+    );
     private static final Ingredient CATALYST = Ingredient.ofItems(CATALYSTS.keySet().toArray(new Item[0]));
     private static final Ingredient TYPE_PAGES = Ingredient.ofItems(PageRegistry.getPages(TypePageItem.class).toArray(new Item[0]));
     private static final Ingredient ATTRIBUTE_PAGES = Ingredient.ofItems(PageRegistry.getPages(AttributePageItem.class).toArray(new Item[0]));
@@ -177,9 +177,7 @@ public class MysticalBookRecipe extends SpecialCraftingRecipe {
     @Override
     public DefaultedList<Ingredient> getIngredients() {
         return DefaultedList.copyOf(
-                BINDING, CATALYST, TYPE_PAGES,
-                ATTRIBUTE_PAGES, ATTRIBUTE_PAGES,
-                ATTRIBUTE_PAGES, ACTION_PAGES
+                BINDING, CATALYST
         ); // TODO make sure combinations shown are valid, maybe mixin into patchouli?
     }
 
