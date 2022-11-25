@@ -18,7 +18,6 @@ import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Vec3f;
 
 @Environment(value = EnvType.CLIENT)
 public class MysticalLecternBlockEntityRenderer implements BlockEntityRenderer<MysticalLecternBlockEntity> {
@@ -49,8 +48,8 @@ public class MysticalLecternBlockEntityRenderer implements BlockEntityRenderer<M
         matrices.translate(0.5, 1.0625 + bookHeightOffset, 0.5);
         var facing = blockState.get(LecternBlock.FACING);
         float g = facing.rotateYClockwise().asRotation();
-        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-g));
-        matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(-bookRotation));
+//        matrices.multiply(.POSITIVE_Y.getDegreesQuaternion(-g));
+//        matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(-bookRotation));
 
         var itemCount = be.items.size();
         for (int i = 0; i < itemCount; i++) {
@@ -64,7 +63,7 @@ public class MysticalLecternBlockEntityRenderer implements BlockEntityRenderer<M
             var itemX = ITEMS_RADIUS * Math.cos(animationPos);
             var itemZ = ITEMS_RADIUS * Math.sin(animationPos);
             matrices.translate(itemX, itemX * -0.35, itemZ);
-            matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(anim * 0.05f));
+//            matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(anim * 0.05f));
             matrices.scale(0.75f, 0.75f, 0.75f);
             MinecraftClient.getInstance().getItemRenderer()
                     .renderItem(itemStack, ModelTransformation.Mode.GROUND, light, overlay, matrices, vertexConsumers, 0);
@@ -72,7 +71,7 @@ public class MysticalLecternBlockEntityRenderer implements BlockEntityRenderer<M
             matrices.pop();
         }
 
-        matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(67.5f));
+//        matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(67.5f));
         matrices.translate(0.0, -0.125, 0.0);
         this.book.setPageAngles(0.0f, 0.1f, 0.9f, 1.2f);
         VertexConsumer vertexConsumer = BOOK_TEXTURE.getVertexConsumer(vertexConsumers, RenderLayer::getEntitySolid);

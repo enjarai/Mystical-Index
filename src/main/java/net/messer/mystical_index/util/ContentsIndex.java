@@ -2,7 +2,6 @@ package net.messer.mystical_index.util;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
@@ -62,7 +61,7 @@ public class ContentsIndex implements Iterable<BigStack> {
         Stream<BigStack> stream = getAll().stream();
         if (sorter != null) stream = stream.sorted(sorter);
         return stream
-                .map(bigStack -> new LiteralText(bigStack.getItemStack().getName().getString() + " x" + bigStack.getAmount()))
+                .map(bigStack -> Text.literal(bigStack.getItemStack().getName().getString() + " x" + bigStack.getAmount()))
                 .collect(Collectors.toList());
     }
 

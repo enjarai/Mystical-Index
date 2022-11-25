@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.10-SNAPSHOT'
+	id 'fabric-loom' version '1.0-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -11,13 +11,15 @@ version = project.mod_version
 group = project.maven_group
 
 repositories {
-	maven {
-		url = uri("https://storage.googleapis.com/devan-maven/")
-	}
+	mavenLocal()
 
-	maven { url "https://maven.shedaniel.me/" }
+//	maven {
+//		url = uri("https://storage.googleapis.com/devan-maven/")
+//	}
+
+//	maven { url "https://maven.shedaniel.me/" }
 	maven { url 'https://maven.nucleoid.xyz' }
-	maven { url 'https://maven.blamejared.com' }
+//	maven { url 'https://maven.blamejared.com' }
 }
 
 dependencies {
@@ -26,13 +28,14 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	modApi("me.shedaniel.cloth:cloth-config-fabric:5.3.58") {
-		exclude(group: "net.fabricmc.fabric-api")
-	}
+//	modApi("me.shedaniel.cloth:cloth-config-fabric:5.3.58") {
+//		exclude(group: "net.fabricmc.fabric-api")
+//	}
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modImplementation "vazkii.patchouli:Patchouli:${project.patchouli_version}"
+//	modImplementation "vazkii.patchouli:Patchouli:${project.patchouli_version}"
+	modImplementation "eu.pb4:polymer:${project.polymer_version}"
 }
 
 processResources {

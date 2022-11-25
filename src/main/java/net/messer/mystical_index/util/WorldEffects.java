@@ -9,13 +9,13 @@ import net.messer.mystical_index.util.request.Request;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 public class WorldEffects {
@@ -75,7 +75,7 @@ public class WorldEffects {
             var buf = PacketByteBufs.create();
 
             buf.writeBlockPos(pos);
-            buf.writeIdentifier(Registry.PARTICLE_TYPE.getId(effect.getType()));
+            buf.writeIdentifier(Registries.PARTICLE_TYPE.getId(effect.getType()));
 
             for (ServerPlayerEntity player : PlayerLookup.tracking(serverWorld, pos)) {
                 ServerPlayNetworking.send(player, ClientNetworkListeners.BLOCK_PARTICLES, buf);

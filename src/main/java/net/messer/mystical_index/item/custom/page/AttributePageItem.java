@@ -6,10 +6,9 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class AttributePageItem extends PageItem implements TypeDependentPage, ActionDependablePage {
@@ -43,7 +42,7 @@ public abstract class AttributePageItem extends PageItem implements TypeDependen
 
     @Nullable
     public MutableText getAttributeDisplayName() {
-        return new TranslatableText("item.mystical_index.page.tooltip.attribute." + id)
+        return Text.translatable("item.mystical_index.page.tooltip.attribute." + id)
                 .fillStyle(Style.EMPTY.withColor(getColor()));
     }
 

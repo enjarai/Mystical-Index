@@ -2,8 +2,7 @@ package net.messer.mystical_index.util.request;
 
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemStack;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public record IndexSource(ItemStack book, @Nullable BlockEntity blockEntity) {
     public ItemStack getBook() {

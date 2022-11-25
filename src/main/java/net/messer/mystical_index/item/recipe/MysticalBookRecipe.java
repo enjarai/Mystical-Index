@@ -1,6 +1,5 @@
 package net.messer.mystical_index.item.recipe;
 
-import com.google.common.collect.Maps;
 import net.messer.mystical_index.item.ModItems;
 import net.messer.mystical_index.item.ModRecipes;
 import net.messer.mystical_index.item.custom.book.MysticalBookItem;
@@ -19,10 +18,10 @@ import net.minecraft.nbt.NbtString;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialCraftingRecipe;
+import net.minecraft.recipe.book.CraftingRecipeCategory;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -41,8 +40,8 @@ public class MysticalBookRecipe extends SpecialCraftingRecipe {
     private static final Ingredient ATTRIBUTE_PAGES = Ingredient.ofItems(PageRegistry.getPages(AttributePageItem.class).toArray(new Item[0]));
     private static final Ingredient ACTION_PAGES = Ingredient.ofItems(PageRegistry.getPages(ActionPageItem.class).toArray(new Item[0]));
 
-    public MysticalBookRecipe(Identifier identifier) {
-        super(identifier);
+    public MysticalBookRecipe(Identifier identifier, CraftingRecipeCategory craftingRecipeCategory) {
+        super(identifier, craftingRecipeCategory);
     }
 
     @Override
@@ -139,7 +138,7 @@ public class MysticalBookRecipe extends SpecialCraftingRecipe {
                 pageItem.onCraftToBook(stack, book);
                 typeColor = pageItem.getColor();
                 if (pageItem.mixColor(stack)) otherColors.add(typeColor);
-                nbt.put(MysticalBookItem.TYPE_PAGE_TAG, NbtString.of(Registry.ITEM.getId(pageItem).toString()));
+                nbt.put(MysticalBookItem.TYPE_PAGE_TAG, NbtString.of(Registries.ITEM.getId(pageItem).toString()));
                 break;
             }
         }
@@ -150,7 +149,7 @@ public class MysticalBookRecipe extends SpecialCraftingRecipe {
             if (stack.getItem() instanceof AttributePageItem pageItem) {
                 pageItem.onCraftToBook(stack, book);
                 otherColors.add(pageItem.getColor());
-                pagesList.add(NbtString.of(Registry.ITEM.getId(pageItem).toString()));
+                pagesList.add(NbtString.of(Registries.ITEM.getId(pageItem).toString()));
             }
         }
         nbt.put(MysticalBookItem.ATTRIBUTE_PAGES_TAG, pagesList);
@@ -160,7 +159,7 @@ public class MysticalBookRecipe extends SpecialCraftingRecipe {
             if (stack.getItem() instanceof ActionPageItem pageItem) {
                 pageItem.onCraftToBook(stack, book);
                 otherColors.add(pageItem.getColor());
-                nbt.put(MysticalBookItem.ACTION_PAGE_TAG, NbtString.of(Registry.ITEM.getId(pageItem).toString()));
+                nbt.put(MysticalBookItem.ACTION_PAGE_TAG, NbtString.of(Registries.ITEM.getId(pageItem).toString()));
                 break;
             }
         }
