@@ -5,7 +5,7 @@
       "item": "minecraft:book"
     },
     {
-      "item": "mystical_index:tattered_page"
+      "item": "mystical_index:empty_page"
     }
   ],
   "book": "guide_book"

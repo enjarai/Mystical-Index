@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "mystical_index:tattered_page"
+    },
+    {
+      "item": "minecraft:redstone_dust"
+    }
+  ],
+  "result": {
+    "item": "mystical_index:empty_page"
+  }
+}

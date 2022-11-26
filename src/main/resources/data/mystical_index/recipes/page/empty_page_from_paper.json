@@ -2,7 +2,10 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "mystical_index:tattered_page"
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "minecraft:redstone_dust"
     },
     {
       "item": "mystical_index:ender_pearl_shard"
