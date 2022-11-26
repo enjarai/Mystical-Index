@@ -21,7 +21,9 @@ public class MysticalIndex implements ModInitializer {
 	public static final Logger LOGGER = LogManager.getLogger("mystical_index");
 	public static final String MOD_ID = "mystical_index";
 
-	@Override
+    public static final Identifier BLOCK_PARTICLES_CHANNEL = id("block_particles");
+
+    @Override
 	public void onInitialize() {
 		ModItems.registerModItems();
 		ModBlocks.registerModBlocks();
