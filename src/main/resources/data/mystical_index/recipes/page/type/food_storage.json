@@ -1,13 +1,13 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " f ",
+    "pfp",
     "ipi",
     " i "
   ],
   "key": {
     "p": {
-      "item": "mystical_index:item_storage_type_page"
+      "item": "mystical_index:empty_page"
     },
     "i": {
       "item": "minecraft:gold_nugget"
@@ -17,6 +17,7 @@
     }
   },
   "result": {
-    "item": "mystical_index:food_storage_type_page"
+    "item": "mystical_index:food_storage_type_page",
+    "count": 3
   }
 }

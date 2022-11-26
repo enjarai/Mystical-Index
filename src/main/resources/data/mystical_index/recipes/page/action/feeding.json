@@ -1,7 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " a ",
+    "pap",
     "rpr",
     " r "
   ],
@@ -17,6 +17,7 @@
     }
   },
   "result": {
-    "item": "mystical_index:feeding_action_page"
+    "item": "mystical_index:feeding_action_page",
+    "count": 3
   }
 }

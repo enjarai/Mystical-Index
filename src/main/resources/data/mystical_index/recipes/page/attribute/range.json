@@ -1,7 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " e ",
+    "pep",
     "gpg",
     " g "
   ],
@@ -17,6 +17,7 @@
     }
   },
   "result": {
-    "item": "mystical_index:range_page"
+    "item": "mystical_index:range_page",
+    "count": 3
   }
 }

@@ -1,7 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " d ",
+    "pdp",
     "epe",
     " e "
   ],
@@ -17,6 +17,7 @@
     }
   },
   "result": {
-    "item": "mystical_index:indexing_type_page"
+    "item": "mystical_index:indexing_type_page",
+    "count": 3
   }
 }

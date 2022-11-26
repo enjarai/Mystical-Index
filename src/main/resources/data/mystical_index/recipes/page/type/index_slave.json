@@ -1,13 +1,13 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " q ",
+    "pqp",
     "epe",
     " e "
   ],
   "key": {
     "p": {
-      "item": "mystical_index:indexing_type_page"
+      "item": "mystical_index:empty_page"
     },
     "q": {
       "item": "minecraft:quartz"
@@ -17,6 +17,7 @@
     }
   },
   "result": {
-    "item": "mystical_index:index_slave_type_page"
+    "item": "mystical_index:index_slave_type_page",
+    "count": 3
   }
 }
