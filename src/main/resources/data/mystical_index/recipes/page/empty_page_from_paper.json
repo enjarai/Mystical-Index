@@ -5,13 +5,32 @@
       "item": "minecraft:paper"
     },
     {
-      "item": "minecraft:redstone"
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "minecraft:paper"
     },
     {
       "item": "mystical_index:ender_pearl_shard"
     }
   ],
   "result": {
-    "item": "mystical_index:empty_page"
+    "item": "mystical_index:empty_page",
+    "count": 8
   }
 }

@@ -5,10 +5,20 @@
       "item": "mystical_index:tattered_page"
     },
     {
+      "item": "mystical_index:tattered_page"
+    },
+    {
+      "item": "mystical_index:tattered_page"
+    },
+    {
+      "item": "mystical_index:tattered_page"
+    },
+    {
       "item": "minecraft:redstone"
     }
   ],
   "result": {
-    "item": "mystical_index:empty_page"
+    "item": "mystical_index:empty_page",
+    "count": 4
   }
 }
