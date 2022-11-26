@@ -1,5 +1,6 @@
 package net.messer.mystical_index.block.custom;
 
+import eu.pb4.polymer.api.block.PolymerBlock;
 import net.messer.mystical_index.block.ModBlockEntities;
 import net.messer.mystical_index.block.entity.MysticalLecternBlockEntity;
 import net.messer.mystical_index.client.Particles;
@@ -32,7 +33,7 @@ import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("deprecation")
-public class MysticalLecternBlock extends LecternBlock {
+public class MysticalLecternBlock extends LecternBlock implements PolymerBlock {
     private static final VoxelShape LECTERN_INSIDE_SHAPE = Block.createCuboidShape(2.0, 11.0, 2.0, 14.0, 16.0, 14.0);
     private static final VoxelShape LECTERN_ABOVE_SHAPE = Block.createCuboidShape(0.0, 16.0, 0.0, 16.0, 32.0, 16.0);
     public static final VoxelShape LECTERN_INPUT_AREA_SHAPE = VoxelShapes.union(LECTERN_INSIDE_SHAPE, LECTERN_ABOVE_SHAPE);
@@ -139,5 +140,17 @@ public class MysticalLecternBlock extends LecternBlock {
                 book.lectern$onPlaced(lectern);
             }
         }
+    }
+
+    @Override
+    public Block getPolymerBlock(BlockState state) {
+        return Blocks.LECTERN;
+    }
+
+    @Override
+    public BlockState getPolymerBlockState(BlockState state) {
+        return Blocks.LECTERN.getDefaultState()
+                .with(LecternBlock.FACING, state.get(FACING))
+                .with(LecternBlock.HAS_BOOK, state.get(HAS_BOOK));
     }
 }

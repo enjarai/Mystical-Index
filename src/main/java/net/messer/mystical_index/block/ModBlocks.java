@@ -14,8 +14,8 @@ import net.minecraft.util.Identifier;
 
 public class ModBlocks {
 
-    public static final Block LIBRARY = registerBlock("library",
-            new LibraryBlock(FabricBlockSettings.of(Material.WOOD).strength(1.5f)), true);
+//    public static final Block LIBRARY = registerBlock("library",
+//            new LibraryBlock(FabricBlockSettings.of(Material.WOOD).strength(1.5f)), true);
 
     public static final Block MYSTICAL_LECTERN = registerBlock("mystical_lectern",
             new MysticalLecternBlock(FabricBlockSettings.of(Material.WOOD).strength(1.5f)), false);
