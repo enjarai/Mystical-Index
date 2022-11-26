@@ -5,7 +5,7 @@ import net.messer.mystical_index.util.ChatInterception;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 public class InterceptionWidget extends DrawableHelper {
     private static final int WIDTH = 200;
@@ -36,7 +36,7 @@ public class InterceptionWidget extends DrawableHelper {
         for (int i = 0; i < 3; i++) {
             MinecraftClient.getInstance().textRenderer.draw(
                     matrices,
-                    new TranslatableText("gui.mystical_index.intercepting." + interceptionMode.name + "[" + i + "]"),
+                    Text.translatable("gui.mystical_index.intercepting." + interceptionMode.name + "[" + i + "]"),
                     left + 40, top + 4 + i * 12,
                     0xffffffff
             );

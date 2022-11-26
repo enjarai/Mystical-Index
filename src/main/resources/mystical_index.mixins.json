@@ -7,7 +7,6 @@
     "EnderPearlEntityMixin",
     "ItemUsageContextAccessor",
     "PlayerInventoryMixin",
-    "ServerPlayNetworkHandlerMixin",
     "compat.patchouli.LecternEventHandlerMixin"
   ],
   "client": [

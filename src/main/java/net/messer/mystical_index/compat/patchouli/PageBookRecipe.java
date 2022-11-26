@@ -2,15 +2,10 @@ package net.messer.mystical_index.compat.patchouli;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.messer.mystical_index.MysticalIndex;
-import net.messer.mystical_index.item.ModRecipes;
 import net.messer.mystical_index.item.recipe.MysticalBookRecipe;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.ShapedRecipe;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.collection.DefaultedList;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
 
@@ -30,7 +25,7 @@ public class PageBookRecipe extends PageWithText {
         int iconY = recipeY + 2;
         DrawableHelper.drawTexture(ms, iconX, iconY, 0, 64, 11, 11, 128, 256);
         if (parent.isMouseInRelativeRange(mouseX, mouseY, iconX, iconY, 11, 11)) {
-            parent.setTooltip(new TranslatableText("patchouli.gui.lexicon.shapeless"));
+            parent.setTooltip(Text.translatable("patchouli.gui.lexicon.shapeless"));
         }
 
         parent.drawCenteredStringNoShadow(ms, getTitle().asOrderedText(), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
@@ -63,7 +58,7 @@ public class PageBookRecipe extends PageWithText {
     }
 
     public Text getTitle() {
-        return new TranslatableText("item.mystical_index.mystical_book");
+        return Text.translatable("item.mystical_index.mystical_book");
     }
 
     protected int getX() {

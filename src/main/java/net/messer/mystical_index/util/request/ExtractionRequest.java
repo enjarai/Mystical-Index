@@ -6,7 +6,6 @@ import net.messer.mystical_index.item.custom.page.type.ItemStorageTypePage;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 import java.util.List;
 import java.util.Locale;
@@ -131,8 +130,8 @@ public class ExtractionRequest extends Request {
 
     public Text getMessage() {
         if (hasMatched())
-            return new TranslatableText("chat.mystical_index.extracted", getTotalAmountAffected(), getMatchedItem().getName().getString());
-        return new TranslatableText("chat.mystical_index.no_match");
+            return Text.translatable("chat.mystical_index.extracted", getTotalAmountAffected(), getMatchedItem().getName().getString());
+        return Text.translatable("chat.mystical_index.no_match");
     }
 
     public List<ItemStack> getAffectedStacks() {

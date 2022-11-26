@@ -30,7 +30,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ClickType;
 import net.minecraft.util.Formatting;
@@ -39,8 +38,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -379,13 +378,13 @@ public class IndexingTypePage extends TypePageItem {
         var linksMax = getMaxLinks(book);
         double linksUsedRatio = (double) linksUsed / linksMax;
 
-        properties.add(new TranslatableText("item.mystical_index.mystical_book.tooltip.type.indexing.range",
+        properties.add(Text.translatable("item.mystical_index.mystical_book.tooltip.type.indexing.range",
                 getMaxRange(book, false))
                 .formatted(Formatting.YELLOW));
-        properties.add(new TranslatableText("item.mystical_index.mystical_book.tooltip.type.indexing.links",
+        properties.add(Text.translatable("item.mystical_index.mystical_book.tooltip.type.indexing.links",
                 linksUsed, linksMax)
                 .formatted(Colors.colorByRatio(linksUsedRatio)));
-        properties.add(new TranslatableText("item.mystical_index.mystical_book.tooltip.type.indexing.linked_range",
+        properties.add(Text.translatable("item.mystical_index.mystical_book.tooltip.type.indexing.linked_range",
                 getMaxRange(book, true))
                 .formatted(Formatting.YELLOW));
     }
@@ -451,11 +450,11 @@ public class IndexingTypePage extends TypePageItem {
             var links = getLinksMultiplier(stack);
             var linkedRange = getRangeMultiplier(stack, true);
 
-            if (range != 1) tooltip.add(new TranslatableText("item.mystical_index.page.tooltip.type.indexing.range", range)
+            if (range != 1) tooltip.add(Text.translatable("item.mystical_index.page.tooltip.type.indexing.range", range)
                     .formatted(Formatting.DARK_GREEN));
-            if (links != 1) tooltip.add(new TranslatableText("item.mystical_index.page.tooltip.type.indexing.links", links)
+            if (links != 1) tooltip.add(Text.translatable("item.mystical_index.page.tooltip.type.indexing.links", links)
                     .formatted(Formatting.DARK_GREEN));
-            if (linkedRange != 1) tooltip.add(new TranslatableText("item.mystical_index.page.tooltip.type.indexing.linked_range", linkedRange)
+            if (linkedRange != 1) tooltip.add(Text.translatable("item.mystical_index.page.tooltip.type.indexing.linked_range", linkedRange)
                     .formatted(Formatting.DARK_GREEN));
         }
     }

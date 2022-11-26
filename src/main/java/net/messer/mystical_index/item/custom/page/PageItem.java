@@ -10,15 +10,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 import static net.messer.mystical_index.item.ModItems.MYSTICAL_INDEX_GROUP;
@@ -96,7 +94,7 @@ public abstract class PageItem extends Item {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
 
-        tooltip.add(new LiteralText(""));
-        tooltip.add(new TranslatableText("item.mystical_index.page.tooltip.when_applied").formatted(Formatting.GRAY));
+        tooltip.add(Text.literal(""));
+        tooltip.add(Text.translatable("item.mystical_index.page.tooltip.when_applied").formatted(Formatting.GRAY));
     }
 }

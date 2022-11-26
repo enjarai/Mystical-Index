@@ -24,17 +24,15 @@ import net.minecraft.nbt.NbtString;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -384,13 +382,13 @@ public class ItemStorageTypePage extends TypePageItem {
     @Override
     public void book$appendTooltip(ItemStack book, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         if (isFiltered(book)) {
-            tooltip.add(new LiteralText(""));
-            tooltip.add(new TranslatableText("item.mystical_index.mystical_book.tooltip.type.item_storage.filtered")
+            tooltip.add(Text.literal(""));
+            tooltip.add(Text.translatable("item.mystical_index.mystical_book.tooltip.type.item_storage.filtered")
                     .formatted(Formatting.GRAY));
 
             tooltip.addAll(getFilteredItems(book).stream()
                     .map(Item::getName)
-                    .map(text -> new LiteralText(" ").append(text).formatted(Formatting.GRAY))
+                    .map(text -> Text.literal(" ").append(text).formatted(Formatting.GRAY))
                     .toList()
             );
         }
@@ -407,11 +405,11 @@ public class ItemStorageTypePage extends TypePageItem {
         var typesTotal = getMaxTypes(book);
         double typesFullRatio = (double) typesOccupied / typesTotal;
 
-        tooltip.add(new TranslatableText("item.mystical_index.mystical_book.tooltip.type.item_storage.stacks",
+        tooltip.add(Text.translatable("item.mystical_index.mystical_book.tooltip.type.item_storage.stacks",
                 stacksOccupied, stacksTotal)
                 .formatted(stacksFullRatio < 0.75 ? Formatting.GREEN :
                         stacksFullRatio == 1 ? Formatting.RED : Formatting.GOLD));
-        tooltip.add(new TranslatableText("item.mystical_index.mystical_book.tooltip.type.item_storage.types",
+        tooltip.add(Text.translatable("item.mystical_index.mystical_book.tooltip.type.item_storage.types",
                 typesOccupied, typesTotal)
                 .formatted(typesFullRatio < 0.75 ? Formatting.GREEN :
                         typesFullRatio == 1 ? Formatting.RED : Formatting.GOLD));
@@ -505,9 +503,9 @@ public class ItemStorageTypePage extends TypePageItem {
             var stacks = getStacksMultiplier(stack);
             var types = getTypesMultiplier(stack);
 
-            if (stacks != 1) tooltip.add(new TranslatableText("item.mystical_index.page.tooltip.type.item_storage.stacks", stacks)
+            if (stacks != 1) tooltip.add(Text.translatable("item.mystical_index.page.tooltip.type.item_storage.stacks", stacks)
                     .formatted(Formatting.DARK_GREEN));
-            if (types != 1) tooltip.add(new TranslatableText("item.mystical_index.page.tooltip.type.item_storage.types", types)
+            if (types != 1) tooltip.add(Text.translatable("item.mystical_index.page.tooltip.type.item_storage.types", types)
                     .formatted(Formatting.DARK_GREEN));
         }
     }

@@ -5,10 +5,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class ActionPageItem extends PageItem implements TypeDependentPage, InteractingPage {
@@ -17,7 +16,7 @@ public abstract class ActionPageItem extends PageItem implements TypeDependentPa
     }
 
     public MutableText getActionDisplayName() {
-        return new TranslatableText("item.mystical_index.page.tooltip.action." + id)
+        return Text.translatable("item.mystical_index.page.tooltip.action." + id)
                 .fillStyle(Style.EMPTY.withColor(getColor()));
     }
 

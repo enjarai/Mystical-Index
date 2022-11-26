@@ -16,7 +16,7 @@ public class ModDataGen implements DataGeneratorEntrypoint {
 
     private static class ModTagGenerator extends FabricTagProvider<Item> {
         public ModTagGenerator(FabricDataGenerator dataGenerator) {
-            super(dataGenerator, Registry.ITEM, MysticalIndex.MOD_ID);
+            super(dataGenerator, Registry.ITEM);
         }
 
         private static final TagKey<Item> BLOCK_ITEMS = TagKey.of(Registry.ITEM_KEY, MysticalIndex.id("block_items"));

@@ -20,15 +20,13 @@ import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -260,8 +258,8 @@ public class MysticalBookItem extends Item {
 
         forEachPage(book, page -> page.book$appendTooltip(book, world, tooltip, context));
 
-        tooltip.add(new LiteralText(""));
-        tooltip.add(new TranslatableText("item.mystical_index.mystical_book.tooltip.properties")
+        tooltip.add(Text.literal(""));
+        tooltip.add(Text.translatable("item.mystical_index.mystical_book.tooltip.properties")
                 .formatted(Formatting.GRAY));
 
         forEachPage(book, page -> page.book$appendPropertiesTooltip(book, world, tooltip, context));
