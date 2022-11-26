@@ -1,5 +1,6 @@
 package net.messer.mystical_index.item.recipe;
 
+import net.messer.mystical_index.MysticalIndex;
 import net.messer.mystical_index.item.ModItems;
 import net.messer.mystical_index.item.ModRecipes;
 import net.messer.mystical_index.item.custom.book.MysticalBookItem;
@@ -130,6 +131,14 @@ public class MysticalBookRecipe extends SpecialCraftingRecipe {
         var nbt = book.getOrCreateNbt();
         var typeColor = -1;
         var otherColors = new ArrayList<Integer>();
+
+        for (int i = 0; i < craftingInventory.size(); ++i) {
+            var stack = craftingInventory.getStack(i);
+            if (CATALYST.test(stack)) {
+                nbt.putString(MysticalBookItem.CATALYST_TAG, Registry.ITEM.getId(stack.getItem()).toString());
+                break;
+            }
+        }
 
         for (int i = 0; i < craftingInventory.size(); ++i) {
             var stack = craftingInventory.getStack(i);

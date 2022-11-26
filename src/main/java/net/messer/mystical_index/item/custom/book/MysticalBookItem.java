@@ -24,6 +24,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,6 +37,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class MysticalBookItem extends Item {
+    public static final String CATALYST_TAG = "catalyst";
     public static final String TYPE_PAGE_TAG = "type_page";
     public static final String ATTRIBUTE_PAGES_TAG = "attribute_pages";
     public static final String ACTION_PAGE_TAG = "action_page";
@@ -51,6 +53,10 @@ public class MysticalBookItem extends Item {
 
     public void setColor(ItemStack stack, int color) {
         stack.getOrCreateNbt().putInt(COLOR_TAG, color);
+    }
+
+    public Item getCatalyst(ItemStack book) {
+        return Registry.ITEM.get(new Identifier(book.getOrCreateNbt().getString(CATALYST_TAG)));
     }
 
     /**
@@ -84,7 +90,7 @@ public class MysticalBookItem extends Item {
             return null;
 
         for (AttributePageItem page : attributePagesList) {
-            if (page.id == id) {
+            if (Objects.equals(page.id, id)) {
                 return page;
             }
         }

@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_16",
   "mixins": [
     "EnderPearlEntityMixin",
+    "ItemEntityMixin",
     "ItemUsageContextAccessor",
     "PlayerInventoryMixin",
     "compat.patchouli.LecternEventHandlerMixin"
