@@ -18,18 +18,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 
-@Mixin(ItemEntity.class)
+@Mixin(value = ItemEntity.class, priority = 800)
 public abstract class ItemEntityMixin {
     // Shamelessly stolen from Spectrum
     // See: https://github.com/DaFuqs/Spectrum/blob/1.19/src/main/java/de/dafuqs/spectrum/mixin/ItemEntityMixin.java
-    @Inject(at = @At("HEAD"), method = "damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "damage(Lnet/minecraft/entity/damage/DamageSource;F)Z")
     public void spectrumItemStackDamageActions(DamageSource source, float amount, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
         if (DamageSource.ANVIL.equals(source)) {
             doAnvilSmash(amount);
-
-            // prevent the source itemStack taking damage.
-            // ItemEntities have a health of 5 and can actually get killed by a falling anvil
-            callbackInfoReturnable.setReturnValue(true);
         }
     }
 

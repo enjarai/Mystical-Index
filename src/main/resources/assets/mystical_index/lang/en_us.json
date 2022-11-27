@@ -10,6 +10,7 @@
   "chat.mystical_index.no_match": "No match for '%s'",
   "chat.mystical_index.extracted": "Extracted %s of %s",
   "chat.mystical_index.listing": "Matching items:",
+  "chat.mystical_index.no_results": "None",
   "chat.mystical_index.copied_filters": "Copied filters",
   "item.mystical_index.mystical_book": "Mystical Book",
   "item.mystical_index.mystical_book.type.item_storage": "Book of Item Storage",

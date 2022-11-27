@@ -22,17 +22,19 @@ public class ListingRequest extends QueryBasedRequest {
 
     @Override
     public Text getMessage() {
-        if (!stacks.getAll().isEmpty()) {
-            var result = Text.translatable("chat.mystical_index.listing");
-            for (BigStack stack : stacks.getAll()) {
-                result
-                        .append("\n  ")
-                        .append(stack.getAmount() + "x ")
-                        .append(stack.getItemStack().getName());
-            }
-            return result;
+        var result = Text.translatable("chat.mystical_index.listing");
+        for (BigStack stack : stacks.getAll()) {
+            result
+                    .append("\n  ")
+                    .append(stack.getAmount() + "x ")
+                    .append(stack.getItemStack().getName());
         }
-        return Text.translatable("chat.mystical_index.no_match", getFullQuery());
+        if (stacks.getAll().size() < 1) {
+            result
+                    .append("\n  ")
+                    .append(Text.translatable("chat.mystical_index.no_results"));
+        }
+        return result;
     }
 
     @SuppressWarnings("ConstantConditions")
