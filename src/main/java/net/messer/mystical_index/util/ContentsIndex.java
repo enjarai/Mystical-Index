@@ -5,12 +5,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class ContentsIndex implements Iterable<BigStack> {
     private final ArrayList<BigStack> contents;
@@ -27,7 +25,11 @@ public class ContentsIndex implements Iterable<BigStack> {
         contentsIndex.contents.forEach(this::add);
     }
 
-    private void add(BigStack bigStack) {
+    public void merge(Stream<BigStack> stream) {
+        stream.forEach(this::add);
+    }
+
+    public void add(BigStack bigStack) {
         add(bigStack.getItemStack(), bigStack.getAmount());
     }
 
@@ -73,5 +75,9 @@ public class ContentsIndex implements Iterable<BigStack> {
     @Override
     public Iterator<BigStack> iterator() {
         return contents.iterator();
+    }
+
+    public Stream<BigStack> stream() {
+        return StreamSupport.stream(spliterator(), false);
     }
 }

@@ -6,10 +6,7 @@ import net.messer.mystical_index.item.custom.page.TypePageItem;
 import net.messer.mystical_index.util.Colors;
 import net.messer.mystical_index.util.LecternTracker;
 import net.messer.mystical_index.util.WorldEffects;
-import net.messer.mystical_index.util.request.ExtractionRequest;
-import net.messer.mystical_index.util.request.IndexInteractable;
-import net.messer.mystical_index.util.request.InsertionRequest;
-import net.messer.mystical_index.util.request.LibraryIndex;
+import net.messer.mystical_index.util.request.*;
 import net.messer.mystical_index.util.state.PageLecternState;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
@@ -164,8 +161,8 @@ public class IndexingTypePage extends TypePageItem {
         return request;
     }
 
-    public ExtractionRequest tryExtractItemStacks(LibraryIndex index, String message, Vec3d pos) {
-        ExtractionRequest request = ExtractionRequest.get(message);
+    public QueryBasedRequest tryQueryItemStacks(LibraryIndex index, String message, Vec3d pos) {
+        QueryBasedRequest request = QueryBasedRequest.get(message);
         request.setSourcePosition(pos);
         request.setBlockAffectedCallback(WorldEffects::extractionParticles);
 
@@ -271,9 +268,9 @@ public class IndexingTypePage extends TypePageItem {
     @Override
     public void book$onInterceptedChatMessage(ItemStack book, ServerPlayerEntity player, String message) {
         var index = getIndex(book, player.world, player.getBlockPos());
-        var request = tryExtractItemStacks(index, message, player.getPos().add(0, 1, 0));
+        QueryBasedRequest request = tryQueryItemStacks(index, message, player.getPos().add(0, 1, 0));
 
-        for (ItemStack stack : request.getAffectedStacks()) {
+        for (ItemStack stack : request.getReturnedStacks()) {
             player.getInventory().offerOrDrop(stack);
         }
 
@@ -297,10 +294,10 @@ public class IndexingTypePage extends TypePageItem {
         var blockPos = lectern.getPos();
 
         var index = getInteractionLecternIndex(lectern);
-        var request = tryExtractItemStacks(index, message, Vec3d.ofCenter(blockPos));
+        QueryBasedRequest request = tryQueryItemStacks(index, message, Vec3d.ofCenter(blockPos));
 
         var itemPos = Vec3d.ofCenter(blockPos, 1);
-        for (ItemStack stack : request.getAffectedStacks()) {
+        for (ItemStack stack : request.getReturnedStacks()) {
             ItemEntity itemEntity = new ItemEntity(world, itemPos.getX(), itemPos.getY(), itemPos.getZ(), stack);
             itemEntity.setToDefaultPickupDelay();
             itemEntity.setVelocity(Vec3d.ZERO);

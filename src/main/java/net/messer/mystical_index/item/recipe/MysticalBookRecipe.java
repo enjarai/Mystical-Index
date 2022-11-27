@@ -1,6 +1,5 @@
 package net.messer.mystical_index.item.recipe;
 
-import net.messer.mystical_index.MysticalIndex;
 import net.messer.mystical_index.item.ModItems;
 import net.messer.mystical_index.item.ModRecipes;
 import net.messer.mystical_index.item.custom.book.MysticalBookItem;

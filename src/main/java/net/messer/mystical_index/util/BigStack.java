@@ -32,6 +32,14 @@ public class BigStack {
         return itemStack.getItem();
     }
 
+    public boolean canCombine(BigStack other) {
+        return canCombine(other.getItemStack());
+    }
+
+    public boolean canCombine(ItemStack other) {
+        return ItemStack.canCombine(itemStack, other);
+    }
+
     public void increment(int amount) {
         this.amount += amount;
     }

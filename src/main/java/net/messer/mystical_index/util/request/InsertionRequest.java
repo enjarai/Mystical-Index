@@ -18,7 +18,7 @@ public class InsertionRequest extends Request {
     }
 
     @Override
-    public void apply(LibraryIndex index, boolean apply) {
+    public void apply(LibraryIndex index) {
         var sources = new ArrayList<>(index.getSources());
 
         // Sort sources by priority.
