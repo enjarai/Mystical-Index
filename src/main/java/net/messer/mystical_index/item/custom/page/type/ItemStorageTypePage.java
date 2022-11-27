@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import net.messer.mystical_index.MysticalIndex;
 import net.messer.mystical_index.block.entity.MysticalLecternBlockEntity;
 import net.messer.mystical_index.client.tooltip.ItemStorageTooltipData;
+import net.messer.mystical_index.item.custom.book.MysticalBookItem;
 import net.messer.mystical_index.item.custom.page.AttributePageItem;
 import net.messer.mystical_index.item.custom.page.TypePageItem;
 import net.messer.mystical_index.util.BigStack;
@@ -150,6 +151,18 @@ public class ItemStorageTypePage extends TypePageItem {
     public void removeFilteredItem(ItemStack book, int i) {
         NbtCompound filters = book.getOrCreateSubNbt(FILTERS_TAG);
         filters.getList(ITEM_FILTERS_TAG, NbtElement.STRING_TYPE).remove(i);
+    }
+
+    public void clearFilteredItems(ItemStack book) {
+        NbtCompound filters = book.getOrCreateSubNbt(FILTERS_TAG);
+        filters.put(ITEM_FILTERS_TAG, new NbtList());
+    }
+
+    public void setFilteredItems(ItemStack book, List<Item> items) {
+        NbtCompound filters = book.getOrCreateSubNbt(FILTERS_TAG);
+        NbtList itemFilters = new NbtList();
+        items.forEach(item -> itemFilters.add(NbtString.of(Registry.ITEM.getId(item).toString())));
+        filters.put(ITEM_FILTERS_TAG, itemFilters);
     }
 
     protected boolean canInsert(ItemStack book, ItemStack itemStack) {
@@ -439,25 +452,36 @@ public class ItemStorageTypePage extends TypePageItem {
         var handStack = player.getStackInHand(hand);
         var book = lectern.getBook();
 
-        if (!(canInsert(book, handStack) || handStack.isEmpty())) return ActionResult.CONSUME;
-
-        var filters = getFilteredItems(book);
-        var i = handStack.isEmpty() ? filters.size() - 1 : filters.indexOf(handStack.getItem());
-
-        if (i == -1) {
-            if (handStack.isEmpty()) return ActionResult.CONSUME;
-
-            addFilteredItem(book, handStack.getItem());
-            lectern.items.add(handStack.getItem().getDefaultStack());
+        if (handStack.getItem() instanceof MysticalBookItem bookItem) {
+            if (bookItem.getTypePage(handStack) instanceof ItemStorageTypePage handPage) {
+                var ownFilters = getFilteredItems(book);
+                handPage.setFilteredItems(handStack, ownFilters);
+                player.sendMessage(Text.translatable("chat.mystical_index.copied_filters"), true);
+                return ActionResult.SUCCESS;
+            }
         } else {
-            removeFilteredItem(book, i);
-            lectern.items.remove(i);
+            if (!(canInsert(book, handStack) || handStack.isEmpty())) return ActionResult.CONSUME;
+
+            var filters = getFilteredItems(book);
+            var i = handStack.isEmpty() ? filters.size() - 1 : filters.indexOf(handStack.getItem());
+
+            if (i == -1) {
+                if (handStack.isEmpty()) return ActionResult.CONSUME;
+
+                addFilteredItem(book, handStack.getItem());
+                lectern.items.add(handStack.getItem().getDefaultStack());
+            } else {
+                removeFilteredItem(book, i);
+                lectern.items.remove(i);
+            }
+
+            lectern.markDirty();
+            world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
+
+            return ActionResult.success(world.isClient());
         }
 
-        lectern.markDirty();
-        world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
-
-        return ActionResult.success(world.isClient());
+        return ActionResult.PASS;
     }
 
     @Override
