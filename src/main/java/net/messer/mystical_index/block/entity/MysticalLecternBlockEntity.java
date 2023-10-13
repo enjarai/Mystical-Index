@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 import static net.minecraft.block.LecternBlock.HAS_BOOK;
 
-public class MysticalLecternBlockEntity extends LecternBlockEntity { // TODO seperate IndexingBlockEntity
+public class MysticalLecternBlockEntity extends LecternBlockEntity { // TODO separate IndexingBlockEntity
     public static final double LECTERN_DETECTION_RADIUS = 2d;
 
     public ArrayList<ItemStack> items = new ArrayList<>();

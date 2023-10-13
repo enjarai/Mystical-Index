@@ -1,4 +1,4 @@
-package net.messer.mystical_index.mixin;
+package net.messer.mystical_index.mixin.accessor;
 
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.util.hit.BlockHitResult;

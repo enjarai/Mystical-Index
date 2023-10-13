@@ -1,6 +1,6 @@
 package net.messer.mystical_index.util;
 
-import net.messer.mystical_index.mixin.ItemUsageContextAccessor;
+import net.messer.mystical_index.mixin.accessor.ItemUsageContextAccessor;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;

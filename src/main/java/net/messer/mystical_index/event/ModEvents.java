@@ -2,7 +2,6 @@ package net.messer.mystical_index.event;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
-import net.messer.mystical_index.block.entity.LibraryBlockEntity;
 import net.messer.mystical_index.block.entity.MysticalLecternBlockEntity;
 import net.messer.mystical_index.item.ModItems;
 import net.messer.mystical_index.item.custom.book.MysticalBookItem;
@@ -26,7 +25,7 @@ public class ModEvents {
     }
 
     private static void onLoadBlockEntity(BlockEntity blockEntity, ServerWorld world) {
-        if (blockEntity instanceof LibraryBlockEntity library) {
+        if (blockEntity instanceof IndexInteractable library) {
             LecternTracker.tryRegisterToLectern(library, false);
         }
     }

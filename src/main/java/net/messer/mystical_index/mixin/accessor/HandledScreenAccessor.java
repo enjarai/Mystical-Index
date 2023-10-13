@@ -1,4 +1,4 @@
-package net.messer.mystical_index.mixin;
+package net.messer.mystical_index.mixin.accessor;
 
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.screen.ScreenHandler;

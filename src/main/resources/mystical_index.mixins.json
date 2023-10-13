@@ -4,16 +4,20 @@
   "package": "net.messer.mystical_index.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "ItemEntityAccessor",
     "ItemEntityMixin",
-    "ItemUsageContextAccessor",
     "PlayerInventoryMixin",
-    "compat.patchouli.LecternEventHandlerMixin"
+    "accessor.ItemEntityAccessor",
+    "accessor.ItemUsageContextAccessor",
+    "compat.patchouli.LecternEventHandlerMixin",
+    "library.BlockMixin",
+    "library.BlockWithEntityMixin",
+    "library.ChiseledBookshelfBlockEntityMixin",
+    "library.ChiseledBookshelfBlockMixin"
   ],
   "client": [
     "ChatScreenMixin",
-    "HandledScreenAccessor",
-    "TooltipComponentMixin"
+    "TooltipComponentMixin",
+    "accessor.HandledScreenAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

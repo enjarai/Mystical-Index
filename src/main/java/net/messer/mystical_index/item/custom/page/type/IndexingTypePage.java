@@ -3,13 +3,14 @@ package net.messer.mystical_index.item.custom.page.type;
 import net.messer.mystical_index.block.entity.MysticalLecternBlockEntity;
 import net.messer.mystical_index.item.custom.page.AttributePageItem;
 import net.messer.mystical_index.item.custom.page.TypePageItem;
-import net.messer.mystical_index.mixin.ItemEntityAccessor;
+import net.messer.mystical_index.mixin.accessor.ItemEntityAccessor;
 import net.messer.mystical_index.util.Colors;
 import net.messer.mystical_index.util.LecternTracker;
 import net.messer.mystical_index.util.WorldEffects;
 import net.messer.mystical_index.util.request.*;
 import net.messer.mystical_index.util.state.PageLecternState;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
@@ -42,7 +43,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import static net.messer.mystical_index.block.ModBlocks.LIBRARY;
+import static net.messer.mystical_index.block.ModTags.INDEX_INTRACTABLE;
 import static net.messer.mystical_index.block.custom.MysticalLecternBlock.LECTERN_INPUT_AREA_SHAPE;
 import static net.messer.mystical_index.block.entity.MysticalLecternBlockEntity.LECTERN_DETECTION_RADIUS;
 import static net.messer.mystical_index.item.ModItems.INDEXING_TYPE_PAGE;
@@ -172,7 +173,7 @@ public class IndexingTypePage extends TypePageItem {
     }
 
     public boolean isLinkableBlock(ItemStack book, BlockState state) {
-        return state.isOf(LIBRARY);
+        return state.isIn(INDEX_INTRACTABLE);
     }
 
     @Override
