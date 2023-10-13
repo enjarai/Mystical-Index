@@ -6,6 +6,7 @@ import net.messer.mystical_index.item.custom.page.type.ItemStorageTypePage;
 import net.messer.mystical_index.util.BigStack;
 import net.messer.mystical_index.util.ContentsIndex;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Text;
 
 import java.util.ArrayList;
@@ -24,10 +25,17 @@ public class ListingRequest extends QueryBasedRequest {
     public Text getMessage() {
         var result = Text.translatable("chat.mystical_index.listing");
         for (BigStack stack : stacks.getAll()) {
-            result
-                    .append("\n  ")
+            result.append(Text.literal("\n  ")
                     .append(stack.getAmount() + "x ")
-                    .append(stack.getItemStack().getName());
+                    .append(stack.getItemStack().getName())
+                    .styled(style -> style
+                            .withClickEvent(new ClickEvent(
+                                    ClickEvent.Action.RUN_COMMAND,
+                                    stack.getAmount() + " " + stack.getItemStack().getName()
+                            ))
+                            .withUnderline(true)
+                    )
+            );
         }
         if (stacks.getAll().size() < 1) {
             result

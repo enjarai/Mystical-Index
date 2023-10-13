@@ -72,7 +72,7 @@ public class ItemStorageTypePage extends TypePageItem {
         NbtCompound attributes = getAttributes(book);
 
         attributes.putInt(MAX_STACKS_TAG, 2);
-        attributes.putInt(MAX_TYPES_TAG, 32);
+        attributes.putInt(MAX_TYPES_TAG, 4);
     }
 
     public int getMaxTypes(ItemStack book) {
