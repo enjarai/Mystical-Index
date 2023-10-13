@@ -7,7 +7,7 @@ import net.messer.mystical_index.util.BigStack;
 import net.messer.mystical_index.util.MathUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -16,14 +16,14 @@ import static net.messer.mystical_index.client.render.ItemCirclesRenderer.SECOND
 import static net.messer.mystical_index.client.render.ItemCirclesRenderer.TERNARY_CIRCLE_ITEM_COUNT;
 
 @Environment(EnvType.CLIENT)
-public class ItemStorageTooltipComponent extends DrawableHelper implements TooltipComponent {
+public class ItemStorageTooltipComponent implements TooltipComponent {
 
     private final ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
     private final TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
     private final ItemCirclesRenderer2D<BigStack> circleRenderer = new ItemCirclesRenderer2D<>() {
         @Override
-        protected void drawItem(MatrixStack matrices, double x, double y, double z, BigStack stack) {
-            ItemStorageTooltipComponent.this.drawItem(matrices, (int) x, (int) y, stack);
+        protected void drawItem(DrawContext context, double x, double y, double z, BigStack stack) {
+            ItemStorageTooltipComponent.this.drawItem(context, (int) x, (int) y, stack);
         }
     };
     private final ItemStorageTooltipData data;
@@ -51,7 +51,7 @@ public class ItemStorageTooltipComponent extends DrawableHelper implements Toolt
     }
 
     @Override
-    public void drawItems(TextRenderer textRenderer, int x, int y, MatrixStack matrices, ItemRenderer itemRenderer, int z) {
+    public void drawItems(TextRenderer textRenderer, int x, int y, DrawContext context) {
         if (data.contents.getAll().isEmpty()) return;
 
         var centerX = x + getWidth(textRenderer) / 2;
@@ -59,14 +59,14 @@ public class ItemStorageTooltipComponent extends DrawableHelper implements Toolt
 
         var stacks = data.contents.getAll();
 
-        circleRenderer.render(centerX, centerY, z, matrices, stacks);
+        circleRenderer.render(centerX, centerY, 0, context, stacks);
     }
 
-    private void drawItem(MatrixStack matrices, int x, int y, BigStack stack) {
+    private void drawItem(DrawContext context, int x, int y, BigStack stack) {
         var count = stack.getAmount();
 
-        itemRenderer.renderInGuiWithOverrides(stack.getItemStack(), x - 8, y - 8);
-        itemRenderer.renderGuiItemOverlay(textRenderer, stack.getItemStack(), x - 8, y - 8,
+        context.drawItem(stack.getItemStack(), x - 8, y - 8);
+        context.drawItemInSlot(textRenderer, stack.getItemStack(), x - 8, y - 8,
                 count > 1 ? MathUtil.shortNumberFormat(count) : "");
     }
 }

@@ -22,6 +22,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
+import net.minecraft.registry.Registries;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -30,7 +31,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -127,7 +127,7 @@ public class ItemStorageTypePage extends TypePageItem {
         NbtCompound filters = book.getOrCreateNbt().getCompound(FILTERS_TAG);
 
         return filters.getList(ITEM_FILTERS_TAG, NbtElement.STRING_TYPE)
-                .contains(NbtString.of(Registry.ITEM.getId(stack.getItem()).toString()));
+                .contains(NbtString.of(Registries.ITEM.getId(stack.getItem()).toString()));
     }
 
     public List<Item> getFilteredItems(ItemStack book) {
@@ -137,14 +137,14 @@ public class ItemStorageTypePage extends TypePageItem {
                 .map(NbtString::asString)
                 .map(Identifier::tryParse)
                 .filter(Objects::nonNull)
-                .map(Registry.ITEM::get)
+                .map(Registries.ITEM::get)
                 .collect(ImmutableList.toImmutableList());
     }
 
     public void addFilteredItem(ItemStack book, Item item) {
         NbtCompound filters = book.getOrCreateSubNbt(FILTERS_TAG);
         NbtList itemFilters = filters.getList(ITEM_FILTERS_TAG, NbtElement.STRING_TYPE);
-        itemFilters.add(NbtString.of(Registry.ITEM.getId(item).toString()));
+        itemFilters.add(NbtString.of(Registries.ITEM.getId(item).toString()));
         filters.put(ITEM_FILTERS_TAG, itemFilters);
     }
 
@@ -161,7 +161,7 @@ public class ItemStorageTypePage extends TypePageItem {
     public void setFilteredItems(ItemStack book, List<Item> items) {
         NbtCompound filters = book.getOrCreateSubNbt(FILTERS_TAG);
         NbtList itemFilters = new NbtList();
-        items.forEach(item -> itemFilters.add(NbtString.of(Registry.ITEM.getId(item).toString())));
+        items.forEach(item -> itemFilters.add(NbtString.of(Registries.ITEM.getId(item).toString())));
         filters.put(ITEM_FILTERS_TAG, itemFilters);
     }
 
@@ -435,7 +435,7 @@ public class ItemStorageTypePage extends TypePageItem {
         if (itemsList.isEmpty()) return false;
 
         Collections.rotate(itemsList, -scrollDirection);
-        if (player.world.isClient()) {
+        if (player.getWorld().isClient()) {
             player.playSound(SoundEvents.ITEM_BUNDLE_INSERT, SoundCategory.PLAYERS, 0.4f, 0.8f);
         }
 

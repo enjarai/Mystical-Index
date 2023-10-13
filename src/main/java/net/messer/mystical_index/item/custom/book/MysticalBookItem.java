@@ -18,13 +18,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.registry.Registries;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,7 +56,7 @@ public class MysticalBookItem extends Item {
     }
 
     public Item getCatalyst(ItemStack book) {
-        return Registry.ITEM.get(new Identifier(book.getOrCreateNbt().getString(CATALYST_TAG)));
+        return Registries.ITEM.get(new Identifier(book.getOrCreateNbt().getString(CATALYST_TAG)));
     }
 
     /**

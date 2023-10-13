@@ -3,6 +3,7 @@ package net.messer.mystical_index.item.custom.page.type;
 import net.messer.mystical_index.block.entity.MysticalLecternBlockEntity;
 import net.messer.mystical_index.item.custom.page.AttributePageItem;
 import net.messer.mystical_index.item.custom.page.TypePageItem;
+import net.messer.mystical_index.mixin.ItemEntityAccessor;
 import net.messer.mystical_index.util.Colors;
 import net.messer.mystical_index.util.LecternTracker;
 import net.messer.mystical_index.util.WorldEffects;
@@ -180,9 +181,9 @@ public class IndexingTypePage extends TypePageItem {
             return false;
         }
 
-        var index = getIndex(book, player.world, player.getBlockPos());
+        var index = getIndex(book, player.getWorld(), player.getBlockPos());
         var request = tryInsertItemStack(index, slot.getStack(), player.getPos());
-        if (request.hasAffected()) WorldEffects.lecternPlonk(player.world, player.getPos(), 0.6f, false);
+        if (request.hasAffected()) WorldEffects.lecternPlonk(player.getWorld(), player.getPos(), 0.6f, false);
         return true;
     }
 
@@ -192,9 +193,9 @@ public class IndexingTypePage extends TypePageItem {
             return false;
         }
 
-        var index = getIndex(book, player.world, player.getBlockPos());
+        var index = getIndex(book, player.getWorld(), player.getBlockPos());
         var request = tryInsertItemStack(index, cursorStack, player.getPos());
-        if (request.hasAffected()) WorldEffects.lecternPlonk(player.world, player.getPos(), 0.6f, false);
+        if (request.hasAffected()) WorldEffects.lecternPlonk(player.getWorld(), player.getPos(), 0.6f, false);
         return true;
     }
 
@@ -267,14 +268,14 @@ public class IndexingTypePage extends TypePageItem {
 
     @Override
     public void book$onInterceptedChatMessage(ItemStack book, ServerPlayerEntity player, String message) {
-        var index = getIndex(book, player.world, player.getBlockPos());
+        var index = getIndex(book, player.getWorld(), player.getBlockPos());
         QueryBasedRequest request = tryQueryItemStacks(index, message, player.getPos().add(0, 1, 0));
 
         for (ItemStack stack : request.getReturnedStacks()) {
             player.getInventory().offerOrDrop(stack);
         }
 
-        if (request.hasAffected()) WorldEffects.lecternPlonk(player.world, player.getPos(), 1f, false);
+        if (request.hasAffected()) WorldEffects.lecternPlonk(player.getWorld(), player.getPos(), 1f, false);
         player.sendMessage(request.getMessage(), false);
     }
 
@@ -355,7 +356,7 @@ public class IndexingTypePage extends TypePageItem {
         if (
                 !world.isClient() &&
                 entity instanceof ItemEntity itemEntity &&
-                !Objects.equals(itemEntity.getThrower(), EXTRACTED_DROP_UUID) &&
+                !Objects.equals(((ItemEntityAccessor) itemEntity).getThrower(), EXTRACTED_DROP_UUID) &&
                 VoxelShapes.matchesAnywhere(VoxelShapes.cuboid(
                                 entity.getBoundingBox().offset(-pos.getX(), -pos.getY(), -pos.getZ())),
                         LECTERN_INPUT_AREA_SHAPE, BooleanBiFunction.AND)

@@ -29,6 +29,8 @@ dependencies {
 	modImplementation "vazkii.patchouli:Patchouli:${project.patchouli_version}"
 }
 
+version = "${rootProject.mod_version}+${rootProject.minecraft_version}"
+
 processResources {
 	inputs.property "version", project.version
 

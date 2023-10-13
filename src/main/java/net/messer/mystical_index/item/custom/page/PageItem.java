@@ -26,7 +26,7 @@ public abstract class PageItem extends Item {
     public final String id;
 
     public PageItem(String id) {
-        super(new FabricItemSettings().group(MYSTICAL_INDEX_GROUP));
+        super(new FabricItemSettings());
         this.id = id;
     }
 

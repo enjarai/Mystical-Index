@@ -132,7 +132,7 @@ public class MysticalLecternBlock extends LecternBlock {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof MysticalLecternBlockEntity lectern) {
             lectern.setBook(stack.split(1));
-            LecternBlock.setHasBook(world, pos, state, true);
+            LecternBlock.setHasBook(player, world, pos, state, true);
             world.playSound(null, pos, SoundEvents.ITEM_BOOK_PUT, SoundCategory.BLOCKS, 1.0f, 1.0f);
             world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
             if (lectern.getBook().getItem() instanceof MysticalBookItem book) {

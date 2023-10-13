@@ -25,7 +25,7 @@ public class LibraryInventoryScreenHandler extends ScreenHandler {
         super(ScreenHandlerType.HOPPER, syncId);
         checkSize(inventory,5);
         this.inventory = inventory;
-        this.world = playerInventory.player.world;
+        this.world = playerInventory.player.getWorld();
         inventory.onOpen(playerInventory.player);
 
         for (int i = 0; i < 5; i++) {
@@ -48,7 +48,7 @@ public class LibraryInventoryScreenHandler extends ScreenHandler {
     }
 
     @Override
-    public ItemStack transferSlot(PlayerEntity player, int invSlot) {
+    public ItemStack quickMove(PlayerEntity player, int invSlot) {
         ItemStack newStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(invSlot);
         if (slot != null && slot.hasStack()) {
