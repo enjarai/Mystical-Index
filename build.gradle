@@ -87,6 +87,8 @@ loom {
 			runDir "build/datagen"
 		}
 	}
+
+	accessWidenerPath = file("src/main/resources/mystical_index.accesswidener")
 }
 
 // Add the datagenned files into the jar.

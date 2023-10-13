@@ -30,6 +30,7 @@
   "mixins": [
     "mystical_index.mixins.json"
   ],
+  "accessWidener": "mystical_index.accesswidener",
   "depends": {
     "fabric": "*",
     "minecraft": "1.20.x",
