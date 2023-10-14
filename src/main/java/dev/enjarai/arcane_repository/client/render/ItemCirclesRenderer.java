@@ -2,7 +2,6 @@ package dev.enjarai.arcane_repository.client.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.enjarai.arcane_repository.ArcaneRepository;
-import dev.enjarai.arcane_repository.mixin.accessor.DrawContextInvoker;
 import dev.enjarai.arcane_repository.util.BigStack;
 import dev.enjarai.arcane_repository.util.MathUtil;
 import net.minecraft.client.MinecraftClient;
@@ -48,7 +47,7 @@ public class ItemCirclesRenderer {
         matrices.push();
         matrices.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(180));
 
-        var drawContext = DrawContextInvoker.constructor(
+        var drawContext = new DrawContext(
                 MinecraftClient.getInstance(), matrices,
                 MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers()
         );

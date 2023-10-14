@@ -6,7 +6,6 @@
   "mixins": [
     "ItemEntityMixin",
     "PlayerInventoryMixin",
-    "accessor.ChiseledBookshelfBlockInvoker",
     "accessor.ItemEntityAccessor",
     "accessor.ItemUsageContextAccessor",
     "compat.patchouli.LecternEventHandlerMixin",
@@ -18,7 +17,6 @@
   "client": [
     "ChatScreenMixin",
     "TooltipComponentMixin",
-    "accessor.DrawContextInvoker",
     "accessor.HandledScreenAccessor"
   ],
   "injectors": {

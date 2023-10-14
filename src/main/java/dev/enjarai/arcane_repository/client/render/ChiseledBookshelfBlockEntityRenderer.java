@@ -2,9 +2,9 @@ package dev.enjarai.arcane_repository.client.render;
 
 import dev.enjarai.arcane_repository.item.custom.book.MysticalBookItem;
 import dev.enjarai.arcane_repository.item.custom.page.type.ItemStorageTypePage;
-import dev.enjarai.arcane_repository.mixin.accessor.ChiseledBookshelfBlockInvoker;
 import dev.enjarai.arcane_repository.util.BigStack;
 import dev.enjarai.arcane_repository.util.ModifiedChiseledBookshelfBlockEntity;
+import net.minecraft.block.ChiseledBookshelfBlock;
 import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.block.entity.ChiseledBookshelfBlockEntity;
 import net.minecraft.client.MinecraftClient;
@@ -34,10 +34,10 @@ public class ChiseledBookshelfBlockEntityRenderer implements BlockEntityRenderer
         if (hitResult instanceof BlockHitResult blockHitResult && entity.getPos().equals(blockHitResult.getBlockPos())) {
 
             var facing = entity.getCachedState().get(HorizontalFacingBlock.FACING);
-            ChiseledBookshelfBlockInvoker.invokeGetHitPos(blockHitResult, facing).ifPresent(hitPos -> {
+            ChiseledBookshelfBlock.getHitPos(blockHitResult, facing).ifPresent(hitPos -> {
 
 
-                var slot = ChiseledBookshelfBlockInvoker.invokeGetSlotForHitPos(hitPos);
+                var slot = ChiseledBookshelfBlock.getSlotForHitPos(hitPos);
                 var bookStack = entity.getStack(slot);
                 var book = bookStack.getItem();
 
