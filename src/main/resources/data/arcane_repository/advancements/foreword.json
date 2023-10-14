@@ -1,0 +1,32 @@
+{
+  "display": {
+    "icon": {
+      "item": "patchouli:guide_book",
+      "nbt": "{\"patchouli:book\": \"arcane_repository:guide_book\"}"
+    },
+    "title": "Foreword",
+    "description": "Welcome to the domain of mystical books!",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "background": "minecraft:block/bookshelf_side"
+  },
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "arcane_repository:tattered_page"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "loot": [
+      "arcane_repository:grant_book_to_player"
+    ]
+  }
+}

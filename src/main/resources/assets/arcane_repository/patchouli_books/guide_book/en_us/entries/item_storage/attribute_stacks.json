@@ -1,0 +1,9 @@
+{
+  "name": "Attribute: Stacks",
+  "icon": "arcane_repository:stacks_page",
+  "category": "arcane_repository:item_storage",
+  "sortnum": 2,
+  "pages": [
+
+  ]
+}

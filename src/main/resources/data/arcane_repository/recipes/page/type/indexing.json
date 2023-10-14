@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "pdp",
+    "epe",
+    " e "
+  ],
+  "key": {
+    "p": {
+      "item": "arcane_repository:empty_page"
+    },
+    "d": {
+      "item": "minecraft:diamond"
+    },
+    "e": {
+      "item": "arcane_repository:ender_pearl_shard"
+    }
+  },
+  "result": {
+    "item": "arcane_repository:indexing_type_page",
+    "count": 3
+  }
+}

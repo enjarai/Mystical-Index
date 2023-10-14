@@ -1,0 +1,6 @@
+{
+  "parent": "arcane_repository:block/library",
+  "textures": {
+    "side": "arcane_repository:block/library_1"
+  }
+}

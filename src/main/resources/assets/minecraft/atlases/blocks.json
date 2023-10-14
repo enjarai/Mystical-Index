@@ -2,7 +2,7 @@
   "sources": [
     {
       "type": "single",
-      "resource": "mystical_index:entity/index_lectern_book"
+      "resource": "arcane_repository:entity/index_lectern_book"
     }
   ]
 }

@@ -1,0 +1,9 @@
+{
+  "name": "Page Types",
+  "icon": "arcane_repository:indexing_type_page",
+  "category": "arcane_repository:general",
+  "sortnum": 1,
+  "pages": [
+    "Mystical Pages can have many different and complex abilities, so they are categorized into three main types based on functionality:$(br2)- Type pages$(br)- Attribute pages$(br)- Action pages"
+  ]
+}

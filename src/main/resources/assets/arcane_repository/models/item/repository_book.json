@@ -1,0 +1,38 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "item/written_book"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "item_storage_type": 1
+      },
+      "model": "arcane_repository:item/book/item_storage_type"
+    },
+    {
+      "predicate": {
+        "indexing_type": 1
+      },
+      "model": "arcane_repository:item/book/indexing_type"
+    },
+    {
+      "predicate": {
+        "index_slave_type": 1
+      },
+      "model": "arcane_repository:item/book/index_slave_type"
+    },
+    {
+      "predicate": {
+        "food_storage_type": 1
+      },
+      "model": "arcane_repository:item/book/food_storage_type"
+    },
+    {
+      "predicate": {
+        "block_storage_type": 1
+      },
+      "model": "arcane_repository:item/book/block_storage_type"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "arcane_repository:tattered_page"
+    },
+    {
+      "item": "arcane_repository:tattered_page"
+    },
+    {
+      "item": "arcane_repository:tattered_page"
+    },
+    {
+      "item": "arcane_repository:tattered_page"
+    },
+    {
+      "item": "minecraft:redstone"
+    }
+  ],
+  "result": {
+    "item": "arcane_repository:empty_page",
+    "count": 4
+  }
+}

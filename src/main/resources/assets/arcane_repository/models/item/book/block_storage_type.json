@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "arcane_repository:item/book/block_storage_type",
+    "layer1": "arcane_repository:item/book/block_storage_type_overlay"
+  }
+}

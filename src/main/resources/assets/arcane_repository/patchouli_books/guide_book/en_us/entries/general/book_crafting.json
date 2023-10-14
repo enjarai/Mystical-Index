@@ -1,0 +1,12 @@
+{
+  "name": "Book Crafting",
+  "icon": "minecraft:writable_book",
+  "category": "arcane_repository:general",
+  "pages": [
+    "test",
+    {
+      "type": "patchouli:crafting",
+      "recipe": "arcane_repository:custom_book"
+    }
+  ]
+}

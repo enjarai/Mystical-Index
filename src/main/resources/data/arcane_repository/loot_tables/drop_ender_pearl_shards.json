@@ -1,0 +1,16 @@
+{
+  "pools": [
+    {
+      "rolls": {
+        "min": 3,
+        "max": 6
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "arcane_repository:ender_pearl_shard"
+        }
+      ]
+    }
+  ]
+}

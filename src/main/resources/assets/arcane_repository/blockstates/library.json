@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "books=0": {"model": "arcane_repository:block/library_empty"},
+    "books=1": {"model": "arcane_repository:block/library_1"},
+    "books=2": {"model": "arcane_repository:block/library_2"},
+    "books=3": {"model": "arcane_repository:block/library_3"},
+    "books=4": {"model": "arcane_repository:block/library_4"},
+    "books=5": {"model": "arcane_repository:block/library_5"}
+  }
+}

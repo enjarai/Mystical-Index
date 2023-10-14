@@ -1,36 +1,36 @@
 {
   "schemaVersion": 1,
-  "id": "mystical_index",
+  "id": "arcane_repository",
   "version": "${version}",
 
-  "name": "Mystical Index",
-  "description": "Magical Storage or something like that.",
+  "name": "Arcane Repository",
+  "description": "A magically indexed storage solution.",
   "authors": [
-    "Nick Messer"
+    "enjarai"
   ],
   "contact": {
-    "homepage": "https://github.com/NickMesser",
-    "sources": "https://github.com/NickMesser/Mystical-Index"
+    "homepage": "https://enjarai.dev",
+    "sources": "https://github.com/enjarai/arcane-repository"
   },
 
   "license": "GNU",
-  "icon": "assets/mystical_index/icon.png",
+  "icon": "assets/arcane_repository/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.messer.mystical_index.MysticalIndex"
+      "dev.enjarai.arcane_repository.ArcaneRepository"
     ],
     "client": [
-      "net.messer.mystical_index.MysticalIndexClient"
+      "dev.enjarai.arcane_repository.ArcaneRepositoryClient"
     ],
     "fabric-datagen": [
-      "net.messer.mystical_index.ModDataGen"
+      "dev.enjarai.arcane_repository.ModDataGen"
     ]
   },
   "mixins": [
-    "mystical_index.mixins.json"
+    "arcane_repository.mixins.json"
   ],
-  "accessWidener": "mystical_index.accesswidener",
+  "accessWidener": "arcane_repository.accesswidener",
   "depends": {
     "fabric": "*",
     "minecraft": "1.20.x",

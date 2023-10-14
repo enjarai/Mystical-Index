@@ -1,0 +1,9 @@
+{
+  "name": "Sub-Type: Block Storage",
+  "icon": "arcane_repository:block_storage_type_page",
+  "category": "arcane_repository:item_storage",
+  "sortnum": 1,
+  "pages": [
+
+  ]
+}

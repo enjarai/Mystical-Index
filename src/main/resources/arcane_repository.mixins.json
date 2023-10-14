@@ -1,0 +1,27 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.enjarai.arcane_repository.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "ItemEntityMixin",
+    "PlayerInventoryMixin",
+    "accessor.ChiseledBookshelfBlockInvoker",
+    "accessor.ItemEntityAccessor",
+    "accessor.ItemUsageContextAccessor",
+    "compat.patchouli.LecternEventHandlerMixin",
+    "library.BlockMixin",
+    "library.BlockWithEntityMixin",
+    "library.ChiseledBookshelfBlockEntityMixin",
+    "library.ChiseledBookshelfBlockMixin"
+  ],
+  "client": [
+    "ChatScreenMixin",
+    "TooltipComponentMixin",
+    "accessor.DrawContextInvoker",
+    "accessor.HandledScreenAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
