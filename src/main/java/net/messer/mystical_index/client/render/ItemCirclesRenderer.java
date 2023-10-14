@@ -18,6 +18,7 @@ import net.minecraft.util.crash.CrashCallable;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.crash.CrashReportSection;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
@@ -44,25 +45,24 @@ public class ItemCirclesRenderer {
         this.inWorld = inWorld;
     }
 
-    public void render(MatrixStack matrices, double x, double y, double z, int light, List<BigStack> stacks) {
+    public void render(MatrixStack matrices, double x, double y, double z, int light, float progress, List<BigStack> stacks) {
         matrices.push();
         matrices.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(180));
-//        matrices.multiplyPositionMatrix(new Matrix4f().scale(1, -1, 1));
 
         var drawContext = DrawContextInvoker.constructor(
                 MinecraftClient.getInstance(), matrices,
                 MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers()
         );
-        render(drawContext, x, y, z, light, stacks);
+        render(drawContext, x, y, z, light, progress, stacks);
 
         matrices.pop();
     }
 
     public void render(DrawContext context, double x, double y, List<BigStack> stacks) {
-        render(context, x, y, 0, 0xF000F0, stacks);
+        render(context, x, y, 0, 0xF000F0, 1, stacks);
     }
 
-    public void render(DrawContext context, double x, double y, double z, int light, List<BigStack> stacks) {
+    public void render(DrawContext context, double x, double y, double z, int light, float progress, List<BigStack> stacks) {
         if (stacks.isEmpty()) return;
 
         var matrices = context.getMatrices();
@@ -74,17 +74,25 @@ public class ItemCirclesRenderer {
         var ternary = stacks.size() > SECONDARY_CIRCLE_ITEM_COUNT ?
                 stacks.subList(SECONDARY_CIRCLE_ITEM_COUNT, Math.min(TERNARY_CIRCLE_ITEM_COUNT, stacks.size())) : null;
 
-        if (secondary != null) drawItemCircle(context, x, y, z, light, 24, secondary);
-        if (ternary != null) drawItemCircle(context, x, y, z, light, 48, ternary);
+        if (secondary != null) drawItemCircle(context, x, y, z, light, progress, 24, secondary);
+        if (ternary != null) drawItemCircle(context, x, y, z, light, progress, 48, ternary);
+
+        var scale = calculateRingScale(0, progress);
+        matrices.scale(scale, scale, scale);
         drawItemCircle(context, x, y, z, true);
         drawItemStack(context, x, y, z, light, primary);
 
         matrices.pop();
     }
 
-    private void drawItemCircle(DrawContext context, double x, double y, double z, int light, int radius, List<BigStack> items) {
+    private void drawItemCircle(DrawContext context, double x, double y, double z, int light, float progress, int radius, List<BigStack> items) {
         var itemCount = items.size();
         var circleTexture = CIRCLE_TEXTURES.get(radius);
+        var matrices = context.getMatrices();
+        var scale = calculateRingScale(radius, progress);
+
+        matrices.push();
+        matrices.scale(scale, scale, scale);
 
         RenderSystem.disableDepthTest();
         RenderSystem.enableBlend();
@@ -105,6 +113,16 @@ public class ItemCirclesRenderer {
             drawItemCircle(context, itemX, itemY, z, false);
             drawItemStack(context, itemX, itemY, z, light, stack);
         }
+
+        matrices.pop();
+    }
+
+    private float calculateRingScale(int radius, float progress) {
+        return inverseCubeEasing(128f / (radius + 24) * progress);
+    }
+
+    private float inverseCubeEasing(float in) {
+        return (float) (1 - Math.pow(1 - MathHelper.clamp(in, 0, 1), 3));
     }
 
     protected void drawItemCircle(DrawContext context, double x, double y, double z, boolean isPrimary) {
@@ -131,15 +149,10 @@ public class ItemCirclesRenderer {
             drawItem(matrices, context.getVertexConsumers(), stack.getItemStack(), (int) x, (int) y, light);
             matrices.pop();
         } else {
-//        matrices.push();
-//
-//            matrices.translate(0, 0, -202);
-//            matrices.multiplyPositionMatrix(new Matrix4f().scale(1, 1, -1));
             context.drawItem(stack.getItemStack(), (int) x - 8, (int) y - 8);
 
             context.drawItemInSlot(MinecraftClient.getInstance().textRenderer, stack.getItemStack(), (int) x - 8, (int) y - 8,
                     count > 1 ? MathUtil.shortNumberFormat(count) : "");
-//        matrices.pop();
         }
     }
 
@@ -151,14 +164,12 @@ public class ItemCirclesRenderer {
             matrices.translate(x, y, inWorld ? 0 : 150);
             if (inWorld) {
                 matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
-//                matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180));
             }
 
             try {
                 if (!inWorld) {
                     matrices.multiplyPositionMatrix(new Matrix4f().scaling(1.0F, -1.0F, 1.0F));
                 }
-//                matrices.multiplyPositionMatrix(new Matrix4f().scaling(1.0F, 1.0F, 1.0F));
                 matrices.scale(16.0F, 16.0F, 16.0F);
 
                 boolean sideLit = bakedModel.isSideLit();

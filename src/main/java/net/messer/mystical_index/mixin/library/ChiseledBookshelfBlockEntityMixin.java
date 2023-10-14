@@ -3,6 +3,7 @@ package net.messer.mystical_index.mixin.library;
 import com.google.common.collect.ImmutableList;
 import net.messer.mystical_index.item.custom.book.MysticalBookItem;
 import net.messer.mystical_index.item.custom.page.type.ItemStorageTypePage;
+import net.messer.mystical_index.util.ModifiedChiseledBookshelfBlockEntity;
 import net.messer.mystical_index.util.request.IndexInteractable;
 import net.messer.mystical_index.util.request.IndexSource;
 import net.minecraft.block.BlockState;
@@ -22,13 +23,17 @@ import org.spongepowered.asm.mixin.Shadow;
 import java.util.List;
 
 @Mixin(ChiseledBookshelfBlockEntity.class)
-public abstract class ChiseledBookshelfBlockEntityMixin extends BlockEntity implements IndexInteractable {
+public abstract class ChiseledBookshelfBlockEntityMixin extends BlockEntity implements IndexInteractable, ModifiedChiseledBookshelfBlockEntity {
     public ChiseledBookshelfBlockEntityMixin(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 
     @Shadow public abstract int size();
     @Shadow public abstract ItemStack getStack(int slot);
+
+    float elapsed = 0f;
+    int lastSlot = -1;
+    BlockPos lastHitPos = BlockPos.ORIGIN;
 
     @Override
     public List<IndexSource> getSources() {
@@ -55,5 +60,35 @@ public abstract class ChiseledBookshelfBlockEntityMixin extends BlockEntity impl
     @Override
     public NbtCompound toInitialChunkDataNbt() {
         return createNbt();
+    }
+
+    @Override
+    public float getElapsed() {
+        return elapsed;
+    }
+
+    @Override
+    public void setElapsed(float elapsed) {
+        this.elapsed = elapsed;
+    }
+
+    @Override
+    public int getLastSlot() {
+        return lastSlot;
+    }
+
+    @Override
+    public void setLastSlot(int lastSlot) {
+        this.lastSlot = lastSlot;
+    }
+
+    @Override
+    public BlockPos getLastHitPos() {
+        return lastHitPos;
+    }
+
+    @Override
+    public void setLastHitPos(BlockPos lastHitPos) {
+        this.lastHitPos = lastHitPos;
     }
 }
