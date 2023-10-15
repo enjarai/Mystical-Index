@@ -8,6 +8,7 @@ import dev.enjarai.arcane_repository.item.custom.page.action.FeedingActionPage;
 import dev.enjarai.arcane_repository.item.custom.page.attribute.*;
 import dev.enjarai.arcane_repository.item.custom.page.type.*;
 import dev.enjarai.arcane_repository.util.PageRegistry;
+import io.wispforest.lavender.book.LavenderBookItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -19,11 +20,12 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import vazkii.patchouli.api.PatchouliAPI;
 
 public class ModItems {
+    public static final LavenderBookItem GUIDE_BOOK = LavenderBookItem.registerForBook(ArcaneRepository.id("guide_book"), new FabricItemSettings().maxCount(1));
+
     public static final ItemGroup MYSTICAL_INDEX_GROUP = FabricItemGroup.builder()
-            .icon(() -> PatchouliAPI.get().getBookStack(ArcaneRepository.id("guide_book")))
+            .icon(GUIDE_BOOK::getDefaultStack)
             .displayName(Text.translatable("item_group.arcane_repository.arcane_repository"))
             .build();
 
@@ -69,7 +71,7 @@ public class ModItems {
 
         Registry.register(Registries.ITEM_GROUP, ArcaneRepository.id("arcane_repository"), MYSTICAL_INDEX_GROUP);
         ItemGroupEvents.modifyEntriesEvent(RegistryKey.of(RegistryKeys.ITEM_GROUP, ArcaneRepository.id("arcane_repository"))).register(entries -> {
-            entries.add(PatchouliAPI.get().getBookStack(ArcaneRepository.id("guide_book")));
+            entries.add(GUIDE_BOOK);
 
             entries.add(ENDER_PEARL_SHARD);
             entries.add(EMPTY_PAGE);

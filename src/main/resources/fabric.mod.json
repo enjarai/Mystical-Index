@@ -33,7 +33,6 @@
   "accessWidener": "arcane_repository.accesswidener",
   "depends": {
     "fabric": "*",
-    "minecraft": "1.20.x",
-    "patchouli": "*"
+    "minecraft": "1.20.x"
   }
 }

@@ -11,6 +11,7 @@
   "chat.arcane_repository.listing": "Matching items:",
   "chat.arcane_repository.no_results": "None",
   "chat.arcane_repository.copied_filters": "Copied filters",
+  "item.arcane_repository.guide_book": "Arcane Storage Solutions",
   "item.arcane_repository.repository_book": "Repository Book",
   "item.arcane_repository.repository_book.type.item_storage": "Book of Item Storage",
   "item.arcane_repository.repository_book.type.food_storage": "Book of Food Storage",

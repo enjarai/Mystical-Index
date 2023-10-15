@@ -1,7 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "item/written_book"
+    "layer0": "arcane_repository:item/unknown_book"
   },
   "overrides": [
     {

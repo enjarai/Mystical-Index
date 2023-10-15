@@ -185,8 +185,8 @@ public class MysticalBookRecipe extends SpecialCraftingRecipe {
     @Override
     public DefaultedList<Ingredient> getIngredients() {
         return DefaultedList.copyOf(
-                BINDING, CATALYST
-        ); // TODO make sure combinations shown are valid, maybe mixin into patchouli?
+                Ingredient.EMPTY, BINDING, CATALYST, TYPE_PAGES, ATTRIBUTE_PAGES, ATTRIBUTE_PAGES, ACTION_PAGES
+        );
     }
 
     @Override

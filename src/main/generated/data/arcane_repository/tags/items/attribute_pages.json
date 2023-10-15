@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "arcane_repository:stacks_page",
+    "arcane_repository:types_page",
+    "arcane_repository:range_page",
+    "arcane_repository:links_page",
+    "arcane_repository:auto_feeding_attribute_page",
+    "arcane_repository:magnetism_attribute_page",
+    "arcane_repository:pickup_attribute_page"
+  ]
+}

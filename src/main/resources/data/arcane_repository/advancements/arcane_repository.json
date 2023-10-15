@@ -1,17 +1,16 @@
 {
   "display": {
     "icon": {
-      "item": "patchouli:guide_book",
-      "nbt": "{\"patchouli:book\": \"arcane_repository:guide_book\"}"
+      "item": "arcane_repository:guide_book"
     },
-    "title": "Foreword",
-    "description": "Welcome to the domain of mystical books!",
+    "title": "Arcane Repository",
+    "description": "A magical solution to your hoarding problem.",
     "show_toast": true,
     "announce_to_chat": true,
-    "background": "minecraft:block/bookshelf_side"
+    "background": "minecraft:textures/block/spruce_planks.png"
   },
   "criteria": {
-    "requirement": {
+    "page": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [

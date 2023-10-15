@@ -1,5 +1,5 @@
 {
-  "type": "patchouli:shapeless_book_recipe",
+  "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
       "item": "minecraft:book"
@@ -8,5 +8,7 @@
       "item": "arcane_repository:empty_page"
     }
   ],
-  "book": "guide_book"
+  "result": {
+    "item": "arcane_repository:guide_book"
+  }
 }

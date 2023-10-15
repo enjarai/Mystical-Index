@@ -261,6 +261,7 @@ public class MysticalBookItem extends Item {
     @Override
     public void appendTooltip(ItemStack book, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(book, world, tooltip, context);
+        if (getTypePage(book) == null) return;
 
         forEachPage(book, page -> page.book$appendTooltip(book, world, tooltip, context));
 

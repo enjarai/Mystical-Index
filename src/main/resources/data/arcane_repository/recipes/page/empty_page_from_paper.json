@@ -20,10 +20,7 @@
       "item": "minecraft:paper"
     },
     {
-      "item": "minecraft:paper"
-    },
-    {
-      "item": "minecraft:paper"
+      "item": "minecraft:glowstone_dust"
     },
     {
       "item": "arcane_repository:ender_pearl_shard"
@@ -31,6 +28,6 @@
   ],
   "result": {
     "item": "arcane_repository:empty_page",
-    "count": 8
+    "count": 6
   }
 }
