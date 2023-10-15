@@ -4,4 +4,7 @@ import java.util.List;
 
 public interface IndexInteractable {
     List<IndexSource> getSources();
+
+    default void onInteractionComplete() {
+    }
 }

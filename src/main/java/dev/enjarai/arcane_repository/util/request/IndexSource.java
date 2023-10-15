@@ -13,4 +13,10 @@ public record IndexSource(ItemStack book, @Nullable BlockEntity blockEntity) {
     public BlockEntity getBlockEntity() {
         return blockEntity;
     }
+
+    public void onInteractionComplete() {
+        if (blockEntity instanceof IndexInteractable interactable) {
+            interactable.onInteractionComplete();
+        }
+    }
 }

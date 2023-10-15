@@ -6,6 +6,7 @@ import dev.enjarai.arcane_repository.item.custom.page.type.ItemStorageTypePage;
 import dev.enjarai.arcane_repository.util.ModifiedChiseledBookshelfBlockEntity;
 import dev.enjarai.arcane_repository.util.request.IndexInteractable;
 import dev.enjarai.arcane_repository.util.request.IndexSource;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -49,6 +50,17 @@ public abstract class ChiseledBookshelfBlockEntityMixin extends BlockEntity impl
         }
 
         return builder.build();
+    }
+
+    @Override
+    public void onInteractionComplete() {
+        // Send new state to clients if applicable
+        if (getWorld() != null) {
+            getWorld().updateListeners(
+                    getPos(), getCachedState(),
+                    getCachedState(), Block.NOTIFY_LISTENERS
+            );
+        }
     }
 
     @Nullable

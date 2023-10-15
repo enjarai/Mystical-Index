@@ -2,6 +2,7 @@ package dev.enjarai.arcane_repository.util.request;
 
 import dev.enjarai.arcane_repository.item.custom.book.MysticalBookItem;
 import dev.enjarai.arcane_repository.item.custom.page.type.ItemStorageTypePage;
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
@@ -43,7 +44,8 @@ public class InsertionRequest extends Request {
                     int amountInserted = page.tryAddItem(book, getItemStack());
                     satisfy(amountInserted);
 
-                    runBlockAffectedCallback(source.getBlockEntity());
+                    source.onInteractionComplete();
+                    runBlockAffectedCallback(source.blockEntity());
                 }
             }
         }

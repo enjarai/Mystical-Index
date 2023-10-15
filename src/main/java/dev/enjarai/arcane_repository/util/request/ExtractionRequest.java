@@ -41,6 +41,7 @@ public class ExtractionRequest extends QueryBasedRequest {
                     if (bookItem.getTypePage(book) instanceof ItemStorageTypePage page) {
                         builder.addAll(page.extractItems(book, this, shouldApply()));
 
+                        source.onInteractionComplete();
                         runBlockAffectedCallback(source.getBlockEntity());
                     }
                 }
