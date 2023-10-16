@@ -11,9 +11,11 @@
 
 Empty pages are the base of Repository Books. 
 Though they can't be used directly, they serve as the base ingredient for all other pages.
-<|item-spotlight@lavender:book_components|item=arcane_repository:empty_page|>
+
 
 They can be crafted from tattered pages you find around the world:
+
+<|item-spotlight@lavender:book_components|item=arcane_repository:empty_page|>
 
 ;;;;;
 

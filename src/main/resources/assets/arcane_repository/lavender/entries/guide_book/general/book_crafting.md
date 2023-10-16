@@ -27,6 +27,11 @@ To create a Repository Book, you will need to combine the following items in a c
 - 0-many Attribute pages
 - 0-1 Action pages
 
+
+---
+
+<|item-tag@arcane_repository:templates|tag-id=arcane_repository:additional_book_ingredients|>
+
 ;;;;;
 
 The Catalyst is a gem that is used as a focus for the magic housed in the pages.

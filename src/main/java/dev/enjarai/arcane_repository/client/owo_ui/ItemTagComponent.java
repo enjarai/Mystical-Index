@@ -2,7 +2,9 @@ package dev.enjarai.arcane_repository.client.owo_ui;
 
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.container.FlowLayout;
+import io.wispforest.owo.ui.core.HorizontalAlignment;
 import io.wispforest.owo.ui.core.Sizing;
+import io.wispforest.owo.ui.core.VerticalAlignment;
 import io.wispforest.owo.ui.parsing.UIParsing;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
@@ -16,6 +18,8 @@ public class ItemTagComponent extends FlowLayout {
     public ItemTagComponent(TagKey<Item> tagKey) {
         super(Sizing.fill(100), Sizing.content(), Algorithm.LTR_TEXT);
         this.tagKey = tagKey;
+
+        alignment(HorizontalAlignment.CENTER, VerticalAlignment.CENTER);
 
         Registries.ITEM.getOrCreateEntryList(tagKey).forEach(entry -> {
             var stack = entry.value().getDefaultStack();
