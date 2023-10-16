@@ -4,7 +4,9 @@ import dev.enjarai.arcane_repository.block.ModBlockEntities;
 import dev.enjarai.arcane_repository.client.ClientNetworkListeners;
 import dev.enjarai.arcane_repository.client.ItemModelProviders;
 import dev.enjarai.arcane_repository.client.event.ClientEvents;
+import dev.enjarai.arcane_repository.client.owo_ui.ItemTagComponent;
 import dev.enjarai.arcane_repository.client.render.MysticalLecternBlockEntityRenderer;
+import io.wispforest.owo.ui.parsing.UIParsing;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -23,5 +25,7 @@ public class ArcaneRepositoryClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(BlockEntityType.CHISELED_BOOKSHELF, ChiseledBookshelfBlockEntityRenderer::new);
 
         ItemModelProviders.register();
+
+        UIParsing.registerFactory(ArcaneRepository.MOD_ID + ".item_tag", ItemTagComponent::parse);
     }
 }

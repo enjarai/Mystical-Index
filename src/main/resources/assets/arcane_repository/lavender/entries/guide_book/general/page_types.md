@@ -16,16 +16,18 @@ so they are categorized into three main types based on functionality:
 
 ;;;;;
 
-<item;arcane_repository:item_storage_type_page><item;arcane_repository:block_storage_type_page>
+<|item-tag@arcane_repository:templates|tag-id=arcane_repository:type_pages|>
+
+---
 
 A single type page is required for any book to function, 
 as these broadly define the general behaviour of the book, 
 and usually dictate what other pages you can use in the first place.
 
 
-E.g. an [Item Storage Type Page](^arcane_repository:item_storage/type_item_storage) will create a book that holds items, 
-while an [Indexing Type Page](^arcane_repository:indexing/type_indexing) will create a book 
-to [index your library](arcane_repository:indexing).
+E.g. an [Item Storage Page](^arcane_repository:item_storage/type_item_storage) will create a book that holds items, 
+while an [Indexing Page](^arcane_repository:indexing/type_indexing) will create a book 
+to [index your library](^arcane_repository:indexing).
 
 ;;;;;
 
@@ -40,6 +42,10 @@ This restriction however means it can be used in conjunction with a
 
 ;;;;;
 
+<|item-tag@arcane_repository:templates|tag-id=arcane_repository:attribute_pages|>
+
+---
+
 Attribute pages can be used to add to or improve functionality of a type page, 
 increasing capacity, range, etc. or granting additional passive effects.
 
@@ -48,6 +54,10 @@ You can add as many attribute pages as your book can fit,
 so long as they are compatible with the type page.
 
 ;;;;;
+
+<|item-tag@arcane_repository:templates|tag-id=arcane_repository:action_pages|>
+
+---
 
 Action pages are similar to attribute pages, in that they grant additional functionality,
 but there are some key distinctions. Firstly, you can only have one action page per book,

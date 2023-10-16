@@ -1,0 +1,9 @@
+<owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.20/owo-ui.xsd">
+    <templates>
+        <template name="item-tag">
+            <arcane_repository.item_tag tag-id="{{tag-id}}">
+            </arcane_repository.item_tag>
+        </template>
+    </templates>
+</owo-ui>
