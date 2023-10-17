@@ -2,7 +2,7 @@
 {
   "title": "Tattered Pages",
   "icon": "arcane_repository:tattered_page",
-  "category": "arcane_repository:1_general",
+  "category": "arcane_repository:general",
   "associated_items": [
     "arcane_repository:tattered_page"
   ]

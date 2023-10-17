@@ -2,7 +2,7 @@
 {
   "title": "Book Crafting",
   "icon": "minecraft:writable_book",
-  "category": "arcane_repository:1_general",
+  "category": "arcane_repository:general",
   "associated_items": [
     "arcane_repository:repository_book"
   ]

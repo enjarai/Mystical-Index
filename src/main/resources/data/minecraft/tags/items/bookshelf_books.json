@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "arcane_repository:repository_book"
+    "arcane_repository:repository_book",
+    "arcane_repository:guide_book"
   ]
 }

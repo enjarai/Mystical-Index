@@ -2,7 +2,7 @@
 {
   "title": "Empty Pages",
   "icon": "arcane_repository:empty_page",
-  "category": "arcane_repository:1_general",
+  "category": "arcane_repository:general",
   "associated_items": [
     "arcane_repository:empty_page"
   ]

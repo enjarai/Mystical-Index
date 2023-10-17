@@ -2,7 +2,7 @@
 {
   "title": "Page Types",
   "icon": "arcane_repository:indexing_type_page",
-  "category": "arcane_repository:1_general"
+  "category": "arcane_repository:general"
 }
 ```
 

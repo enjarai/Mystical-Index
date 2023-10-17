@@ -2,7 +2,7 @@
 {
   "title": "Ender Pearl Shards",
   "icon": "arcane_repository:ender_pearl_shard",
-  "category": "arcane_repository:1_general",
+  "category": "arcane_repository:general",
   "associated_items": [
     "arcane_repository:ender_pearl_shard"
   ]
