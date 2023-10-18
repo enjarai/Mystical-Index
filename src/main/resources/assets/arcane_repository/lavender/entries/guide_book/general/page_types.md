@@ -55,6 +55,11 @@ so long as they are compatible with the type page.
 
 ;;;;;
 
+It should be noted that attribute pages that directly increase numerical values, such as capacity,
+can almost always be stacked, which will compound their effect.
+
+;;;;;
+
 <|item-tag@arcane_repository:templates|tag-id=arcane_repository:action_pages|>
 
 ---

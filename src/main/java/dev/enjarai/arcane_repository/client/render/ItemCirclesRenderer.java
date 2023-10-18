@@ -32,10 +32,12 @@ public class ItemCirclesRenderer {
     public static final int CIRCLE_TEXTURES_SIZE = 256;
     public static final Map<Integer, Identifier> CIRCLE_TEXTURES = Map.of(
             24, ArcaneRepository.id("textures/gui/circle_24.png"),
-            48, ArcaneRepository.id("textures/gui/circle_48.png")
+            48, ArcaneRepository.id("textures/gui/circle_48.png"),
+            72, ArcaneRepository.id("textures/gui/circle_72.png")
     );
-    public static final int SECONDARY_CIRCLE_ITEM_COUNT = 7;
-    public static final int TERNARY_CIRCLE_ITEM_COUNT = 19;
+    public static final int SECONDARY_CIRCLE_ITEM_COUNT = 1 + 6;
+    public static final int TERNARY_CIRCLE_ITEM_COUNT = 1 + 6 + 12;
+    public static final int QUATERNARY_CIRCLE_ITEM_COUNT = 1 + 6 + 12 + 18;
 
     private final boolean inWorld;
 
@@ -71,9 +73,12 @@ public class ItemCirclesRenderer {
                 stacks.subList(1, Math.min(SECONDARY_CIRCLE_ITEM_COUNT, stacks.size())) : null;
         var ternary = stacks.size() > SECONDARY_CIRCLE_ITEM_COUNT ?
                 stacks.subList(SECONDARY_CIRCLE_ITEM_COUNT, Math.min(TERNARY_CIRCLE_ITEM_COUNT, stacks.size())) : null;
+        var quaternary = stacks.size() > TERNARY_CIRCLE_ITEM_COUNT ?
+                stacks.subList(TERNARY_CIRCLE_ITEM_COUNT, Math.min(QUATERNARY_CIRCLE_ITEM_COUNT, stacks.size())) : null;
 
         if (secondary != null) drawItemCircle(context, x, y, z, light, progress, 24, secondary);
         if (ternary != null) drawItemCircle(context, x, y, z, light, progress, 48, ternary);
+        if (quaternary != null) drawItemCircle(context, x, y, z, light, progress, 72, quaternary);
 
         var scale = calculateRingScale(0, progress);
         matrices.scale(scale, scale, scale);

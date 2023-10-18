@@ -7,8 +7,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 
-import static dev.enjarai.arcane_repository.client.render.ItemCirclesRenderer.SECONDARY_CIRCLE_ITEM_COUNT;
-import static dev.enjarai.arcane_repository.client.render.ItemCirclesRenderer.TERNARY_CIRCLE_ITEM_COUNT;
+import static dev.enjarai.arcane_repository.client.render.ItemCirclesRenderer.*;
 
 @Environment(EnvType.CLIENT)
 public class ItemStorageTooltipComponent implements TooltipComponent {
@@ -22,9 +21,10 @@ public class ItemStorageTooltipComponent implements TooltipComponent {
     public int getSize() {
         if (data.size <= 0) return 0;
         if (data.size <= 1) return 22;
-        if (data.size <= SECONDARY_CIRCLE_ITEM_COUNT) return 64;
-        if (data.size <= TERNARY_CIRCLE_ITEM_COUNT) return 112;
-        return 112;
+        if (data.size <= SECONDARY_CIRCLE_ITEM_COUNT) return (24 + 8) * 2;
+        if (data.size <= TERNARY_CIRCLE_ITEM_COUNT) return (48 + 8) * 2;
+        if (data.size <= QUATERNARY_CIRCLE_ITEM_COUNT) return (72 + 8) * 2;
+        return (72 + 8) * 2;
     }
 
     @Override

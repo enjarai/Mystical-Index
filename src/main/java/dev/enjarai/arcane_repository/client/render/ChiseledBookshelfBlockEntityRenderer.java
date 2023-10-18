@@ -18,16 +18,17 @@ import net.minecraft.util.math.RotationAxis;
 
 import java.util.List;
 
-public class ChiseledBookshelfBlockEntityRenderer implements BlockEntityRenderer<ChiseledBookshelfBlockEntity> {
+public class ChiseledBookshelfBlockEntityRenderer extends MildlyLessCringeBlockEntityRenderer<ChiseledBookshelfBlockEntity> {
     private final ItemCirclesRenderer circleRenderer = new ItemCirclesRenderer(true);
 
     public ChiseledBookshelfBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
+        super(ctx);
     }
 
     final float totalTime = 2f;
 
     @Override
-    public void render(ChiseledBookshelfBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    protected void render(ChiseledBookshelfBlockEntity entity, float tickDelta, float frameDelta, long time, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         var hitResult = MinecraftClient.getInstance().crosshairTarget;
         var mEntity = (ModifiedChiseledBookshelfBlockEntity) entity;
 
@@ -53,7 +54,7 @@ public class ChiseledBookshelfBlockEntityRenderer implements BlockEntityRenderer
 
                     matrices.push();
 
-                    mEntity.setElapsed(mEntity.getElapsed() + tickDelta / 75);
+                    mEntity.setElapsed(mEntity.getElapsed() + frameDelta / 25);
                     if (mEntity.getElapsed() > totalTime) mEntity.setElapsed(totalTime);
                     float t = mEntity.getElapsed() / totalTime;
 
