@@ -11,6 +11,11 @@
 
 Tattered Pages are remnants of ancient Repository Books that have been left around the world, 
 primarily being found in dungeons and dropped by Zombies.
+
+
+
+
+
 <|item-spotlight@lavender:book_components|item=arcane_repository:tattered_page|>
 
 ;;;;;

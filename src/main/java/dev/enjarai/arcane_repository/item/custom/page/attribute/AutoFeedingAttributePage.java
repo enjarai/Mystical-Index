@@ -32,20 +32,20 @@ public class AutoFeedingAttributePage extends AttributePageItem {
     }
 
     @Override
-    public @Nullable List<ActionPageItem> getCompatibleActions(ItemStack page) {
-        return List.of(FEEDING_ACTION_PAGE);
+    public List<TypePageItem> getCompatibleTypes(ItemStack page) {
+        return List.of(ModItems.FOOD_STORAGE_TYPE_PAGE);
     }
 
     @Override
-    public List<TypePageItem> getCompatibleTypes(ItemStack page) {
-        return List.of(ModItems.FOOD_STORAGE_TYPE_PAGE);
+    public boolean bookCanHaveMultiple(ItemStack page) {
+        return false;
     }
 
     @Override
     public void book$inventoryTick(ItemStack book, World world, Entity entity, int slot, boolean selected) {
         super.book$inventoryTick(book, world, entity, slot, selected);
 
-        if(entity instanceof PlayerEntity player && !player.isCreative() && player.canConsume(false)){
+        if (entity instanceof PlayerEntity player && !player.isCreative() && player.canConsume(false)){
             var usedBook = (MysticalBookItem) book.getItem();
 
             if (usedBook.getTypePage(book) instanceof FoodStorageTypePage foodPage) {

@@ -28,4 +28,9 @@ public class PickupAttributePage extends AttributePageItem {
     public List<TypePageItem> getCompatibleTypes(ItemStack page) {
         return List.of(ITEM_STORAGE_TYPE_PAGE, FOOD_STORAGE_TYPE_PAGE, BLOCK_STORAGE_TYPE_PAGE);
     }
+
+    @Override
+    public boolean bookCanHaveMultiple(ItemStack page) {
+        return false;
+    }
 }

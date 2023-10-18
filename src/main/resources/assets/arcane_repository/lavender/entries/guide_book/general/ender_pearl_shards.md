@@ -13,9 +13,10 @@ While [Tattered Pages](^arcane_repository:general/tattered_pages) can be restore
 this might not be a viable strategy in the long term, due to their relative scarcity. 
 Ender Pearl Shards can be used as an alternative to craft blank pages from ordinary paper.
 
-;;;;;
 
 <|item-spotlight@lavender:book_components|item=arcane_repository:ender_pearl_shard|>
+
+;;;;;
 
 Getting Ender Pearl Shards requires destroying an Ender Pearl without using it to teleport. 
 This can be done in many ways, such as fire, explosions, etc. 

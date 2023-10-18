@@ -1,6 +1,6 @@
 ```json
 {
-  "title": "Item Indexing",
+  "title": "Indexing",
   "icon": "arcane_repository:repository_book"
 }
 ```
