@@ -180,8 +180,12 @@ public class IndexingTypePage extends TypePageItem {
 
     @Override
     public boolean book$onStackClicked(ItemStack book, Slot slot, ClickType clickType, PlayerEntity player) {
-        if (clickType != ClickType.RIGHT || !slot.hasStack() || player.getWorld().isClient()) {
+        if (clickType != ClickType.RIGHT || !slot.hasStack()) {
             return false;
+        }
+
+        if (player.getWorld().isClient()) {
+            return true;
         }
 
         var index = getIndex(book, player.getWorld(), player.getBlockPos());
