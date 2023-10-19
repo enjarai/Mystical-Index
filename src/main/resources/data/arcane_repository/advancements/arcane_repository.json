@@ -4,7 +4,7 @@
       "item": "arcane_repository:guide_book"
     },
     "title": "Arcane Repository",
-    "description": "A magical solution to your hoarding problem.",
+    "description": "A magical solution to your hoarding problem",
     "show_toast": true,
     "announce_to_chat": true,
     "background": "minecraft:textures/block/spruce_planks.png"
@@ -26,6 +26,10 @@
   "rewards": {
     "loot": [
       "arcane_repository:grant_book_to_player"
+    ],
+    "recipes": [
+      "arcane_repository:page/empty_page_from_tattered",
+      "arcane_repository:guide_book"
     ]
   }
 }
