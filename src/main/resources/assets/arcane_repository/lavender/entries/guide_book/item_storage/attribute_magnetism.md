@@ -5,3 +5,5 @@
   "category": "arcane_repository:item_storage"
 }
 ```
+
+The magnetism attribute page can be used to attract dropped items in the world to a storage book.

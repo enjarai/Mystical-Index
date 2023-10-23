@@ -49,8 +49,8 @@ The book will respond to these requests with a message in chat,
 and either drop the requested items onto the lectern, or into your inventory if you're holding it.
 
 
-Items can also be inserted into the indexing book by dropping them onto the lectern,
-or right-clicking them on the book in your inventory. This will place the items in the repository,
+Items can also be inserted into the indexing book by right-clicking them on the lectern,
+or on the book in your inventory. This will place the items in the repository,
 prioritizing books that are filtered for them.
 
 ;;;;;

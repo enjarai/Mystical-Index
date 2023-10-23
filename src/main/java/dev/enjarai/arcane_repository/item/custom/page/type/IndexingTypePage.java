@@ -34,7 +34,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ClickType;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
 import net.minecraft.util.function.BooleanBiFunction;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShapes;
@@ -51,7 +53,7 @@ import static dev.enjarai.arcane_repository.block.entity.MysticalLecternBlockEnt
 import static dev.enjarai.arcane_repository.item.ModItems.INDEXING_TYPE_PAGE;
 import static net.minecraft.block.LecternBlock.HAS_BOOK;
 
-public class IndexingTypePage extends TypePageItem {
+public class IndexingTypePage extends TypePageItem implements ItemInsertableTypePage {
     public static final String MAX_RANGE_TAG = "max_range";
     public static final String MAX_LINKS_TAG = "max_links";
     public static final String MAX_RANGE_LINKED_TAG = "max_range_linked";
@@ -172,6 +174,22 @@ public class IndexingTypePage extends TypePageItem {
 
         request.apply(index);
         return request;
+    }
+
+    @Override
+    public int book$tryInsertItemStack(ItemStack book, PlayerEntity player, ItemStack insert) {
+        var index = getIndex(book, player.getWorld(), player.getBlockPos());
+        var request = tryInsertItemStack(index, insert, player.getPos());
+
+        return request.getAmountAffected();
+    }
+
+    @Override
+    public int lectern$tryInsertItemStack(MysticalLecternBlockEntity lectern, ItemStack insert) {
+        var index = getInteractionLecternIndex(lectern);
+        var request = tryInsertItemStack(index, insert, Vec3d.ofCenter(lectern.getPos(), 1));
+
+        return request.getAmountAffected();
     }
 
     public boolean isLinkableBlock(ItemStack book, BlockState state) {
@@ -358,23 +376,34 @@ public class IndexingTypePage extends TypePageItem {
         }
     }
 
+//    @Override
+//    public void lectern$onEntityCollision(MysticalLecternBlockEntity lectern, BlockState state, World world, BlockPos pos, Entity entity) {
+//        if (
+//                !world.isClient() &&
+//                entity instanceof ItemEntity itemEntity &&
+//                !Objects.equals(((ItemEntityAccessor) itemEntity).getThrower(), EXTRACTED_DROP_UUID) &&
+//                VoxelShapes.matchesAnywhere(VoxelShapes.cuboid(
+//                                entity.getBoundingBox().offset(-pos.getX(), -pos.getY(), -pos.getZ())),
+//                        LECTERN_INPUT_AREA_SHAPE, BooleanBiFunction.AND)
+//        ) {
+//
+//            var itemStack = itemEntity.getStack();
+//            var index = getInteractionLecternIndex(lectern);
+//
+//            var request = tryInsertItemStack(index, itemStack, Vec3d.ofCenter(pos));
+//            if (request.hasAffected()) WorldEffects.lecternPlonk(world, entity.getPos(), 0.6f, true);
+//        }
+//    }
+
     @Override
-    public void lectern$onEntityCollision(MysticalLecternBlockEntity lectern, BlockState state, World world, BlockPos pos, Entity entity) {
-        if (
-                !world.isClient() &&
-                entity instanceof ItemEntity itemEntity &&
-                !Objects.equals(((ItemEntityAccessor) itemEntity).getThrower(), EXTRACTED_DROP_UUID) &&
-                VoxelShapes.matchesAnywhere(VoxelShapes.cuboid(
-                                entity.getBoundingBox().offset(-pos.getX(), -pos.getY(), -pos.getZ())),
-                        LECTERN_INPUT_AREA_SHAPE, BooleanBiFunction.AND)
-        ) {
+    public ActionResult lectern$onUse(MysticalLecternBlockEntity lectern, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        var itemStack = player.getStackInHand(hand);
+        var index = getInteractionLecternIndex(lectern);
 
-            var itemStack = itemEntity.getStack();
-            var index = getInteractionLecternIndex(lectern);
+        var request = tryInsertItemStack(index, itemStack, Vec3d.ofCenter(pos));
+        if (request.hasAffected()) WorldEffects.lecternPlonk(world, player.getPos(), 0.6f, true);
 
-            var request = tryInsertItemStack(index, itemStack, Vec3d.ofCenter(pos));
-            if (request.hasAffected()) WorldEffects.lecternPlonk(world, entity.getPos(), 0.6f, true);
-        }
+        return ActionResult.SUCCESS;
     }
 
     @Override

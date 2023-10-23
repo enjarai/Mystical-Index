@@ -40,7 +40,7 @@ import java.util.stream.Stream;
 
 import static dev.enjarai.arcane_repository.item.ModItems.*;
 
-public class ItemStorageTypePage extends TypePageItem {
+public class ItemStorageTypePage extends TypePageItem implements ItemInsertableTypePage {
     public static final String MAX_STACKS_TAG = "max_stacks";
     public static final String MAX_TYPES_TAG = "max_types";
 
@@ -228,6 +228,20 @@ public class ItemStorageTypePage extends TypePageItem {
                 itemsList.size());
 
         return canBeTakenAmount;
+    }
+
+    @Override
+    public int book$tryInsertItemStack(ItemStack book, PlayerEntity player, ItemStack insert) {
+        var affected = tryAddItem(book, insert);
+        insert.decrement(affected);
+        return affected;
+    }
+
+    @Override
+    public int lectern$tryInsertItemStack(MysticalLecternBlockEntity lectern, ItemStack insert) {
+        var affected = tryAddItem(lectern.getBook(), insert);
+        insert.decrement(affected);
+        return affected;
     }
 
     public Optional<ItemStack> removeFirstStack(ItemStack book) {
