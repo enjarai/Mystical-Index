@@ -1,7 +1,8 @@
 ```json
 {
   "title": "Indexing",
-  "icon": "arcane_repository:repository_book"
+  "icon": "arcane_repository:repository_book",
+  "ordinal": 2
 }
 ```
 

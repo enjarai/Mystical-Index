@@ -1,7 +1,8 @@
 ```json
 {
   "title": "General Information",
-  "icon": "minecraft:lectern"
+  "icon": "minecraft:lectern",
+  "ordinal": 0
 }
 ```
 

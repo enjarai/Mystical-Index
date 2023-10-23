@@ -5,7 +5,8 @@
   "category": "arcane_repository:general",
   "associated_items": [
     "arcane_repository:ender_pearl_shard"
-  ]
+  ],
+  "ordinal": 2
 }
 ```
 

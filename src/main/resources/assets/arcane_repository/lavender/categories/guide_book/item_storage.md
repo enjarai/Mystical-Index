@@ -1,7 +1,8 @@
 ```json
 {
   "title": "Item Storage",
-  "icon": "arcane_repository:repository_book"
+  "icon": "arcane_repository:repository_book",
+  "ordinal": 1
 }
 ```
 

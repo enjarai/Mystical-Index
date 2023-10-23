@@ -1,3 +1,4 @@
 {
-  "texture": "lavender:textures/gui/red_book.png"
+  "texture": "lavender:textures/gui/red_book.png",
+  "intro_entry": "arcane_repository:intro"
 }

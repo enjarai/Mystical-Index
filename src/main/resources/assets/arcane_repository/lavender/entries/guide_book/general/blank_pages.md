@@ -5,7 +5,8 @@
   "category": "arcane_repository:general",
   "associated_items": [
     "arcane_repository:empty_page"
-  ]
+  ],
+  "ordinal": 1
 }
 ```
 
