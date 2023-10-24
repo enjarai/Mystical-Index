@@ -2,7 +2,8 @@
 {
   "title": "Linked Indexing",
   "icon": "minecraft:compass",
-  "category": "arcane_repository:indexing"
+  "category": "arcane_repository:indexing",
+  "ordinal": 2
 }
 ```
 

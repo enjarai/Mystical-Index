@@ -5,7 +5,8 @@
   "category": "arcane_repository:item_storage",
   "associated_items": [
     "arcane_repository:feeding_action_page"
-  ]
+  ],
+  "ordinal": 9
 }
 ```
 

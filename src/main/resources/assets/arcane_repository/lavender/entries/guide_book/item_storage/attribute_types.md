@@ -5,7 +5,8 @@
   "category": "arcane_repository:item_storage",
   "associated_items": [
     "arcane_repository:types_page"
-  ]
+  ],
+  "ordinal": 4
 }
 ```
 
