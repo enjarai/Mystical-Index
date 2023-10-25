@@ -41,8 +41,8 @@ public class MysticalBookRecipe extends SpecialCraftingRecipe {
     private static final Ingredient ATTRIBUTE_PAGES = Ingredient.ofItems(PageRegistry.getPages(AttributePageItem.class).toArray(new Item[0]));
     private static final Ingredient ACTION_PAGES = Ingredient.ofItems(PageRegistry.getPages(ActionPageItem.class).toArray(new Item[0]));
 
-    public MysticalBookRecipe(Identifier id, CraftingRecipeCategory category) {
-        super(id, category);
+    public MysticalBookRecipe(CraftingRecipeCategory category) {
+        super(category);
     }
 
     @Override
@@ -195,7 +195,7 @@ public class MysticalBookRecipe extends SpecialCraftingRecipe {
     }
 
     @Override
-    public ItemStack getOutput(DynamicRegistryManager registryManager) {
+    public ItemStack getResult(DynamicRegistryManager registryManager) {
         return new ItemStack(ModItems.MYSTICAL_BOOK);
     }
 
