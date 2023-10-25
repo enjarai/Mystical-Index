@@ -2,8 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "pbp",
-    "gpg",
-    " g "
+    "ggg"
   ],
   "key": {
     "p": {
@@ -18,6 +17,6 @@
   },
   "result": {
     "item": "arcane_repository:links_page",
-    "count": 3
+    "count": 2
   }
 }

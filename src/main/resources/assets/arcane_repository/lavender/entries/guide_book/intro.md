@@ -28,8 +28,3 @@ Regretfully, the art of writing and compiling the books that make up repositorie
 
 Thus, this book is my attempt to document and explain what little we do know of this lost art, 
 in the hopes it may be of use to someone.
-
-
-Sincerely,
-
-Victor Tervosh
