@@ -2,12 +2,11 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "pap",
-    "gpg",
-    " g "
+    "ggg"
   ],
   "key": {
     "p": {
-      "item": "arcane_repository:empty_page"
+      "item": "arcane_repository:feeding_action_page"
     },
     "g": {
       "item": "minecraft:glowstone_dust"
@@ -18,6 +17,6 @@
   },
   "result": {
     "item": "arcane_repository:auto_feeding_attribute_page",
-    "count": 3
+    "count": 2
   }
 }
