@@ -1,6 +1,7 @@
 package dev.enjarai.arcane_repository.mixin.library;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import dev.enjarai.arcane_repository.item.custom.book.MysticalBookItem;
 import dev.enjarai.arcane_repository.item.custom.page.type.ItemStorageTypePage;
 import dev.enjarai.arcane_repository.util.ModifiedChiseledBookshelfBlockEntity;
@@ -22,6 +23,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.List;
+import java.util.Set;
 
 @Mixin(ChiseledBookshelfBlockEntity.class)
 public abstract class ChiseledBookshelfBlockEntityMixin extends BlockEntity implements IndexInteractable, ModifiedChiseledBookshelfBlockEntity {
@@ -37,8 +39,8 @@ public abstract class ChiseledBookshelfBlockEntityMixin extends BlockEntity impl
     BlockPos lastHitPos = BlockPos.ORIGIN;
 
     @Override
-    public List<IndexSource> getSources() {
-        ImmutableList.Builder<IndexSource> builder = ImmutableList.builder();
+    public Set<IndexSource> getSources() {
+        ImmutableSet.Builder<IndexSource> builder = ImmutableSet.builder();
 
         for (int i = 0; i < size(); i++) {
             var book = getStack(i);

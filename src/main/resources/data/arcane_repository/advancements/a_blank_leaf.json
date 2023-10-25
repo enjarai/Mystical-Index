@@ -4,7 +4,7 @@
     "icon": {
       "item": "arcane_repository:empty_page"
     },
-    "title": "A Blank Canvas",
+    "title": "A Blank Leaf",
     "description": "Create or restore a blank page",
     "show_toast": true,
     "announce_to_chat": true
@@ -27,7 +27,6 @@
     "recipes": [
       "arcane_repository:page/empty_page_from_paper",
       "arcane_repository:page/type/item_storage",
-      "arcane_repository:page/type/indexing",
       "arcane_repository:custom_book"
     ]
   }

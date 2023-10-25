@@ -1,0 +1,32 @@
+{
+  "parent": "arcane_repository:a_blank_leaf",
+  "display": {
+    "icon": {
+      "item": "arcane_repository:ender_pearl_shard"
+    },
+    "title": "Shattered and Lost",
+    "description": "Break an ender pearl using unconventional means",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "page": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "arcane_repository:ender_pearl_shard"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "recipes": [
+      "arcane_repository:page/empty_page_from_paper",
+      "arcane_repository:page/type/indexing"
+    ]
+  }
+}

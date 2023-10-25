@@ -1,6 +1,7 @@
 package dev.enjarai.arcane_repository.util.request;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import dev.enjarai.arcane_repository.block.ModTags;
 import dev.enjarai.arcane_repository.util.WorldEffects;
 import net.minecraft.util.math.BlockPos;
@@ -65,8 +66,8 @@ public class LibraryIndex implements IndexInteractable {
     }
 
     @Override
-    public List<IndexSource> getSources() {
-        ImmutableList.Builder<IndexSource> builder = ImmutableList.builder();
+    public Set<IndexSource> getSources() {
+        ImmutableSet.Builder<IndexSource> builder = ImmutableSet.builder();
 
         for (IndexInteractable entity : interactables) {
             builder.addAll(entity.getSources());

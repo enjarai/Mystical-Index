@@ -33,6 +33,7 @@
   "accessWidener": "arcane_repository.accesswidener",
   "depends": {
     "fabric": "*",
-    "minecraft": "1.20.x"
+    "minecraft": "1.20.1",
+    "owo": "*"
   }
 }

@@ -1,0 +1,35 @@
+{
+  "parent": "arcane_repository:off_my_chest",
+  "display": {
+    "icon": {
+      "item": "arcane_repository:stacks_page"
+    },
+    "title": "Number Goes Up",
+    "description": "Create some pages to increase your storage capacity",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "page": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "arcane_repository:stacks_page"
+            ]
+          }
+        ],
+        "items2": [
+          {
+            "items": [
+              "arcane_repository:types_page"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+  }
+}

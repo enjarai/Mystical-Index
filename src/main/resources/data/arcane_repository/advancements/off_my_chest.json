@@ -1,0 +1,35 @@
+{
+  "parent": "arcane_repository:a_blank_leaf",
+  "display": {
+    "icon": {
+      "item": "arcane_repository:item_storage_type_page"
+    },
+    "title": "Off My Chest",
+    "description": "Craft a page to facilitate item storage",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "page": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "arcane_repository:item_storage_type_page"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "recipes": [
+      "arcane_repository:page/type/block_storage",
+      "arcane_repository:page/type/food_storage",
+      "arcane_repository:page/attribute/stacks",
+      "arcane_repository:page/attribute/types",
+      "arcane_repository:page/attribute/pickup"
+    ]
+  }
+}
