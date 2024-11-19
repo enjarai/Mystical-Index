@@ -2,6 +2,7 @@ package dev.enjarai.arcane_repository.item.custom.page.type;
 
 import com.google.common.collect.ImmutableList;
 import dev.enjarai.arcane_repository.client.tooltip.ItemStorageTooltipData;
+import dev.enjarai.arcane_repository.item.ItemSettings;
 import dev.enjarai.arcane_repository.item.ModDataComponentTypes;
 import dev.enjarai.arcane_repository.item.component.StorageFilterComponent;
 import dev.enjarai.arcane_repository.util.request.ExtractionRequest;
@@ -50,7 +51,7 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
     public static final String MAX_TYPES_TAG = "max_types";
 
     public ItemStorageTypePage(String id) {
-        super(id);
+        super(new ItemSettings().component(COMPONENT_TYPE, new StorageFilterComponent(List.of(), 0, 0)), id);
     }
 
     private StorageFilterComponent getComponent(ItemStack stack) {

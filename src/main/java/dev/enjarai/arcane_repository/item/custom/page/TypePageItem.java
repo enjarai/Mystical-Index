@@ -13,8 +13,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public abstract class TypePageItem extends PageItem implements InteractingPage {
-    public TypePageItem(String id) {
-        super(new ItemSettings().rarity(Rarity.RARE), id);
+    public TypePageItem(Settings settings,String id) {
+        super(settings.rarity(Rarity.RARE), id);
     }
 
     public boolean mixColor(ItemStack stack) {

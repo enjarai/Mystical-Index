@@ -2,6 +2,7 @@ package dev.enjarai.arcane_repository.item.custom.page.type;
 
 import dev.enjarai.arcane_repository.block.entity.MysticalLecternBlockEntity;
 import dev.enjarai.arcane_repository.duck.RepositoryDrop;
+import dev.enjarai.arcane_repository.item.ItemSettings;
 import dev.enjarai.arcane_repository.item.ModDataComponentTypes;
 import dev.enjarai.arcane_repository.item.custom.page.AttributePageItem;
 import dev.enjarai.arcane_repository.item.custom.page.TypePageItem;
@@ -56,7 +57,7 @@ public class IndexingTypePage extends TypePageItem implements ItemInsertableType
     public static final String MAX_RANGE_LINKED_TAG = "max_range_linked";
 
     public IndexingTypePage(String id) {
-        super(id);
+        super(new ItemSettings(), id);
     }
 
     @Override
