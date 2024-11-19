@@ -5,10 +5,12 @@
   "compatibilityLevel": "JAVA_16",
   "mixins": [
     "EnderPearlItemMixin",
+    "ItemEntityMixin",
     "ItemMixin",
     "PlayerInventoryMixin",
     "accessor.ItemEntityAccessor",
     "accessor.ItemUsageContextAccessor",
+    "accessor.LootTablesAccessor",
     "library.BlockMixin",
     "library.BlockWithEntityMixin",
     "library.ChiseledBookshelfBlockEntityMixin",

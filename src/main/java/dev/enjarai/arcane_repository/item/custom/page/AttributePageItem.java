@@ -1,21 +1,23 @@
 package dev.enjarai.arcane_repository.item.custom.page;
 
-import net.minecraft.client.item.TooltipContext;
+import dev.enjarai.arcane_repository.item.ItemSettings;
+import dev.enjarai.arcane_repository.item.ModDataComponentTypes;
+import net.minecraft.component.ComponentType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public abstract class AttributePageItem extends PageItem implements TypeDependentPage, ActionDependablePage {
-    public static final String ATTRIBUTES_TAG = "attributes";
+    public static final ComponentType<NbtCompound> ATTRIBUTES_TAG = ModDataComponentTypes.PAGE_ITEM_ATTRIBUTES;
 
     public AttributePageItem(String id) {
-        super(id);
+        super(new ItemSettings(), id);
     }
 
     public static void multiplyIntAttribute(NbtCompound nbt, String attribute, double amount) {
@@ -37,7 +39,7 @@ public abstract class AttributePageItem extends PageItem implements TypeDependen
     public void onCraftToBook(ItemStack page, ItemStack book) {
         super.onCraftToBook(page, book);
 
-        appendAttributes(page, book.getOrCreateSubNbt(ATTRIBUTES_TAG));
+        appendAttributes(page, book.getOrDefault(ATTRIBUTES_TAG, new NbtCompound()));
     }
 
     @Nullable
@@ -52,16 +54,16 @@ public abstract class AttributePageItem extends PageItem implements TypeDependen
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        super.appendTooltip(stack, world, tooltip, context);
+    public void appendTooltip(ItemStack stack, @Nullable TooltipContext context, List<Text> tooltip, TooltipType type) {
+        super.appendTooltip(stack, context, tooltip, type);
 
         var name = getAttributeDisplayName();
         if (name != null) tooltip.add(name);
     }
 
     @Override
-    public void book$appendPropertiesTooltip(ItemStack book, @Nullable World world, List<Text> properties, TooltipContext context) {
-        super.book$appendPropertiesTooltip(book, world, properties, context);
+    public void book$appendPropertiesTooltip(ItemStack book, @Nullable TooltipContext context, List<Text> properties, TooltipType type) {
+        super.book$appendPropertiesTooltip(book, context, properties, type);
 
         var name = book$getAttributeDisplayName();
         if (name != null) properties.add(name);

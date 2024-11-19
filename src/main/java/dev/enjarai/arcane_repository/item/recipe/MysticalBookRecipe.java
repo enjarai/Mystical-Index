@@ -1,5 +1,7 @@
 package dev.enjarai.arcane_repository.item.recipe;
 
+import dev.enjarai.arcane_repository.item.ModDataComponentTypes;
+import dev.enjarai.arcane_repository.item.component.MysticalBookComponent;
 import dev.enjarai.arcane_repository.item.custom.book.MysticalBookItem;
 import dev.enjarai.arcane_repository.item.ModItems;
 import dev.enjarai.arcane_repository.item.ModRecipes;
@@ -19,8 +21,10 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialCraftingRecipe;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
+import net.minecraft.recipe.input.CraftingRecipeInput;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
@@ -41,12 +45,12 @@ public class MysticalBookRecipe extends SpecialCraftingRecipe {
     private static final Ingredient ATTRIBUTE_PAGES = Ingredient.ofItems(PageRegistry.getPages(AttributePageItem.class).toArray(new Item[0]));
     private static final Ingredient ACTION_PAGES = Ingredient.ofItems(PageRegistry.getPages(ActionPageItem.class).toArray(new Item[0]));
 
-    public MysticalBookRecipe(Identifier id, CraftingRecipeCategory category) {
-        super(id, category);
+    public MysticalBookRecipe(CraftingRecipeCategory category) {
+        super(category);
     }
 
     @Override
-    public boolean matches(RecipeInputInventory craftingInventory, World world) {
+    public boolean matches(CraftingRecipeInput input, World world) {
         var binding = false;
         var catalyst = 0;
         TypePageItem typePage = null;
@@ -54,8 +58,8 @@ public class MysticalBookRecipe extends SpecialCraftingRecipe {
         var pages = new ArrayList<PageItem>();
 
         // Check binding and catalyst, and store type page.
-        for (int i = 0; i < craftingInventory.size(); ++i) {
-            var itemStack = craftingInventory.getStack(i);
+        for (int i = 0; i < input.getSize(); ++i) {
+            var itemStack = input.getStackInSlot(i);
             if (itemStack.isEmpty()) continue;
             if (BINDING.test(itemStack)) {
                 if (binding) {
@@ -86,8 +90,8 @@ public class MysticalBookRecipe extends SpecialCraftingRecipe {
         }
 
         // Store action page.
-        for (int i = 0; i < craftingInventory.size(); ++i) {
-            var itemStack = craftingInventory.getStack(i);
+        for (int i = 0; i < input.getSize(); ++i) {
+            var itemStack = input.getStackInSlot(i);
             if (itemStack.isEmpty()) continue;
             if (itemStack.getItem() instanceof ActionPageItem page) {
                 if (typePage == null || !page.getCompatibleTypes(itemStack).contains(typePage)) {
@@ -102,8 +106,8 @@ public class MysticalBookRecipe extends SpecialCraftingRecipe {
         }
 
         // Get attribute pages and check if all pages are compatible.
-        for (int i = 0; i < craftingInventory.size(); ++i) {
-            var itemStack = craftingInventory.getStack(i);
+        for (int i = 0; i < input.getSize(); ++i) {
+            var itemStack = input.getStackInSlot(i);
             if (itemStack.isEmpty()) continue;
             if (itemStack.getItem() instanceof AttributePageItem page) {
                 if (typePage == null || !page.getCompatibleTypes(itemStack).contains(typePage)) {
@@ -127,48 +131,49 @@ public class MysticalBookRecipe extends SpecialCraftingRecipe {
     }
 
     @Override
-    public ItemStack craft(RecipeInputInventory craftingInventory, DynamicRegistryManager registryManager) {
+    public ItemStack craft(CraftingRecipeInput input, RegistryWrapper.WrapperLookup lookup) {
         var book = new ItemStack(ModItems.MYSTICAL_BOOK);
-        var nbt = book.getOrCreateNbt();
+        MysticalBookComponent component = book.get(ModDataComponentTypes.MYSTICAL_BOOK);
         var typeColor = -1;
         var otherColors = new ArrayList<Integer>();
 
-        for (int i = 0; i < craftingInventory.size(); ++i) {
-            var stack = craftingInventory.getStack(i);
+        for (int i = 0; i < input.getSize(); ++i) {
+            var stack = input.getStackInSlot(i);
             if (CATALYST.test(stack)) {
-                nbt.putString(MysticalBookItem.CATALYST_TAG, Registries.ITEM.getId(stack.getItem()).toString());
+                book.set(ModDataComponentTypes.MYSTICAL_BOOK, component.withCatalyst(Registries.ITEM.getId(stack.getItem())));
                 break;
             }
         }
 
-        for (int i = 0; i < craftingInventory.size(); ++i) {
-            var stack = craftingInventory.getStack(i);
+        for (int i = 0; i < input.getSize(); ++i) {
+            var stack = input.getStackInSlot(i);
             if (stack.getItem() instanceof TypePageItem pageItem) {
                 pageItem.onCraftToBook(stack, book);
                 typeColor = pageItem.getColor();
                 if (pageItem.mixColor(stack)) otherColors.add(typeColor);
-                nbt.put(MysticalBookItem.TYPE_PAGE_TAG, NbtString.of(Registries.ITEM.getId(pageItem).toString()));
+                book.set(ModDataComponentTypes.MYSTICAL_BOOK, component.withTypePage(Registries.ITEM.getId(pageItem)));
                 break;
             }
         }
 
-        var pagesList = nbt.getList(MysticalBookItem.ATTRIBUTE_PAGES_TAG, NbtElement.STRING_TYPE);
-        for (int i = 0; i < craftingInventory.size(); ++i) {
-            var stack = craftingInventory.getStack(i);
+        var pagesList = new ArrayList<>(component.attributePages());
+        for (int i = 0; i < input.getSize(); ++i) {
+            var stack = input.getStackInSlot(i);
             if (stack.getItem() instanceof AttributePageItem pageItem) {
                 pageItem.onCraftToBook(stack, book);
                 otherColors.add(pageItem.getColor());
-                pagesList.add(NbtString.of(Registries.ITEM.getId(pageItem).toString()));
+                pagesList.add(Registries.ITEM.getId(pageItem));
             }
         }
-        nbt.put(MysticalBookItem.ATTRIBUTE_PAGES_TAG, pagesList);
 
-        for (int i = 0; i < craftingInventory.size(); ++i) {
-            var stack = craftingInventory.getStack(i);
+        book.set(ModDataComponentTypes.MYSTICAL_BOOK, component.withAttributePages(pagesList));
+
+        for (int i = 0; i < input.getSize(); ++i) {
+            var stack = input.getStackInSlot(i);
             if (stack.getItem() instanceof ActionPageItem pageItem) {
                 pageItem.onCraftToBook(stack, book);
                 otherColors.add(pageItem.getColor());
-                nbt.put(MysticalBookItem.ACTION_PAGE_TAG, NbtString.of(Registries.ITEM.getId(pageItem).toString()));
+                book.set(ModDataComponentTypes.MYSTICAL_BOOK, component.withActionPage(Registries.ITEM.getId(pageItem)));
                 break;
             }
         }
@@ -195,7 +200,7 @@ public class MysticalBookRecipe extends SpecialCraftingRecipe {
     }
 
     @Override
-    public ItemStack getOutput(DynamicRegistryManager registryManager) {
+    public ItemStack getResult(RegistryWrapper.WrapperLookup registriesLookup) {
         return new ItemStack(ModItems.MYSTICAL_BOOK);
     }
 

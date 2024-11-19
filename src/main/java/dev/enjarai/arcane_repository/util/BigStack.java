@@ -37,7 +37,7 @@ public class BigStack {
     }
 
     public boolean canCombine(ItemStack other) {
-        return ItemStack.canCombine(itemStack, other);
+        return ItemStack.areItemsAndComponentsEqual(itemStack, other);
     }
 
     public void increment(int amount) {

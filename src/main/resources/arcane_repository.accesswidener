@@ -3,4 +3,5 @@ accessWidener   v2  named
 accessible method net/minecraft/client/gui/DrawContext <init> (Lnet/minecraft/client/MinecraftClient;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider$Immediate;)V
 
 accessible method net/minecraft/block/ChiseledBookshelfBlock getHitPos (Lnet/minecraft/util/hit/BlockHitResult;Lnet/minecraft/util/math/Direction;)Ljava/util/Optional;
-accessible method net/minecraft/block/ChiseledBookshelfBlock getSlotForHitPos (Lnet/minecraft/util/math/Vec2f;)I
+accessible method net/minecraft/block/ChiseledBookshelfBlock getSlotForHitPos (Lnet/minecraft/util/hit/BlockHitResult;Lnet/minecraft/block/BlockState;)Ljava/util/OptionalInt;
+accessible method net/minecraft/block/ChiseledBookshelfBlock getColumn (F)I

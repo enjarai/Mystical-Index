@@ -1,13 +1,12 @@
 package dev.enjarai.arcane_repository.item.custom.page;
 
 import dev.enjarai.arcane_repository.block.entity.MysticalLecternBlockEntity;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -24,8 +23,8 @@ import static dev.enjarai.arcane_repository.item.custom.page.AttributePageItem.A
 public abstract class PageItem extends Item {
     public final String id;
 
-    public PageItem(String id) {
-        super(new FabricItemSettings());
+    public PageItem(Item.Settings settings, String id) {
+        super(settings.rarity(Rarity.UNCOMMON));
         this.id = id;
     }
 
@@ -35,10 +34,10 @@ public abstract class PageItem extends Item {
     public void book$inventoryTick(ItemStack book, World world, Entity entity, int slot, boolean selected) {
     }
 
-    public void book$appendTooltip(ItemStack book, @Nullable World world, List<Text> properties, TooltipContext context) {
+    public void book$appendTooltip(ItemStack book, @Nullable TooltipContext world, List<Text> properties, TooltipType type) {
     }
 
-    public void book$appendPropertiesTooltip(ItemStack book, @Nullable World world, List<Text> properties, TooltipContext context) {
+    public void book$appendPropertiesTooltip(ItemStack book, @Nullable TooltipContext context, List<Text> properties, TooltipType type) {
     }
 
     /**
@@ -70,15 +69,10 @@ public abstract class PageItem extends Item {
     public void lectern$serverTick(World world, BlockPos pos, BlockState state, MysticalLecternBlockEntity lectern) {
     }
 
-    @Override
-    public Rarity getRarity(ItemStack page) {
-        return Rarity.UNCOMMON;
-    }
-
     public abstract int getColor();
 
     public NbtCompound getAttributes(ItemStack book) {
-        return book.getOrCreateSubNbt(ATTRIBUTES_TAG);
+        return book.get(ATTRIBUTES_TAG);
     }
 
     // TODO display color on item texture somehow
@@ -90,8 +84,8 @@ public abstract class PageItem extends Item {
 //    }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        super.appendTooltip(stack, world, tooltip, context);
+    public void appendTooltip(ItemStack stack, @Nullable TooltipContext context, List<Text> tooltip, TooltipType type) {
+        super.appendTooltip(stack, context, tooltip, type);
 
         tooltip.add(Text.literal(""));
         tooltip.add(Text.translatable("item.arcane_repository.page.tooltip.when_applied").formatted(Formatting.GRAY));

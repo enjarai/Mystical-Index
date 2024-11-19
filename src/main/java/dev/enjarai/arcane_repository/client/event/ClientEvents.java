@@ -1,6 +1,7 @@
 package dev.enjarai.arcane_repository.client.event;
 
 import dev.enjarai.arcane_repository.item.custom.book.MysticalBookItem;
+import dev.enjarai.arcane_repository.network.ScrollItemPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -11,8 +12,6 @@ import dev.enjarai.arcane_repository.mixin.accessor.HandledScreenAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-
-import static dev.enjarai.arcane_repository.event.ServerNetworkListeners.SCROLL_ITEM;
 
 @Environment(EnvType.CLIENT)
 public class ClientEvents {
@@ -36,13 +35,7 @@ public class ClientEvents {
                 book.onInventoryScroll(stack, MinecraftClient.getInstance().player, scroll);
             }
 
-            var buf = PacketByteBufs.create();
-
-            buf.writeByte(handledScreen.getHandler().syncId);
-            buf.writeShort(focusedSlot.id);
-            buf.writeByte(scroll);
-
-            ClientPlayNetworking.send(SCROLL_ITEM, buf);
+            ClientPlayNetworking.send(new ScrollItemPacket(handledScreen.getHandler().syncId, focusedSlot.id, scroll));
         }
     }
 

@@ -7,7 +7,7 @@ import net.minecraft.recipe.SpecialRecipeSerializer;
 
 public class ModRecipes {
     public static final SpecialRecipeSerializer<MysticalBookRecipe> MYSTICAL_BOOK = RecipeSerializer.register(
-            ArcaneRepository.MOD_ID + ":crafting_special_custom_book",
+            ArcaneRepository.id("crafting_special_custom_book").toString(),
             new SpecialRecipeSerializer<>(MysticalBookRecipe::new));
 
     public static void registerModRecipes(){

@@ -5,6 +5,7 @@ import dev.enjarai.arcane_repository.item.custom.book.MysticalBookItem;
 import dev.enjarai.arcane_repository.item.custom.page.ActionPageItem;
 import dev.enjarai.arcane_repository.item.custom.page.TypePageItem;
 import dev.enjarai.arcane_repository.item.custom.page.type.FoodStorageTypePage;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -45,15 +46,15 @@ public class FeedingActionPage extends ActionPageItem {
         var usedBook = (MysticalBookItem) book.getItem();
 
         if (usedBook.getTypePage(book) instanceof FoodStorageTypePage foodPage) {
-            Item foodItem;
+            ItemStack foodItem;
             try {
-                foodItem = foodPage.getContents(book).getAll().get(0).getItem();
+                foodItem = foodPage.getContents(book).getAll().get(0).getItemStack();
             } catch (IndexOutOfBoundsException e) {
                 return TypedActionResult.fail(book);
             }
 
-            var foodComponent = foodItem.getFoodComponent();
-            if (foodComponent != null && user.canConsume(foodComponent.isAlwaysEdible())){
+            var foodComponent = foodItem.get(DataComponentTypes.FOOD);
+            if (foodComponent != null && user.canConsume(foodComponent.canAlwaysEat())){
                 user.setCurrentHand(hand);
                 return TypedActionResult.consume(book);
             }
@@ -71,7 +72,8 @@ public class FeedingActionPage extends ActionPageItem {
         if (usedBook.getTypePage(book) instanceof FoodStorageTypePage foodPage) {
             var food = foodPage.removeFirstStack(book, 1);
             if (food.isPresent()) {
-                user.eatFood(world, food.get());
+                ItemStack stack = food.get();
+                user.eatFood(world, stack, stack.get(DataComponentTypes.FOOD));
                 return null;
             }
         }

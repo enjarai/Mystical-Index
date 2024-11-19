@@ -3,12 +3,12 @@ package dev.enjarai.arcane_repository.item.custom.page;
 import dev.enjarai.arcane_repository.block.entity.MysticalLecternBlockEntity;
 import dev.enjarai.arcane_repository.util.state.PageLecternState;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipData;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.tooltip.TooltipData;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
@@ -80,7 +80,11 @@ public interface InteractingPage {
         return false;
     }
 
-    default ActionResult lectern$onUse(MysticalLecternBlockEntity lectern, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    default ActionResult lectern$onUse(MysticalLecternBlockEntity lectern, BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         return ActionResult.PASS;
+    }
+
+    default ItemActionResult lectern$onUseWithItem(MysticalLecternBlockEntity lectern, ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+        return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 }

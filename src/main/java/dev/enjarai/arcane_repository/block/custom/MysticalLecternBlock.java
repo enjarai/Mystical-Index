@@ -20,6 +20,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -64,15 +65,11 @@ public class MysticalLecternBlock extends LecternBlock {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (hand != Hand.MAIN_HAND) {
-            return ActionResult.CONSUME;
-        }
-
+    protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (!player.isSneaking()) {
             if (world.getBlockEntity(pos) instanceof MysticalLecternBlockEntity lectern) {
                 if (state.get(HAS_BOOK) && lectern.getBook().getItem() instanceof MysticalBookItem book) {
-                    var result = book.lectern$onUse(lectern, state, world, pos, player, hand, hit);
+                    var result = book.lectern$onUse(lectern, state, world, pos, player, hit);
                     if (result != ActionResult.PASS) {
                         return result;
                     }
@@ -99,6 +96,38 @@ public class MysticalLecternBlock extends LecternBlock {
         return ActionResult.CONSUME;
     }
 
+    @Override //TODO: check this
+    protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (!player.isSneaking()) {
+            if (world.getBlockEntity(pos) instanceof MysticalLecternBlockEntity lectern) {
+                if (state.get(HAS_BOOK) && lectern.getBook().getItem() instanceof MysticalBookItem book) {
+                    var result = book.lectern$onUseWithItem(lectern, stack, state, world, pos, player, hit);
+                    if (result != ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) {
+                        return result;
+                    }
+                }
+            }
+        } else {
+            if (state.get(HAS_BOOK)) {
+                var blockEntity = world.getBlockEntity(pos);
+                if (blockEntity instanceof MysticalLecternBlockEntity lecternBlockEntity) {
+                    var book = lecternBlockEntity.getBook();
+                    player.getInventory().offerOrDrop(book);
+
+                    if (book.getItem() instanceof MysticalBookItem bookItem) {
+                        bookItem.lectern$onRemoved(player, lecternBlockEntity);
+                    }
+
+                    world.setBlockState(pos, Blocks.LECTERN.getStateWithProperties(state).with(LecternBlock.HAS_BOOK, false));
+
+                    return ItemActionResult.success(world.isClient());
+                }
+                return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+            }
+        }
+        return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+    }
+
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new MysticalLecternBlockEntity(pos, state);
@@ -106,7 +135,7 @@ public class MysticalLecternBlock extends LecternBlock {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, ModBlockEntities.MYSTICAL_LECTERN_BLOCK_ENTITY, MysticalLecternBlockEntity::serverTick);
+        return validateTicker(type, ModBlockEntities.MYSTICAL_LECTERN_BLOCK_ENTITY, MysticalLecternBlockEntity::serverTick);
     }
 
     @Override

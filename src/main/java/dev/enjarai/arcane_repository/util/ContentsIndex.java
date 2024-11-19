@@ -43,7 +43,7 @@ public class ContentsIndex implements Iterable<BigStack> {
 
     public void add(ItemStack item, int amount) {
         for (BigStack content : contents) {
-            if (ItemStack.canCombine(content.getItemStack(), item)) {
+            if (ItemStack.areItemsAndComponentsEqual(content.getItemStack(), item)) {
                 content.increment(amount);
                 return;
             }

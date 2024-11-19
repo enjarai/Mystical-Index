@@ -76,7 +76,7 @@ public class MysticalLecternBlockEntityRenderer implements BlockEntityRenderer<M
         matrices.translate(0.0, -0.125, 0.0);
         this.book.setPageAngles(0.0f, 0.1f, 0.9f, 1.2f);
         VertexConsumer vertexConsumer = BOOK_TEXTURE.getVertexConsumer(vertexConsumers, RenderLayer::getEntitySolid);
-        this.book.renderBook(matrices, vertexConsumer, light, overlay, 1.0f, 1.0f, 1.0f, 1.0f);
+        this.book.renderBook(matrices, vertexConsumer, light, overlay, 0xffffff);
 
         matrices.pop();
     }

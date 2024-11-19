@@ -1,5 +1,7 @@
 package dev.enjarai.arcane_repository.client;
 
+import dev.enjarai.arcane_repository.item.ModDataComponentTypes;
+import dev.enjarai.arcane_repository.item.component.MysticalBookComponent;
 import dev.enjarai.arcane_repository.item.custom.book.MysticalBookItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -24,10 +26,10 @@ public class ItemModelProviders {
     }
 
     private static void registerBookModel(Identifier id, String name) {
-        var checkId = id.toString();
-        ModelPredicateProviderRegistryAccessor.callRegister(new Identifier(name), (itemStack, clientWorld, livingEntity, i) -> {
-            if (itemStack.getItem() == MYSTICAL_BOOK) {
-                if (itemStack.getOrCreateNbt().getString(MysticalBookItem.TYPE_PAGE_TAG).equals(checkId)) {
+        ModelPredicateProviderRegistryAccessor.callRegister(Identifier.of(name), (itemStack, clientWorld, livingEntity, i) -> {
+            MysticalBookComponent component;
+            if (itemStack.getItem() == MYSTICAL_BOOK && (component = itemStack.get(ModDataComponentTypes.MYSTICAL_BOOK)) != null) {
+                if (id.equals(component.typePage())) {
                     return 1;
                 }
             }

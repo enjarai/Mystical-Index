@@ -1,9 +1,10 @@
 package dev.enjarai.arcane_repository.item.custom.page.type;
 
 import dev.enjarai.arcane_repository.block.entity.MysticalLecternBlockEntity;
+import dev.enjarai.arcane_repository.duck.RepositoryDrop;
+import dev.enjarai.arcane_repository.item.ModDataComponentTypes;
 import dev.enjarai.arcane_repository.item.custom.page.AttributePageItem;
 import dev.enjarai.arcane_repository.item.custom.page.TypePageItem;
-import dev.enjarai.arcane_repository.mixin.accessor.ItemEntityAccessor;
 import dev.enjarai.arcane_repository.util.Colors;
 import dev.enjarai.arcane_repository.util.LecternTracker;
 import dev.enjarai.arcane_repository.util.WorldEffects;
@@ -13,16 +14,18 @@ import dev.enjarai.arcane_repository.util.request.LibraryIndex;
 import dev.enjarai.arcane_repository.util.request.QueryBasedRequest;
 import dev.enjarai.arcane_repository.util.state.PageLecternState;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.component.ComponentType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtInt;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.screen.slot.Slot;
@@ -31,24 +34,18 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ClickType;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.function.BooleanBiFunction;
+import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 import static dev.enjarai.arcane_repository.block.ModTags.INDEX_INTRACTABLE;
-import static dev.enjarai.arcane_repository.block.custom.MysticalLecternBlock.LECTERN_INPUT_AREA_SHAPE;
 import static dev.enjarai.arcane_repository.block.entity.MysticalLecternBlockEntity.LECTERN_DETECTION_RADIUS;
 import static dev.enjarai.arcane_repository.item.ModItems.INDEXING_TYPE_PAGE;
 import static net.minecraft.block.LecternBlock.HAS_BOOK;
@@ -67,13 +64,11 @@ public class IndexingTypePage extends TypePageItem implements ItemInsertableType
         return 0xaa22aa;
     }
 
-    public static final String LINKED_BLOCKS_TAG = "linked_blocks";
+    public static final ComponentType<List<BlockPos>> LINKED_BLOCKS_TAG = ModDataComponentTypes.INDEXING_PAGE_ITEM_LINKED_BLOCKS;
 
     private static final int CIRCLE_PERIOD = 200;
     private static final int CIRCLE_INTERVAL = 2;
     private static final int SOUND_INTERVAL = 24;
-
-    public static final UUID EXTRACTED_DROP_UUID = UUID.randomUUID();
 
     @Override
     public void onCraftToBook(ItemStack page, ItemStack book) {
@@ -86,18 +81,6 @@ public class IndexingTypePage extends TypePageItem implements ItemInsertableType
         attributes.putInt(MAX_RANGE_LINKED_TAG, 20);
     }
 
-    protected static NbtList blockPosToList(BlockPos pos) {
-        var list = new NbtList();
-        list.add(0, NbtInt.of(pos.getX()));
-        list.add(1, NbtInt.of(pos.getY()));
-        list.add(2, NbtInt.of(pos.getZ()));
-        return list;
-    }
-
-    protected static BlockPos blockPosFromList(NbtList list) {
-        return new BlockPos(list.getInt(0), list.getInt(1), list.getInt(2));
-    }
-
     public int getMaxRange(ItemStack book, boolean linked) {
         return getAttributes(book).getInt(linked ? MAX_RANGE_LINKED_TAG : MAX_RANGE_TAG);
     }
@@ -107,7 +90,7 @@ public class IndexingTypePage extends TypePageItem implements ItemInsertableType
     }
 
     public int getLinks(ItemStack book) {
-        return book.getOrCreateNbt().getList(LINKED_BLOCKS_TAG, NbtElement.LIST_TYPE).size();
+        return book.getOrDefault(LINKED_BLOCKS_TAG, List.of()).size();
     }
 
     public boolean hasRangedLinking(ItemStack book) {
@@ -117,13 +100,10 @@ public class IndexingTypePage extends TypePageItem implements ItemInsertableType
     @SuppressWarnings("ConstantConditions")
     private LibraryIndex getLinkedIndex(ItemStack book, World world, BlockPos pos) {
         var index = new LibraryIndex();
-        var nbtList = book.getOrCreateNbt().getList(LINKED_BLOCKS_TAG, NbtElement.LIST_TYPE);
-        for (int i = 0; i < nbtList.size(); i++) {
-            var posList = nbtList.getList(i);
-            var interactablePos = blockPosFromList(posList);
-
+        var blockPosList = book.getOrDefault(LINKED_BLOCKS_TAG, List.<BlockPos>of());
+        for (BlockPos interactablePos : blockPosList) {
             if (pos.isWithinDistance(interactablePos, getMaxRange(book, true)) &&
-                    world.getBlockEntity(interactablePos) instanceof IndexInteractable interactable) {
+                world.getBlockEntity(interactablePos) instanceof IndexInteractable interactable) {
                 index.add(interactable);
             }
         }
@@ -234,13 +214,12 @@ public class IndexingTypePage extends TypePageItem implements ItemInsertableType
         // Try linking library to book
         if (isLinkableBlock(book, blockState) && context.getPlayer() != null && context.getPlayer().isSneaking()) {
 
-            var nbt = book.getOrCreateNbt();
-            var librariesList = nbt.getList(LINKED_BLOCKS_TAG, NbtElement.LIST_TYPE);
-            var serializedPos = blockPosToList(blockPos);
+            var librariesList = new ArrayList<>(book.getOrDefault(LINKED_BLOCKS_TAG, List.of()));
+
             var pos = Vec3d.ofCenter(blockPos);
 
-            if (librariesList.contains(serializedPos)) {
-                librariesList.remove(serializedPos);
+            if (librariesList.contains(blockPos)) {
+                librariesList.remove(blockPos);
                 world.playSound(null, pos.getX(), pos.getY(), pos.getZ(),
                         SoundEvents.ENTITY_ENDER_EYE_DEATH, SoundCategory.BLOCKS,
                         0.5f, 0.2f + world.getRandom().nextFloat() * 0.4f);
@@ -255,14 +234,14 @@ public class IndexingTypePage extends TypePageItem implements ItemInsertableType
                     return ActionResult.success(world.isClient);
                 }
 
-                librariesList.add(serializedPos);
+                librariesList.add(blockPos);
                 world.playSound(null, pos.getX(), pos.getY(), pos.getZ(),
                         SoundEvents.BLOCK_AMETHYST_BLOCK_STEP, SoundCategory.BLOCKS,
                         1f, 0.4f + world.getRandom().nextFloat() * 0.4f);
                 WorldEffects.blockParticles(world, blockPos, ParticleTypes.SOUL_FIRE_FLAME);
             }
 
-            nbt.put(LINKED_BLOCKS_TAG, librariesList);
+            book.set(LINKED_BLOCKS_TAG, librariesList);
 
             return ActionResult.success(world.isClient);
         }
@@ -278,10 +257,9 @@ public class IndexingTypePage extends TypePageItem implements ItemInsertableType
             return;
         }
 
-        var positions = book.getOrCreateNbt().getList(LINKED_BLOCKS_TAG, NbtElement.LIST_TYPE);
+        var positions = book.getOrDefault(LINKED_BLOCKS_TAG, List.<BlockPos>of());
 
-        for (var pos : positions) {
-            var blockPos = blockPosFromList((NbtList) pos);
+        for (var blockPos : positions) {
             WorldEffects.blockParticles(world, blockPos, ParticleTypes.SOUL_FIRE_FLAME);
         }
     }
@@ -327,7 +305,7 @@ public class IndexingTypePage extends TypePageItem implements ItemInsertableType
             ItemEntity itemEntity = new ItemEntity(world, itemPos.getX(), itemPos.getY(), itemPos.getZ(), stack);
             itemEntity.setToDefaultPickupDelay();
             itemEntity.setVelocity(Vec3d.ZERO);
-            itemEntity.setThrower(EXTRACTED_DROP_UUID);
+            RepositoryDrop.cast(itemEntity).arcane_repository$setRepositoryDrop(true);
             world.spawnEntity(itemEntity);
         }
 
@@ -396,18 +374,17 @@ public class IndexingTypePage extends TypePageItem implements ItemInsertableType
 //    }
 
     @Override
-    public ActionResult lectern$onUse(MysticalLecternBlockEntity lectern, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        var itemStack = player.getStackInHand(hand);
+    public ItemActionResult lectern$onUseWithItem(MysticalLecternBlockEntity lectern, ItemStack itemStack, BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         var index = getInteractionLecternIndex(lectern);
 
         var request = tryInsertItemStack(index, itemStack, Vec3d.ofCenter(pos));
         if (request.hasAffected()) WorldEffects.lecternPlonk(world, player.getPos(), 0.6f, true);
 
-        return ActionResult.SUCCESS;
+        return ItemActionResult.SUCCESS;
     }
 
     @Override
-    public void book$appendPropertiesTooltip(ItemStack book, @Nullable World world, List<Text> properties, TooltipContext context) {
+    public void book$appendPropertiesTooltip(ItemStack book, @Nullable TooltipContext context, List<Text> properties, TooltipType type) {
         var linksUsed = getLinks(book);
         var linksMax = getMaxLinks(book);
         double linksUsedRatio = (double) linksUsed / linksMax;
@@ -477,8 +454,8 @@ public class IndexingTypePage extends TypePageItem implements ItemInsertableType
         }
 
         @Override
-        public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-            super.appendTooltip(stack, world, tooltip, context);
+        public void appendTooltip(ItemStack stack, @Nullable TooltipContext context, List<Text> tooltip, TooltipType type) {
+            super.appendTooltip(stack, context, tooltip, type);
 
             var range = getRangeMultiplier(stack, false);
             var links = getLinksMultiplier(stack);

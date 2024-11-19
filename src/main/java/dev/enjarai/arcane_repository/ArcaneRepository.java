@@ -5,6 +5,7 @@ import dev.enjarai.arcane_repository.block.ModBlocks;
 import dev.enjarai.arcane_repository.event.LootTableEvent;
 import dev.enjarai.arcane_repository.event.ModEvents;
 import dev.enjarai.arcane_repository.event.ServerNetworkListeners;
+import dev.enjarai.arcane_repository.item.ModDataComponentTypes;
 import dev.enjarai.arcane_repository.item.ModItems;
 import dev.enjarai.arcane_repository.item.ModRecipes;
 import net.fabricmc.api.ModInitializer;
@@ -21,8 +22,6 @@ public class ArcaneRepository implements ModInitializer {
 	public static final Logger LOGGER = LogManager.getLogger("arcane_repository");
 	public static final String MOD_ID = "arcane_repository";
 
-    public static final Identifier BLOCK_PARTICLES_CHANNEL = id("block_particles");
-
     @Override
 	public void onInitialize() {
 		ModItems.registerModItems();
@@ -30,13 +29,14 @@ public class ArcaneRepository implements ModInitializer {
 		ModBlockEntities.registerBlockEntities();
 		ModRecipes.registerModRecipes();
 		LootTableEvent.registerLootTable();
+		ModDataComponentTypes.registerDataComponentTypes();
 
 		ModEvents.register();
 		ServerNetworkListeners.registerListeners();
 	}
 
 	public static Identifier id(String path) {
-		return new Identifier(MOD_ID, path);
+		return Identifier.of(MOD_ID, path);
 	}
 
 	public static void playUISound(PlayerEntity player, SoundEvent sound, SoundCategory category, Vec3d pos) {
@@ -44,6 +44,6 @@ public class ArcaneRepository implements ModInitializer {
 	}
 
 	public static void playUISound(PlayerEntity player, SoundEvent sound, SoundCategory category, Vec3d pos, float volume) {
-		player.playSound(sound, category, volume, 0.8f + player.getWorld().getRandom().nextFloat() * 0.4f);
+		player.playSoundToPlayer(sound, category, volume, 0.8f + player.getWorld().getRandom().nextFloat() * 0.4f);
 	}
 }

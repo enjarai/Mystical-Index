@@ -3,13 +3,13 @@ package dev.enjarai.arcane_repository.item.custom.book;
 import dev.enjarai.arcane_repository.block.ModBlocks;
 import dev.enjarai.arcane_repository.block.custom.MysticalLecternBlock;
 import dev.enjarai.arcane_repository.block.entity.MysticalLecternBlockEntity;
+import dev.enjarai.arcane_repository.item.ModDataComponentTypes;
+import dev.enjarai.arcane_repository.item.component.MysticalBookComponent;
 import dev.enjarai.arcane_repository.item.custom.page.*;
 import dev.enjarai.arcane_repository.util.PageRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LecternBlock;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.client.item.TooltipData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,7 +17,8 @@ import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
-import net.minecraft.nbt.NbtElement;
+import net.minecraft.item.tooltip.TooltipData;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.registry.Registries;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -37,47 +38,53 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class MysticalBookItem extends Item {
-    public static final String CATALYST_TAG = "catalyst";
-    public static final String TYPE_PAGE_TAG = "type_page";
-    public static final String ATTRIBUTE_PAGES_TAG = "attribute_pages";
-    public static final String ACTION_PAGE_TAG = "action_page";
-    public static final String COLOR_TAG = "color";
-
     public MysticalBookItem(Settings settings) {
-        super(settings);
+        super(
+          settings
+            .component(ModDataComponentTypes.MYSTICAL_BOOK, new MysticalBookComponent(
+                0,
+                Identifier.ofVanilla("stone"),
+                List.of(),
+                Identifier.ofVanilla("stone"),
+                Identifier.ofVanilla("stone")
+              )
+            )
+        );
+    }
+
+    private MysticalBookComponent getComponent(ItemStack stack) {
+        return stack.get(ModDataComponentTypes.MYSTICAL_BOOK);
     }
 
     public int getColor(ItemStack stack) {
-        return stack.getOrCreateNbt().getInt(COLOR_TAG);
+        return getComponent(stack).color();
     }
 
     public void setColor(ItemStack stack, int color) {
-        stack.getOrCreateNbt().putInt(COLOR_TAG, color);
+        stack.set(ModDataComponentTypes.MYSTICAL_BOOK, getComponent(stack).withColor(color));
     }
 
     public Item getCatalyst(ItemStack book) {
-        return Registries.ITEM.get(new Identifier(book.getOrCreateNbt().getString(CATALYST_TAG)));
+        return Registries.ITEM.get(getComponent(book).catalyst());
     }
 
     /**
      * Safely get a single page from a tag.
      */
     @Nullable
-    public PageItem getPage(ItemStack book, String tag) {
+    public PageItem getPage(ItemStack book, Function<MysticalBookComponent, Identifier> tag) {
         try {
-            return PageRegistry.getPage(new Identifier(book.getOrCreateNbt().getString(tag)));
-        } catch (Exception e) {
+            return PageRegistry.getPage(tag.apply(getComponent(book)));
+        } catch (Throwable e) {
             return null;
         }
     }
 
     @Nullable
-    public AttributePageItem getAttributePage(ItemStack book, String id){
+    public AttributePageItem getAttributePage(ItemStack book, String id) {
         List<AttributePageItem> attributePagesList = new ArrayList<>();
 
-        book.getOrCreateNbt().getList(ATTRIBUTE_PAGES_TAG, NbtElement.STRING_TYPE).forEach(element -> {
-            var pageName = element.asString();
-            var pageId = Identifier.tryParse(pageName);
+        getComponent(book).attributePages().forEach(pageId -> {
             if (pageId != null) {
                 var page = PageRegistry.getPage(pageId);
                 if (page != null) {
@@ -86,7 +93,7 @@ public class MysticalBookItem extends Item {
             }
         });
 
-        if(attributePagesList.size() <= 0)
+        if (attributePagesList.isEmpty())
             return null;
 
         for (AttributePageItem page : attributePagesList) {
@@ -102,7 +109,7 @@ public class MysticalBookItem extends Item {
      */
     @Nullable
     public TypePageItem getTypePage(ItemStack book) {
-        return (TypePageItem) getPage(book, TYPE_PAGE_TAG);
+        return (TypePageItem) getPage(book, MysticalBookComponent::typePage);
     }
 
     /**
@@ -110,7 +117,7 @@ public class MysticalBookItem extends Item {
      */
     @Nullable
     public ActionPageItem getActionPage(ItemStack book) {
-        return (ActionPageItem) getPage(book, ACTION_PAGE_TAG);
+        return (ActionPageItem) getPage(book, MysticalBookComponent::actionPage);
     }
 
     /**
@@ -128,7 +135,7 @@ public class MysticalBookItem extends Item {
     /**
      * Runs the given consumer on the page in the given tag without a return value.
      */
-    private void forPage(ItemStack book, String tag, Consumer<PageItem> consumer) {
+    private void forPage(ItemStack book, Function<MysticalBookComponent, Identifier> tag, Consumer<PageItem> consumer) {
         forPage(book, tag, pageItem -> {
             consumer.accept(pageItem);
             return null;
@@ -139,9 +146,8 @@ public class MysticalBookItem extends Item {
      * Runs a function for the page with the given tag,
      * providing the returned result or a default value if the page is not found.
      */
-    private <R> R forPage(ItemStack book, String tag, Function<PageItem, R> function, R defaultValue) {
-        var pageName = book.getOrCreateNbt().getString(tag);
-        var pageId = Identifier.tryParse(pageName);
+    private <R> R forPage(ItemStack book, Function<MysticalBookComponent, Identifier> component, Function<PageItem, R> function, R defaultValue) {
+        var pageId = component.apply(getComponent(book));
         if (pageId != null) {
             var page = PageRegistry.getPage(pageId);
             if (page != null) {
@@ -152,11 +158,11 @@ public class MysticalBookItem extends Item {
     }
 
     /**
-     * Similar to {@link MysticalBookItem#forPage(ItemStack, String, Function, Object)}, runs a function for the page with the given tag,
+     * Similar to {@link MysticalBookItem#forPage(ItemStack, Function, Function, Object)}, runs a function for the page with the given tag,
      * but safely casts it to {@link InteractingPage} first.
      * This opens up page functions that have return values.
      */
-    private <R> R forInteractingPage(ItemStack book, String tag, Function<InteractingPage, R> function, R defaultValue) {
+    private <R> R forInteractingPage(ItemStack book, Function<MysticalBookComponent, Identifier> tag, Function<InteractingPage, R> function, R defaultValue) {
         return forPage(book, tag, pageItem -> {
             if (pageItem instanceof InteractingPage) {
                 return function.apply((InteractingPage) pageItem);
@@ -167,7 +173,7 @@ public class MysticalBookItem extends Item {
 
     /**
      * <p>
-     * Similar to {@link MysticalBookItem#forInteractingPage(ItemStack, String, Function, Object)},
+     * Similar to {@link MysticalBookItem#forInteractingPage(ItemStack, Function, Function, Object)},
      * but runs the function for all pages supporting interaction. (Namely type pages and action pages)
      * </p>
      * <p>
@@ -180,8 +186,8 @@ public class MysticalBookItem extends Item {
      * </p>
      */
     private <R> R forInteractingPages(ItemStack book, Predicate<R> returnCondition, Function<InteractingPage, R> function, R defaultValue) {
-        for (var tag : new String[]{TYPE_PAGE_TAG, ACTION_PAGE_TAG}) {
-            var result = forInteractingPage(book, tag, function, defaultValue);
+        for (var tag : List.<Function<MysticalBookComponent, Identifier>>of(MysticalBookComponent::typePage, MysticalBookComponent::actionPage)) {
+            R result = forInteractingPage(book, tag, function, defaultValue);
 
             if (returnCondition.test(result)) {
                 return result;
@@ -194,11 +200,9 @@ public class MysticalBookItem extends Item {
      * Runs the given consumer for every page in the book.
      */
     public void forEachPage(ItemStack book, Consumer<PageItem> consumer) {
-        forPage(book, TYPE_PAGE_TAG, consumer);
+        forPage(book, MysticalBookComponent::typePage, consumer);
 
-        book.getOrCreateNbt().getList(ATTRIBUTE_PAGES_TAG, NbtElement.STRING_TYPE).forEach(element -> {
-            var pageName = element.asString();
-            var pageId = Identifier.tryParse(pageName);
+        getComponent(book).attributePages().forEach(pageId -> {
             if (pageId != null) {
                 var page = PageRegistry.getPage(pageId);
                 if (page != null) {
@@ -207,13 +211,13 @@ public class MysticalBookItem extends Item {
             }
         });
 
-        forPage(book, ACTION_PAGE_TAG, consumer);
+        forPage(book, MysticalBookComponent::actionPage, consumer);
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         return forInteractingPages(user.getStackInHand(hand), result -> result.getResult() != ActionResult.PASS,
-                page -> page.book$use(world, user, hand), TypedActionResult.pass(user.getStackInHand(hand)));
+          page -> page.book$use(world, user, hand), TypedActionResult.pass(user.getStackInHand(hand)));
     }
 
     @Override
@@ -231,26 +235,26 @@ public class MysticalBookItem extends Item {
             context.getStack().decrement(1);
 
             return MysticalLecternBlock.putBookIfAbsent(
-                    context.getPlayer(), world,
-                    blockPos, newState,
-                    stack
+              context.getPlayer(), world,
+              blockPos, newState,
+              stack
             ) ? ActionResult.success(world.isClient) : ActionResult.PASS;
         }
 
         return forInteractingPages(context.getStack(), result -> result != ActionResult.PASS,
-                page -> page.book$useOnBlock(context), ActionResult.PASS);
+          page -> page.book$useOnBlock(context), ActionResult.PASS);
     }
 
     @Override
     public boolean onClicked(ItemStack book, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
         return forInteractingPages(book, result -> result,
-                page -> page.book$onClicked(book, otherStack, slot, clickType, player, cursorStackReference), false);
+          page -> page.book$onClicked(book, otherStack, slot, clickType, player, cursorStackReference), false);
     }
 
     @Override
     public boolean onStackClicked(ItemStack book, Slot slot, ClickType clickType, PlayerEntity player) {
         return forInteractingPages(book, result -> result,
-                page -> page.book$onStackClicked(book, slot, clickType, player), false);
+          page -> page.book$onStackClicked(book, slot, clickType, player), false);
     }
 
     @Override
@@ -259,28 +263,29 @@ public class MysticalBookItem extends Item {
     }
 
     @Override
-    public void appendTooltip(ItemStack book, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        super.appendTooltip(book, world, tooltip, context);
+    public void appendTooltip(ItemStack book, TooltipContext context, List<Text> tooltip, TooltipType type) {
+        super.appendTooltip(book, context, tooltip, type);
+
         if (getTypePage(book) == null) return;
 
-        forEachPage(book, page -> page.book$appendTooltip(book, world, tooltip, context));
+        forEachPage(book, page -> page.book$appendTooltip(book, context, tooltip, type));
 
         tooltip.add(Text.literal(""));
         tooltip.add(Text.translatable("item.arcane_repository.repository_book.tooltip.properties")
-                .formatted(Formatting.GRAY));
+          .formatted(Formatting.GRAY));
 
-        forEachPage(book, page -> page.book$appendPropertiesTooltip(book, world, tooltip, context));
+        forEachPage(book, page -> page.book$appendPropertiesTooltip(book, context, tooltip, type));
     }
 
     @Override
     public boolean hasGlint(ItemStack book) {
         return forInteractingPages(book, result -> result,
-                page -> page.book$hasGlint(book), false);
+          page -> page.book$hasGlint(book), false);
     }
 
     public boolean interceptsChatMessage(ItemStack book, PlayerEntity player, String message) {
         return forInteractingPages(book, result -> result,
-                page -> page.book$interceptsChatMessage(book, player, message), false);
+          page -> page.book$interceptsChatMessage(book, player, message), false);
     }
 
     public void onInterceptedChatMessage(ItemStack book, ServerPlayerEntity player, String message) {
@@ -290,35 +295,35 @@ public class MysticalBookItem extends Item {
     @Override
     public ItemStack finishUsing(ItemStack book, World world, LivingEntity user) {
         return forInteractingPages(book, Objects::nonNull,
-                page -> page.book$finishUsing(book, world, user), book);
+          page -> page.book$finishUsing(book, world, user), book);
     }
 
     @Override
     public UseAction getUseAction(ItemStack book) {
         return forInteractingPages(book, result -> result != UseAction.NONE,
-                page -> page.book$getUseAction(book), UseAction.NONE);
+          page -> page.book$getUseAction(book), UseAction.NONE);
     }
 
     @Override
-    public int getMaxUseTime(ItemStack book) {
+    public int getMaxUseTime(ItemStack book, LivingEntity user) {
         return forInteractingPages(book, result -> result != 0,
-                page -> page.book$getMaxUseTime(book), 0);
+          page -> page.book$getMaxUseTime(book), 0);
     }
 
     public void onInventoryScroll(ItemStack book, PlayerEntity player, byte scrollDirection) {
         forInteractingPages(book, result -> result,
-                page -> page.book$onInventoryScroll(book, player, scrollDirection), false);
+          page -> page.book$onInventoryScroll(book, player, scrollDirection), false);
     }
 
     @Override
     public Optional<TooltipData> getTooltipData(ItemStack book) {
         return forInteractingPages(book, Optional::isPresent,
-                page -> page.book$getTooltipData(book), Optional.empty());
+          page -> page.book$getTooltipData(book), Optional.empty());
     }
 
     public boolean lectern$interceptsChatMessage(MysticalLecternBlockEntity lectern, PlayerEntity player, String message) {
         return forInteractingPages(lectern.getBook(), result -> result,
-                page -> page.lectern$interceptsChatMessage(lectern, player, message), false);
+          page -> page.lectern$interceptsChatMessage(lectern, player, message), false);
     }
 
     public void lectern$onInterceptedChatMessage(MysticalLecternBlockEntity lectern, ServerPlayerEntity player, String message) {
@@ -329,9 +334,14 @@ public class MysticalBookItem extends Item {
         forEachPage(lectern.getBook(), page -> page.lectern$onEntityCollision(lectern, state, world, pos, entity));
     }
 
-    public ActionResult lectern$onUse(MysticalLecternBlockEntity lectern, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult lectern$onUse(MysticalLecternBlockEntity lectern, BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         return forInteractingPages(lectern.getBook(), result -> result != ActionResult.PASS,
-                page -> page.lectern$onUse(lectern, state, world, pos, player, hand, hit), ActionResult.PASS);
+          page -> page.lectern$onUse(lectern, state, world, pos, player, hit), ActionResult.PASS);
+    }
+
+    public ItemActionResult lectern$onUseWithItem(MysticalLecternBlockEntity lectern, ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+        return forInteractingPages(lectern.getBook(), result -> result != ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION,
+          page -> page.lectern$onUseWithItem(lectern, stack, state, world, pos, player, hit), ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION);
     }
 
     public void lectern$serverTick(World world, BlockPos pos, BlockState state, MysticalLecternBlockEntity lectern) {

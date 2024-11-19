@@ -199,7 +199,7 @@ public class ItemCirclesRenderer {
                 CrashReportSection crashReportSection = crashReport.addElement("Item being rendered");
                 crashReportSection.add("Item Type", () -> String.valueOf(stack.getItem()));
                 crashReportSection.add("Item Damage", () -> String.valueOf(stack.getDamage()));
-                crashReportSection.add("Item NBT", () -> String.valueOf(stack.getNbt()));
+                crashReportSection.add("Item Components", () -> String.valueOf(stack.getComponents()));
                 crashReportSection.add("Item Foil", () -> String.valueOf(stack.hasGlint()));
                 throw new CrashException(crashReport);
             }
