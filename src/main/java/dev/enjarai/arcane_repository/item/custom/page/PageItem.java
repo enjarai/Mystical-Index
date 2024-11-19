@@ -1,5 +1,7 @@
 package dev.enjarai.arcane_repository.item.custom.page;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import dev.enjarai.arcane_repository.block.entity.MysticalLecternBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -8,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -21,6 +24,13 @@ import java.util.List;
 import static dev.enjarai.arcane_repository.item.custom.page.AttributePageItem.ATTRIBUTES_TAG;
 
 public abstract class PageItem extends Item {
+    public static final Codec<PageItem> CODEC = Registries.ITEM.getCodec().comapFlatMap(i -> {
+        if (i instanceof PageItem item) {
+            return DataResult.success(item);
+        }
+        return DataResult.error(() -> "Not a page item");
+    }, i -> i);
+
     public final String id;
 
     public PageItem(Item.Settings settings, String id) {

@@ -45,7 +45,7 @@ public class FeedingActionPage extends ActionPageItem {
         var book = user.getStackInHand(hand);
         var usedBook = (MysticalBookItem) book.getItem();
 
-        if (usedBook.getTypePage(book) instanceof FoodStorageTypePage foodPage) {
+        if (usedBook.getTypePage(book).orElse(null) instanceof FoodStorageTypePage foodPage) {
             ItemStack foodItem;
             try {
                 foodItem = foodPage.getContents(book).getAll().get(0).getItemStack();
@@ -69,7 +69,7 @@ public class FeedingActionPage extends ActionPageItem {
     public ItemStack book$finishUsing(ItemStack book, World world, LivingEntity user) {
         var usedBook = (MysticalBookItem) book.getItem();
 
-        if (usedBook.getTypePage(book) instanceof FoodStorageTypePage foodPage) {
+        if (usedBook.getTypePage(book).orElse(null) instanceof FoodStorageTypePage foodPage) {
             var food = foodPage.removeFirstStack(book, 1);
             if (food.isPresent()) {
                 ItemStack stack = food.get();

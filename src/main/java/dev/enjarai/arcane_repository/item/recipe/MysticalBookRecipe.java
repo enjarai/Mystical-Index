@@ -1,5 +1,6 @@
 package dev.enjarai.arcane_repository.item.recipe;
 
+import com.google.common.collect.ImmutableList;
 import dev.enjarai.arcane_repository.item.ModDataComponentTypes;
 import dev.enjarai.arcane_repository.item.component.MysticalBookComponent;
 import dev.enjarai.arcane_repository.item.custom.book.MysticalBookItem;
@@ -30,7 +31,9 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class MysticalBookRecipe extends SpecialCraftingRecipe {
     private static final Ingredient BINDING = Ingredient.ofItems(Items.LEATHER);
@@ -132,15 +135,22 @@ public class MysticalBookRecipe extends SpecialCraftingRecipe {
 
     @Override
     public ItemStack craft(CraftingRecipeInput input, RegistryWrapper.WrapperLookup lookup) {
-        var book = new ItemStack(ModItems.MYSTICAL_BOOK);
-        MysticalBookComponent component = book.get(ModDataComponentTypes.MYSTICAL_BOOK);
+        Item catalyst = null;
+        TypePageItem typePage = null;
+        List<AttributePageItem> attributePages = new ArrayList<>();
+        ActionPageItem actionPage = null;
+
+        ItemStack typeStack = null;
+        List<ItemStack> attributeStacks = new ArrayList<>();
+        ItemStack actionStack = null;
+
         var typeColor = -1;
         var otherColors = new ArrayList<Integer>();
 
         for (int i = 0; i < input.getSize(); ++i) {
             var stack = input.getStackInSlot(i);
             if (CATALYST.test(stack)) {
-                book.set(ModDataComponentTypes.MYSTICAL_BOOK, component = component.withCatalyst(Registries.ITEM.getId(stack.getItem())));
+                catalyst = stack.getItem();
                 break;
             }
         }
@@ -148,40 +158,51 @@ public class MysticalBookRecipe extends SpecialCraftingRecipe {
         for (int i = 0; i < input.getSize(); ++i) {
             var stack = input.getStackInSlot(i);
             if (stack.getItem() instanceof TypePageItem pageItem) {
-                pageItem.onCraftToBook(stack, book);
                 typeColor = pageItem.getColor();
                 if (pageItem.mixColor(stack)) otherColors.add(typeColor);
-                book.set(ModDataComponentTypes.MYSTICAL_BOOK, component = component.withTypePage(Registries.ITEM.getId(pageItem)));
+                typeStack = stack;
+                typePage = pageItem;
                 break;
             }
         }
 
-        var pagesList = new ArrayList<>(component.attributePages());
         for (int i = 0; i < input.getSize(); ++i) {
             var stack = input.getStackInSlot(i);
             if (stack.getItem() instanceof AttributePageItem pageItem) {
-                pageItem.onCraftToBook(stack, book);
                 otherColors.add(pageItem.getColor());
-                pagesList.add(Registries.ITEM.getId(pageItem));
+                attributeStacks.add(stack);
+                attributePages.add(pageItem);
             }
         }
-
-        book.set(ModDataComponentTypes.MYSTICAL_BOOK, component = component.withAttributePages(pagesList));
 
         for (int i = 0; i < input.getSize(); ++i) {
             var stack = input.getStackInSlot(i);
             if (stack.getItem() instanceof ActionPageItem pageItem) {
-                pageItem.onCraftToBook(stack, book);
                 otherColors.add(pageItem.getColor());
-                book.set(ModDataComponentTypes.MYSTICAL_BOOK, component.withActionPage(Registries.ITEM.getId(pageItem)));
+                actionStack = stack;
+                actionPage = pageItem;
                 break;
             }
         }
 
-        if (otherColors.isEmpty()) {
-            ((MysticalBookItem) book.getItem()).setColor(book, typeColor);
-        } else {
-            ((MysticalBookItem) book.getItem()).setColor(book, Colors.mixColors(otherColors));
+        if (catalyst == null || typePage == null) {
+            throw new IllegalStateException("Recipe broken, what?");
+        }
+
+        var book = new ItemStack(ModItems.MYSTICAL_BOOK);
+        book.set(ModDataComponentTypes.MYSTICAL_BOOK, new MysticalBookComponent(
+                otherColors.isEmpty() ? typeColor : Colors.mixColors(otherColors),
+                catalyst, ImmutableList.copyOf(attributePages), typePage, Optional.ofNullable(actionPage)
+        ));
+
+        typePage.onCraftToBook(typeStack, book);
+        for (int i = 0; i < attributePages.size(); i++) {
+            var pageItem = attributePages.get(i);
+            var stack = attributeStacks.get(i);
+            pageItem.onCraftToBook(stack, book);
+        }
+        if (actionPage != null) {
+            actionPage.onCraftToBook(actionStack, book);
         }
 
         return book;

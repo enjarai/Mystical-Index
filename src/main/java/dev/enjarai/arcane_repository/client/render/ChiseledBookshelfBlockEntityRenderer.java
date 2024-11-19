@@ -52,7 +52,7 @@ public class ChiseledBookshelfBlockEntityRenderer extends MildlyLessCringeBlockE
                 mEntity.setLastSlot(slot);
                 mEntity.setLastHitPos(blockHitResult.getBlockPos());
 
-                if (book instanceof MysticalBookItem bookItem && bookItem.getTypePage(bookStack) instanceof ItemStorageTypePage storagePage) {
+                if (book instanceof MysticalBookItem bookItem && bookItem.getTypePage(bookStack).orElse(null) instanceof ItemStorageTypePage storagePage) {
                     var stacks = storagePage.getContents(bookStack).getAll();
                     if (stacks.isEmpty()) stacks = List.of(new BigStack(Items.AIR.getDefaultStack()));
                     var x = (slot % 3 / 3f + 1f / 6f) / 16f * 15f + 1f / 32f;

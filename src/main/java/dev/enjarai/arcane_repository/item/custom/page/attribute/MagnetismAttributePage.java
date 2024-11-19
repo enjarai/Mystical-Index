@@ -46,7 +46,7 @@ public class MagnetismAttributePage extends AttributePageItem {
 
         if (entity instanceof PlayerEntity player
                 && stack.getItem() instanceof MysticalBookItem book
-                && book.getTypePage(stack) instanceof ItemStorageTypePage typePage
+                && book.getTypePage(stack).orElse(null) instanceof ItemStorageTypePage typePage
                 && typePage.isFiltered(stack)
         ) {
             var pos = player.getPos();

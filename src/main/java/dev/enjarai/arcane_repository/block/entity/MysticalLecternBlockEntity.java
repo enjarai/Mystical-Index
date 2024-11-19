@@ -79,8 +79,8 @@ public class MysticalLecternBlockEntity extends LecternBlockEntity { // TODO sep
         var typePage = bookItem.getTypePage(getBook());
         var actionPage = bookItem.getActionPage(getBook());
 
-        if (typePage != null) typeState = typePage.lectern$getState(this);
-        if (actionPage != null) actionState = actionPage.lectern$getState(this);
+        typePage.ifPresent(p -> typeState = p.lectern$getState(this));
+        actionPage.ifPresent(p -> actionState = p.lectern$getState(this));
 
         bookItem.lectern$afterPlaced(this);
     }

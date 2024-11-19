@@ -6,7 +6,6 @@ import dev.enjarai.arcane_repository.block.entity.MysticalLecternBlockEntity;
 import dev.enjarai.arcane_repository.item.ModDataComponentTypes;
 import dev.enjarai.arcane_repository.item.component.MysticalBookComponent;
 import dev.enjarai.arcane_repository.item.custom.page.*;
-import dev.enjarai.arcane_repository.util.PageRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LecternBlock;
@@ -20,7 +19,6 @@ import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.tooltip.TooltipData;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.Registries;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -28,9 +26,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -44,140 +40,47 @@ public class MysticalBookItem extends Item {
     public MysticalBookItem(Settings settings) {
         super(
           settings
-            .component(ModDataComponentTypes.MYSTICAL_BOOK, new MysticalBookComponent(
-                0,
-                Identifier.ofVanilla("stone"),
-                List.of(),
-                Identifier.ofVanilla("stone"),
-                Identifier.ofVanilla("stone")
-              )
-            ).component(ATTRIBUTES_TAG, new NbtCompound())
+            .component(ATTRIBUTES_TAG, new NbtCompound())
         );
     }
 
-    private MysticalBookComponent getComponent(ItemStack stack) {
-        return stack.get(ModDataComponentTypes.MYSTICAL_BOOK);
+    private Optional<MysticalBookComponent> getComponent(ItemStack stack) {
+        return Optional.ofNullable(stack.get(ModDataComponentTypes.MYSTICAL_BOOK));
     }
 
     public int getColor(ItemStack stack) {
-        return getComponent(stack).color();
+        return getComponent(stack).map(MysticalBookComponent::color).orElse(0x000000);
     }
 
     public void setColor(ItemStack stack, int color) {
-        stack.set(ModDataComponentTypes.MYSTICAL_BOOK, getComponent(stack).withColor(color));
+        getComponent(stack).ifPresent(c -> stack.set(ModDataComponentTypes.MYSTICAL_BOOK, c.withColor(color)));
     }
 
-    public Item getCatalyst(ItemStack book) {
-        return Registries.ITEM.get(getComponent(book).catalyst());
+    public Optional<Item> getCatalyst(ItemStack book) {
+        return getComponent(book).map(MysticalBookComponent::catalyst);
     }
 
-    /**
-     * Safely get a single page from a tag.
-     */
-    @Nullable
-    public PageItem getPage(ItemStack book, Function<MysticalBookComponent, Identifier> tag) {
-        try {
-            return PageRegistry.getPage(tag.apply(getComponent(book)));
-        } catch (Throwable e) {
-            return null;
-        }
-    }
-
-    @Nullable
-    public AttributePageItem getAttributePage(ItemStack book, String id) {
-        List<AttributePageItem> attributePagesList = new ArrayList<>();
-
-        getComponent(book).attributePages().forEach(pageId -> {
-            if (pageId != null) {
-                var page = PageRegistry.getPage(pageId);
-                if (page != null) {
-                    attributePagesList.add((AttributePageItem) page);
-                }
-            }
-        });
-
-        if (attributePagesList.isEmpty())
-            return null;
-
-        for (AttributePageItem page : attributePagesList) {
-            if (Objects.equals(page.id, id)) {
-                return page;
-            }
-        }
-        return null;
+    public Optional<AttributePageItem> getAttributePage(ItemStack book, String id) {
+        return getComponent(book).flatMap(c -> c.attributePages().stream().filter(p -> id.equals(p.id)).findFirst());
     }
 
     /**
      * Returns the current type page of the book.
      */
-    @Nullable
-    public TypePageItem getTypePage(ItemStack book) {
-        return (TypePageItem) getPage(book, MysticalBookComponent::typePage);
+    public Optional<TypePageItem> getTypePage(ItemStack book) {
+        return getComponent(book).map(MysticalBookComponent::typePage);
     }
 
     /**
      * Returns the current action page of the book.
      */
-    @Nullable
-    public ActionPageItem getActionPage(ItemStack book) {
-        return (ActionPageItem) getPage(book, MysticalBookComponent::actionPage);
-    }
-
-    /**
-     * Checks if the type page of this book is of a certain class, and if so, returns it.
-     */
-    @Nullable
-    public static <T extends TypePageItem> T isType(ItemStack book, Class<T> clazz) {
-        try {
-            return clazz.cast(((MysticalBookItem) book.getItem()).getTypePage(book));
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * Runs the given consumer on the page in the given tag without a return value.
-     */
-    private void forPage(ItemStack book, Function<MysticalBookComponent, Identifier> tag, Consumer<PageItem> consumer) {
-        forPage(book, tag, pageItem -> {
-            consumer.accept(pageItem);
-            return null;
-        }, null);
-    }
-
-    /**
-     * Runs a function for the page with the given tag,
-     * providing the returned result or a default value if the page is not found.
-     */
-    private <R> R forPage(ItemStack book, Function<MysticalBookComponent, Identifier> component, Function<PageItem, R> function, R defaultValue) {
-        var pageId = component.apply(getComponent(book));
-        if (pageId != null) {
-            var page = PageRegistry.getPage(pageId);
-            if (page != null) {
-                return function.apply(page);
-            }
-        }
-        return defaultValue;
-    }
-
-    /**
-     * Similar to {@link MysticalBookItem#forPage(ItemStack, Function, Function, Object)}, runs a function for the page with the given tag,
-     * but safely casts it to {@link InteractingPage} first.
-     * This opens up page functions that have return values.
-     */
-    private <R> R forInteractingPage(ItemStack book, Function<MysticalBookComponent, Identifier> tag, Function<InteractingPage, R> function, R defaultValue) {
-        return forPage(book, tag, pageItem -> {
-            if (pageItem instanceof InteractingPage) {
-                return function.apply((InteractingPage) pageItem);
-            }
-            return defaultValue;
-        }, defaultValue);
+    public Optional<ActionPageItem> getActionPage(ItemStack book) {
+        return getComponent(book).flatMap(MysticalBookComponent::actionPage);
     }
 
     /**
      * <p>
-     * Similar to {@link MysticalBookItem#forInteractingPage(ItemStack, Function, Function, Object)},
-     * but runs the function for all pages supporting interaction. (Namely type pages and action pages)
+     * Runs the function for all pages supporting interaction. (Namely type pages and action pages)
      * </p>
      * <p>
      * Requires a return condition, which determines whether the value
@@ -189,11 +92,21 @@ public class MysticalBookItem extends Item {
      * </p>
      */
     private <R> R forInteractingPages(ItemStack book, Predicate<R> returnCondition, Function<InteractingPage, R> function, R defaultValue) {
-        for (var tag : List.<Function<MysticalBookComponent, Identifier>>of(MysticalBookComponent::typePage, MysticalBookComponent::actionPage)) {
-            R result = forInteractingPage(book, tag, function, defaultValue);
+        var component = getComponent(book);
+        if (component.isPresent()) {
+            R result = function.apply(component.get().typePage());
 
             if (returnCondition.test(result)) {
                 return result;
+            }
+
+            var actionPage = component.get().actionPage();
+            if (actionPage.isPresent()) {
+                result = function.apply(actionPage.get());
+
+                if (returnCondition.test(result)) {
+                    return result;
+                }
             }
         }
         return defaultValue;
@@ -203,18 +116,12 @@ public class MysticalBookItem extends Item {
      * Runs the given consumer for every page in the book.
      */
     public void forEachPage(ItemStack book, Consumer<PageItem> consumer) {
-        forPage(book, MysticalBookComponent::typePage, consumer);
-
-        getComponent(book).attributePages().forEach(pageId -> {
-            if (pageId != null) {
-                var page = PageRegistry.getPage(pageId);
-                if (page != null) {
-                    consumer.accept(page);
-                }
-            }
+        var component = getComponent(book);
+        component.ifPresent(mysticalBookComponent -> {
+            consumer.accept(mysticalBookComponent.typePage());
+            mysticalBookComponent.actionPage().ifPresent(consumer);
+            mysticalBookComponent.attributePages().forEach(consumer);
         });
-
-        forPage(book, MysticalBookComponent::actionPage, consumer);
     }
 
     @Override
@@ -269,7 +176,7 @@ public class MysticalBookItem extends Item {
     public void appendTooltip(ItemStack book, TooltipContext context, List<Text> tooltip, TooltipType type) {
         super.appendTooltip(book, context, tooltip, type);
 
-        if (getTypePage(book) == null) return;
+        if (getTypePage(book).isEmpty()) return;
 
         forEachPage(book, page -> page.book$appendTooltip(book, context, tooltip, type));
 
@@ -366,8 +273,8 @@ public class MysticalBookItem extends Item {
     @Override
     public Text getName(ItemStack book) {
         var page = getTypePage(book);
-        if (page != null) {
-            return page.getBookDisplayName();
+        if (page.isPresent()) {
+            return page.get().getBookDisplayName();
         }
         return super.getName(book);
     }

@@ -1,6 +1,6 @@
-// 1.20.1	2023-10-25T19:06:09.3048136	Arcane Repository/Tags for minecraft:item
-6d434b405b54f06c8904c9d8aa281e26ce5b0f8d data\arcane_repository\tags\items\attribute_pages.json
-a4f439a5e0231424b21c0fe743ef1fd473f9bac4 data\arcane_repository\tags\items\block_items.json
-88fc8a318d7d0633858b410a8f2306d4cf91a7e5 data\arcane_repository\tags\items\food_items.json
-0a856d417cef17fea111ec40ae72472f26258997 data\arcane_repository\tags\items\type_pages.json
-f80ecd713f9e3e0d21a50db6913612fa49719600 data\arcane_repository\tags\items\action_pages.json
+// 1.21.1	2024-11-19T15:54:01.8998298	Arcane Repository/Tags for minecraft:item
+ac5d3865bf05ab891c0d4abd78e3bd81628a827f data\arcane_repository\tags\item\action_pages.json
+b8b76ff1f9705b05e4810b3f1cc335642470a903 data\arcane_repository\tags\item\attribute_pages.json
+1809500c86ae92d4196a013bf946f06627805359 data\arcane_repository\tags\item\type_pages.json
+0ab7286f0d7075be8909c6c122f4c49e2c7c9f43 data\arcane_repository\tags\item\food_items.json
+5fcd4cbe1150a372289c383db10ac1b8d36f32b0 data\arcane_repository\tags\item\block_items.json

@@ -52,7 +52,7 @@ public class PickupAttributePage extends AttributePageItem {
         if (
           entity instanceof ItemEntity itemEntity &&
           book.getItem() instanceof MysticalBookItem bookItem &&
-          bookItem.getTypePage(book) instanceof ItemInsertableTypePage itemTypePage &&
+          bookItem.getTypePage(book).orElse(null) instanceof ItemInsertableTypePage itemTypePage &&
           !RepositoryDrop.cast(itemEntity).arcane_repository$isRepositoryDrop() &&
           VoxelShapes.matchesAnywhere(
                 VoxelShapes.cuboid(entity.getBoundingBox().offset(-pos.getX(), -pos.getY(), -pos.getZ())),

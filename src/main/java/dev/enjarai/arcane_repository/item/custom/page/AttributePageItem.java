@@ -1,11 +1,14 @@
 package dev.enjarai.arcane_repository.item.custom.page;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import dev.enjarai.arcane_repository.item.ItemSettings;
 import dev.enjarai.arcane_repository.item.ModDataComponentTypes;
 import net.minecraft.component.ComponentType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -14,6 +17,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public abstract class AttributePageItem extends PageItem implements TypeDependentPage, ActionDependablePage {
+    public static final Codec<AttributePageItem> CODEC = Registries.ITEM.getCodec().comapFlatMap(i -> {
+        if (i instanceof AttributePageItem item) {
+            return DataResult.success(item);
+        }
+        return DataResult.error(() -> "Not an attribute page item");
+    }, i -> i);
     public static final ComponentType<NbtCompound> ATTRIBUTES_TAG = ModDataComponentTypes.PAGE_ITEM_ATTRIBUTES;
 
     public AttributePageItem(String id) {

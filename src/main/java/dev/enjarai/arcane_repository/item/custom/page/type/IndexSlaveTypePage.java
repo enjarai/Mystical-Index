@@ -66,7 +66,7 @@ public class IndexSlaveTypePage extends IndexingTypePage {
                 var masterBookItem = (MysticalBookItem) masterBook.getItem();
                 var masterPage = masterBookItem.getTypePage(masterBook);
 
-                if (masterPage instanceof IndexingTypePage masterIndexingPage && masterLectern.typeState != null) {
+                if (masterPage.orElse(null) instanceof IndexingTypePage masterIndexingPage && masterLectern.typeState != null) {
                     return masterIndexingPage.getLecternIndex(masterLectern);
                 }
             }

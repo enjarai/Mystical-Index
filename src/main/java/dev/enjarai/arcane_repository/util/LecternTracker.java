@@ -85,7 +85,7 @@ public class LecternTracker {
     private static void forEachIndexingLectern(TriConsumer<ItemStack, MysticalLecternBlockEntity, IndexingTypePage> consumer) {
         for (MysticalLecternBlockEntity lectern : indexLecterns) {
             var stack = lectern.getBook();
-            if (stack.getItem() instanceof MysticalBookItem book && book.getTypePage(stack) instanceof IndexingTypePage page) {
+            if (stack.getItem() instanceof MysticalBookItem book && book.getTypePage(stack).orElse(null) instanceof IndexingTypePage page) {
                 consumer.accept(stack, lectern, page);
             }
         }
@@ -94,7 +94,7 @@ public class LecternTracker {
     private static void forEachSlaveLectern(TriConsumer<ItemStack, MysticalLecternBlockEntity, IndexSlaveTypePage> consumer) {
         for (MysticalLecternBlockEntity lectern : indexLecterns) {
             var stack = lectern.getBook();
-            if (stack.getItem() instanceof MysticalBookItem book && book.getTypePage(stack) instanceof IndexSlaveTypePage page) {
+            if (stack.getItem() instanceof MysticalBookItem book && book.getTypePage(stack).orElse(null) instanceof IndexSlaveTypePage page) {
                 consumer.accept(stack, lectern, page);
             }
         }

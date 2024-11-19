@@ -474,7 +474,7 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
         var book = lectern.getBook();
 
         if (stack.getItem() instanceof MysticalBookItem bookItem) {
-            if (bookItem.getTypePage(stack) instanceof ItemStorageTypePage handPage) {
+            if (bookItem.getTypePage(stack).orElse(null) instanceof ItemStorageTypePage handPage) {
                 var ownFilters = getFilteredItems(book);
                 handPage.setFilteredItems(stack, ownFilters);
                 player.sendMessage(Text.translatable("chat.arcane_repository.copied_filters"), true);

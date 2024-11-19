@@ -49,7 +49,7 @@ public class AutoFeedingAttributePage extends AttributePageItem {
         if (entity instanceof PlayerEntity player && !player.isCreative() && player.canConsume(false)){
             var usedBook = (MysticalBookItem) book.getItem();
 
-            if (usedBook.getTypePage(book) instanceof FoodStorageTypePage foodPage) {
+            if (usedBook.getTypePage(book).orElse(null) instanceof FoodStorageTypePage foodPage) {
                 var stack = foodPage.tryRemoveFirstStack(book, 1, itemStack -> {
                     var foodComponent = itemStack.getComponents().get(DataComponentTypes.FOOD);
                     if (foodComponent == null) {
