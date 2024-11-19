@@ -1,23 +1,23 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "php",
-    "gpg",
-    " g "
+    "pap",
+    "rpr",
+    " r "
   ],
   "key": {
     "p": {
       "item": "arcane_repository:empty_page"
     },
-    "g": {
-      "item": "minecraft:glowstone_dust"
+    "r": {
+      "item": "minecraft:redstone"
     },
-    "h": {
-      "item": "minecraft:hopper"
+    "a": {
+      "item": "minecraft:golden_apple"
     }
   },
   "result": {
-    "item": "arcane_repository:pickup_attribute_page",
+    "id": "arcane_repository:feeding_action_page",
     "count": 3
   }
 }

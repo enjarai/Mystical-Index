@@ -11,6 +11,10 @@ import net.minecraft.util.Identifier;
 public class ModLootTables {
     public static final RegistryKey<LootTable> DROP_ENDER_PEARL_SHARDS = register("drop_ender_pearl_shards");
 
+    public static void registerLootTables() {
+        ArcaneRepository.LOGGER.debug("Registering loot tables for " + ArcaneRepository.MOD_ID);
+    }
+
     private static RegistryKey<LootTable> register(String id) {
         return registerLootTable(RegistryKey.of(RegistryKeys.LOOT_TABLE, ArcaneRepository.id(id)));
     }

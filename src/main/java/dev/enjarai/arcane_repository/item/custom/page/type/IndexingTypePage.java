@@ -461,12 +461,9 @@ public class IndexingTypePage extends TypePageItem implements ItemInsertableType
             var links = getLinksMultiplier(stack);
             var linkedRange = getRangeMultiplier(stack, true);
 
-            if (range != 1) tooltip.add(Text.translatable("item.arcane_repository.page.tooltip.type.indexing.range", range)
-                    .formatted(Formatting.DARK_GREEN));
-            if (links != 1) tooltip.add(Text.translatable("item.arcane_repository.page.tooltip.type.indexing.links", links)
-                    .formatted(Formatting.DARK_GREEN));
-            if (linkedRange != 1) tooltip.add(Text.translatable("item.arcane_repository.page.tooltip.type.indexing.linked_range", linkedRange)
-                    .formatted(Formatting.DARK_GREEN));
+            if (range != 1) tooltip.add(Text.translatable("item.arcane_repository.page.tooltip.type.indexing.range", range).formatted(Formatting.DARK_GREEN));
+            if (links != 1) tooltip.add(Text.translatable("item.arcane_repository.page.tooltip.type.indexing.links", links).formatted(Formatting.DARK_GREEN));
+            if (linkedRange != 1) tooltip.add(Text.translatable("item.arcane_repository.page.tooltip.type.indexing.linked_range", linkedRange).formatted(Formatting.DARK_GREEN));
         }
     }
 }

@@ -1,23 +1,23 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "pap",
-    "rpr",
-    " r "
+    "pcp",
+    "ipi",
+    " i "
   ],
   "key": {
     "p": {
       "item": "arcane_repository:empty_page"
     },
-    "r": {
-      "item": "minecraft:redstone"
+    "i": {
+      "item": "minecraft:gold_nugget"
     },
-    "a": {
-      "item": "minecraft:golden_apple"
+    "c": {
+      "item": "minecraft:chest"
     }
   },
   "result": {
-    "item": "arcane_repository:feeding_action_page",
+    "id": "arcane_repository:item_storage_type_page",
     "count": 3
   }
 }

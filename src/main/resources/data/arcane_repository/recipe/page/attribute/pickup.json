@@ -1,23 +1,23 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "pcp",
-    "ipi",
-    " i "
+    "php",
+    "gpg",
+    " g "
   ],
   "key": {
     "p": {
       "item": "arcane_repository:empty_page"
     },
-    "i": {
-      "item": "minecraft:gold_nugget"
+    "g": {
+      "item": "minecraft:glowstone_dust"
     },
-    "c": {
-      "item": "minecraft:chest"
+    "h": {
+      "item": "minecraft:hopper"
     }
   },
   "result": {
-    "item": "arcane_repository:item_storage_type_page",
+    "id": "arcane_repository:pickup_attribute_page",
     "count": 3
   }
 }

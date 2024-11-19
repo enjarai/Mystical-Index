@@ -7,6 +7,7 @@ import dev.enjarai.arcane_repository.event.ModEvents;
 import dev.enjarai.arcane_repository.event.ServerNetworkListeners;
 import dev.enjarai.arcane_repository.item.ModDataComponentTypes;
 import dev.enjarai.arcane_repository.item.ModItems;
+import dev.enjarai.arcane_repository.item.ModLootTables;
 import dev.enjarai.arcane_repository.item.ModRecipes;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.entity.player.PlayerEntity;
@@ -24,12 +25,13 @@ public class ArcaneRepository implements ModInitializer {
 
     @Override
 	public void onInitialize() {
+		ModDataComponentTypes.registerDataComponentTypes();
 		ModItems.registerModItems();
 		ModBlocks.registerModBlocks();
 		ModBlockEntities.registerBlockEntities();
-		ModRecipes.registerModRecipes();
+		ModLootTables.registerLootTables();
 		LootTableEvent.registerLootTable();
-		ModDataComponentTypes.registerDataComponentTypes();
+		ModRecipes.registerModRecipes();
 
 		ModEvents.register();
 		ServerNetworkListeners.registerListeners();

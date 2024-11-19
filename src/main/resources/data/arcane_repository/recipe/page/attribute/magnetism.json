@@ -13,11 +13,11 @@
       "item": "minecraft:glowstone_dust"
     },
     "b": {
-      "item": "minecraft:barrel"
+      "item": "minecraft:iron_block"
     }
   },
   "result": {
-    "item": "arcane_repository:types_page",
+    "id": "arcane_repository:magnetism_attribute_page",
     "count": 3
   }
 }

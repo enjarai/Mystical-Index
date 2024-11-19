@@ -2,7 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "pbp",
-    "ggg"
+    "gpg",
+    " g "
   ],
   "key": {
     "p": {
@@ -12,11 +13,11 @@
       "item": "minecraft:glowstone_dust"
     },
     "b": {
-      "item": "minecraft:book"
+      "item": "minecraft:barrel"
     }
   },
   "result": {
-    "item": "arcane_repository:links_page",
-    "count": 2
+    "id": "arcane_repository:types_page",
+    "count": 3
   }
 }

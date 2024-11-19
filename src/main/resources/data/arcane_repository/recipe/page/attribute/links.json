@@ -2,22 +2,21 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "pbp",
-    "rpr",
-    " r "
+    "ggg"
   ],
   "key": {
     "p": {
       "item": "arcane_repository:empty_page"
     },
-    "r": {
-      "item": "minecraft:redstone"
+    "g": {
+      "item": "minecraft:glowstone_dust"
     },
     "b": {
-      "tag": "arcane_repository:block_items"
+      "item": "minecraft:book"
     }
   },
   "result": {
-    "item": "arcane_repository:building_action_page",
-    "count": 3
+    "id": "arcane_repository:links_page",
+    "count": 2
   }
 }

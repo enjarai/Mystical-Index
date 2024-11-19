@@ -23,5 +23,6 @@ public class ModDataComponentTypes {
     }
 
     public static void registerDataComponentTypes() {
+        ArcaneRepository.LOGGER.debug("Registering data components for " + ArcaneRepository.MOD_ID);
     }
 }

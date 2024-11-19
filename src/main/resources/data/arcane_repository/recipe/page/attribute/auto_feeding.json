@@ -16,7 +16,7 @@
     }
   },
   "result": {
-    "item": "arcane_repository:auto_feeding_attribute_page",
+    "id": "arcane_repository:auto_feeding_attribute_page",
     "count": 2
   }
 }

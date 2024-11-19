@@ -2,22 +2,22 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "pbp",
-    "ipi",
-    " i "
+    "rpr",
+    " r "
   ],
   "key": {
     "p": {
       "item": "arcane_repository:empty_page"
     },
-    "i": {
-      "item": "minecraft:gold_nugget"
+    "r": {
+      "item": "minecraft:redstone"
     },
     "b": {
       "tag": "arcane_repository:block_items"
     }
   },
   "result": {
-    "item": "arcane_repository:block_storage_type_page",
+    "id": "arcane_repository:building_action_page",
     "count": 3
   }
 }

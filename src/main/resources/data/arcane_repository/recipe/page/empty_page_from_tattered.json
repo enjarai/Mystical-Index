@@ -18,7 +18,7 @@
     }
   ],
   "result": {
-    "item": "arcane_repository:empty_page",
+    "id": "arcane_repository:empty_page",
     "count": 4
   }
 }

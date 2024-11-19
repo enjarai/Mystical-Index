@@ -1,7 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "pfp",
+    "pbp",
     "ipi",
     " i "
   ],
@@ -12,12 +12,12 @@
     "i": {
       "item": "minecraft:gold_nugget"
     },
-    "f": {
-      "tag": "arcane_repository:food_items"
+    "b": {
+      "tag": "arcane_repository:block_items"
     }
   },
   "result": {
-    "item": "arcane_repository:food_storage_type_page",
+    "id": "arcane_repository:block_storage_type_page",
     "count": 3
   }
 }

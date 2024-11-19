@@ -24,7 +24,7 @@ public abstract class PageItem extends Item {
     public final String id;
 
     public PageItem(Item.Settings settings, String id) {
-        super(settings.rarity(Rarity.UNCOMMON));
+        super(settings.rarity(Rarity.UNCOMMON).component(ATTRIBUTES_TAG, new NbtCompound()));
         this.id = id;
     }
 

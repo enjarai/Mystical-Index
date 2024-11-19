@@ -17,7 +17,7 @@
     }
   },
   "result": {
-    "item": "arcane_repository:index_slave_type_page",
+    "id": "arcane_repository:index_slave_type_page",
     "count": 1
   }
 }

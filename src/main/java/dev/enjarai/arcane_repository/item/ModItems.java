@@ -66,7 +66,7 @@ public class ModItems {
     }
 
     public static void registerModItems(){
-        ArcaneRepository.LOGGER.info("Registering items for " + ArcaneRepository.MOD_ID);
+        ArcaneRepository.LOGGER.debug("Registering items for " + ArcaneRepository.MOD_ID);
 
         Registry.register(Registries.ITEM_GROUP, ArcaneRepository.id("arcane_repository"), MYSTICAL_INDEX_GROUP);
         ItemGroupEvents.modifyEntriesEvent(RegistryKey.of(RegistryKeys.ITEM_GROUP, ArcaneRepository.id("arcane_repository"))).register(entries -> {

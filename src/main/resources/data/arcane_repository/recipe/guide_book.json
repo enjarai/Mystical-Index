@@ -9,6 +9,7 @@
     }
   ],
   "result": {
-    "item": "arcane_repository:guide_book"
+    "id": "arcane_repository:guide_book",
+    "count": 1
   }
 }

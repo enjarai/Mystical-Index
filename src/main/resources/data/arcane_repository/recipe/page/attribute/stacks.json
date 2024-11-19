@@ -1,7 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "pbp",
+    "pcp",
     "gpg",
     " g "
   ],
@@ -12,12 +12,12 @@
     "g": {
       "item": "minecraft:glowstone_dust"
     },
-    "b": {
-      "item": "minecraft:iron_block"
+    "c": {
+      "item": "minecraft:chest"
     }
   },
   "result": {
-    "item": "arcane_repository:magnetism_attribute_page",
+    "id": "arcane_repository:stacks_page",
     "count": 3
   }
 }
