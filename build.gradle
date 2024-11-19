@@ -68,7 +68,7 @@ publishing {
 	repositories {
 		maven {
 			name = "enjaraiMaven"
-			url = "https://maven.enjarai.nl/releases"
+			url = "https://maven.enjarai.dev/releases"
 			credentials(PasswordCredentials)
 			authentication {
 				basic(BasicAuthentication)
