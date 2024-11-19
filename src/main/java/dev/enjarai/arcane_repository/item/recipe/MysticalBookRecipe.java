@@ -140,7 +140,7 @@ public class MysticalBookRecipe extends SpecialCraftingRecipe {
         for (int i = 0; i < input.getSize(); ++i) {
             var stack = input.getStackInSlot(i);
             if (CATALYST.test(stack)) {
-                book.set(ModDataComponentTypes.MYSTICAL_BOOK, component.withCatalyst(Registries.ITEM.getId(stack.getItem())));
+                book.set(ModDataComponentTypes.MYSTICAL_BOOK, component = component.withCatalyst(Registries.ITEM.getId(stack.getItem())));
                 break;
             }
         }
@@ -151,7 +151,7 @@ public class MysticalBookRecipe extends SpecialCraftingRecipe {
                 pageItem.onCraftToBook(stack, book);
                 typeColor = pageItem.getColor();
                 if (pageItem.mixColor(stack)) otherColors.add(typeColor);
-                book.set(ModDataComponentTypes.MYSTICAL_BOOK, component.withTypePage(Registries.ITEM.getId(pageItem)));
+                book.set(ModDataComponentTypes.MYSTICAL_BOOK, component = component.withTypePage(Registries.ITEM.getId(pageItem)));
                 break;
             }
         }
@@ -166,7 +166,7 @@ public class MysticalBookRecipe extends SpecialCraftingRecipe {
             }
         }
 
-        book.set(ModDataComponentTypes.MYSTICAL_BOOK, component.withAttributePages(pagesList));
+        book.set(ModDataComponentTypes.MYSTICAL_BOOK, component = component.withAttributePages(pagesList));
 
         for (int i = 0; i < input.getSize(); ++i) {
             var stack = input.getStackInSlot(i);
