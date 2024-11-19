@@ -23,7 +23,6 @@ public abstract class AttributePageItem extends PageItem implements TypeDependen
         }
         return DataResult.error(() -> "Not an attribute page item");
     }, i -> i);
-    public static final ComponentType<NbtCompound> ATTRIBUTES_TAG = ModDataComponentTypes.PAGE_ITEM_ATTRIBUTES;
 
     public AttributePageItem(String id) {
         super(new ItemSettings(), id);
@@ -48,7 +47,9 @@ public abstract class AttributePageItem extends PageItem implements TypeDependen
     public void onCraftToBook(ItemStack page, ItemStack book) {
         super.onCraftToBook(page, book);
 
-        appendAttributes(page, book.getOrDefault(ATTRIBUTES_TAG, new NbtCompound()));
+        var compound = book.getOrDefault(ModDataComponentTypes.PAGE_ITEM_ATTRIBUTES, new NbtCompound()).copy();
+        appendAttributes(page, compound);
+        book.set(ModDataComponentTypes.PAGE_ITEM_ATTRIBUTES, compound);
     }
 
     @Nullable

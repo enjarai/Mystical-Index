@@ -18,7 +18,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.tooltip.TooltipData;
 import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -34,14 +33,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import static dev.enjarai.arcane_repository.item.custom.page.AttributePageItem.ATTRIBUTES_TAG;
-
 public class MysticalBookItem extends Item {
     public MysticalBookItem(Settings settings) {
-        super(
-          settings
-            .component(ATTRIBUTES_TAG, new NbtCompound())
-        );
+        super(settings);
     }
 
     private Optional<MysticalBookComponent> getComponent(ItemStack stack) {

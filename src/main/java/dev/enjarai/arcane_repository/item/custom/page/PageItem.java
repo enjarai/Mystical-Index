@@ -3,6 +3,7 @@ package dev.enjarai.arcane_repository.item.custom.page;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import dev.enjarai.arcane_repository.block.entity.MysticalLecternBlockEntity;
+import dev.enjarai.arcane_repository.item.ModDataComponentTypes;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,8 +22,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-import static dev.enjarai.arcane_repository.item.custom.page.AttributePageItem.ATTRIBUTES_TAG;
-
 public abstract class PageItem extends Item {
     public static final Codec<PageItem> CODEC = Registries.ITEM.getCodec().comapFlatMap(i -> {
         if (i instanceof PageItem item) {
@@ -34,7 +33,7 @@ public abstract class PageItem extends Item {
     public final String id;
 
     public PageItem(Item.Settings settings, String id) {
-        super(settings.rarity(Rarity.UNCOMMON).component(ATTRIBUTES_TAG, new NbtCompound()));
+        super(settings.rarity(Rarity.UNCOMMON));
         this.id = id;
     }
 
@@ -82,16 +81,8 @@ public abstract class PageItem extends Item {
     public abstract int getColor();
 
     public NbtCompound getAttributes(ItemStack book) {
-        return book.get(ATTRIBUTES_TAG);
+        return book.getOrDefault(ModDataComponentTypes.PAGE_ITEM_ATTRIBUTES, new NbtCompound());
     }
-
-    // TODO display color on item texture somehow
-//    @Override
-//    public ItemStack getPolymerItemStack(ItemStack itemStack, @Nullable ServerPlayerEntity player) {
-//        var returnStack = PolymerItem.super.getPolymerItemStack(itemStack, player);
-//        returnStack.getOrCreateSubNbt("display").putInt("MapColor", getColor());
-//        return returnStack;
-//    }
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable TooltipContext context, List<Text> tooltip, TooltipType type) {

@@ -75,11 +75,13 @@ public class IndexingTypePage extends TypePageItem implements ItemInsertableType
     public void onCraftToBook(ItemStack page, ItemStack book) {
         super.onCraftToBook(page, book);
 
-        NbtCompound attributes = getAttributes(book);
+        NbtCompound attributes = getAttributes(book).copy();
 
         attributes.putInt(MAX_RANGE_TAG, 1);
         attributes.putInt(MAX_LINKS_TAG, 2);
         attributes.putInt(MAX_RANGE_LINKED_TAG, 20);
+
+        book.set(ModDataComponentTypes.PAGE_ITEM_ATTRIBUTES, attributes);
     }
 
     public int getMaxRange(ItemStack book, boolean linked) {
@@ -376,10 +378,12 @@ public class IndexingTypePage extends TypePageItem implements ItemInsertableType
 
     @Override
     public ItemActionResult lectern$onUseWithItem(MysticalLecternBlockEntity lectern, ItemStack itemStack, BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        var index = getInteractionLecternIndex(lectern);
+        if (!world.isClient) {
+            var index = getInteractionLecternIndex(lectern);
 
-        var request = tryInsertItemStack(index, itemStack, Vec3d.ofCenter(pos));
-        if (request.hasAffected()) WorldEffects.lecternPlonk(world, player.getPos(), 0.6f, true);
+            var request = tryInsertItemStack(index, itemStack, Vec3d.ofCenter(pos));
+            if (request.hasAffected()) WorldEffects.lecternPlonk(world, player.getPos(), 0.6f, true);
+        }
 
         return ItemActionResult.SUCCESS;
     }

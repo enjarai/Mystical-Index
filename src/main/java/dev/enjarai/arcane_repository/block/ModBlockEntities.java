@@ -14,7 +14,7 @@ public class ModBlockEntities {
     public static void registerBlockEntities() {
         MYSTICAL_LECTERN_BLOCK_ENTITY =
                 Registry.register(Registries.BLOCK_ENTITY_TYPE, ArcaneRepository.id("mystical_lectern"),
-                        FabricBlockEntityTypeBuilder.create(MysticalLecternBlockEntity::new,
+                        BlockEntityType.Builder.create(MysticalLecternBlockEntity::new,
                                 ModBlocks.MYSTICAL_LECTERN).build(null));
     }
 }

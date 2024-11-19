@@ -1,6 +1,7 @@
 package dev.enjarai.arcane_repository.item;
 
 import dev.enjarai.arcane_repository.ArcaneRepository;
+import dev.enjarai.arcane_repository.item.component.OverstackingStorageComponent;
 import dev.enjarai.arcane_repository.item.component.StorageFilterComponent;
 import dev.enjarai.arcane_repository.item.component.MysticalBookComponent;
 import net.minecraft.component.ComponentType;
@@ -17,6 +18,7 @@ public class ModDataComponentTypes {
     public static final ComponentType<NbtCompound> PAGE_ITEM_ATTRIBUTES = register("page_item/attributes", builder -> builder.codec(NbtCompound.CODEC));
     public static final ComponentType<List<BlockPos>> INDEXING_PAGE_ITEM_LINKED_BLOCKS = register("page_item/indexing/linked_blocks", builder -> builder.codec(BlockPos.CODEC.listOf()));
     public static final ComponentType<StorageFilterComponent> STORAGE_FILTERS = register("storage_filters", builder -> builder.codec(StorageFilterComponent.CODEC));
+    public static final ComponentType<OverstackingStorageComponent> OVERSTACKING_STORAGE = register("overstacking_storage", builder -> builder.codec(OverstackingStorageComponent.CODEC));
 
     private static <T> ComponentType<T> register(String id, UnaryOperator<ComponentType.Builder<T>> builderOperator) {
         return Registry.register(Registries.DATA_COMPONENT_TYPE, ArcaneRepository.id(id), builderOperator.apply(ComponentType.builder()).build());

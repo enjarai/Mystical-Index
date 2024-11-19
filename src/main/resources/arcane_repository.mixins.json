@@ -4,9 +4,11 @@
   "package": "dev.enjarai.arcane_repository.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
+    "BlockEntityMixin",
     "EnderPearlItemMixin",
     "ItemEntityMixin",
     "ItemMixin",
+    "LecternBlockMixin",
     "PlayerInventoryMixin",
     "accessor.ItemEntityAccessor",
     "accessor.ItemUsageContextAccessor",

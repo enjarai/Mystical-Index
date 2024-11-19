@@ -1,6 +1,5 @@
 package dev.enjarai.arcane_repository.block.entity;
 
-import com.mojang.serialization.DataResult;
 import dev.enjarai.arcane_repository.item.custom.book.MysticalBookItem;
 import dev.enjarai.arcane_repository.block.ModBlockEntities;
 import dev.enjarai.arcane_repository.util.LecternTracker;
@@ -88,7 +87,7 @@ public class MysticalLecternBlockEntity extends LecternBlockEntity { // TODO sep
     public static void serverTick(World world, BlockPos pos, BlockState state, MysticalLecternBlockEntity lectern) {
         if (!world.isClient()) {
             if (state.get(HAS_BOOK)) {
-                if (lectern.tick == 0) {
+                if (lectern.typeState == null) {
                     lectern.initState();
                 }
             }

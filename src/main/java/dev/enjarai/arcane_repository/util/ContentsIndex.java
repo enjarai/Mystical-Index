@@ -1,5 +1,6 @@
 package dev.enjarai.arcane_repository.util;
 
+import dev.enjarai.arcane_repository.item.component.OverstackingStorageComponent;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -35,6 +36,10 @@ public class ContentsIndex implements Iterable<BigStack> {
 
     public void add(ItemStack itemStack) {
         add(itemStack, itemStack.getCount());
+    }
+
+    public void add(OverstackingStorageComponent.TypeStack typeStack) {
+        add(typeStack.stack(), typeStack.count());
     }
 
     public void add(Item item, int amount) {

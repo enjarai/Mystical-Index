@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import dev.enjarai.arcane_repository.client.tooltip.ItemStorageTooltipData;
 import dev.enjarai.arcane_repository.item.ItemSettings;
 import dev.enjarai.arcane_repository.item.ModDataComponentTypes;
+import dev.enjarai.arcane_repository.item.component.OverstackingStorageComponent;
 import dev.enjarai.arcane_repository.item.component.StorageFilterComponent;
 import dev.enjarai.arcane_repository.util.request.ExtractionRequest;
 import dev.enjarai.arcane_repository.ArcaneRepository;
@@ -16,8 +17,6 @@ import dev.enjarai.arcane_repository.util.ContentsIndex;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.ComponentType;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ContainerComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
@@ -25,16 +24,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipData;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.registry.Registries;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -51,7 +46,7 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
     public static final String MAX_TYPES_TAG = "max_types";
 
     public ItemStorageTypePage(String id) {
-        super(new ItemSettings().component(COMPONENT_TYPE, new StorageFilterComponent(List.of(), 0, 0)), id);
+        super(new ItemSettings(), id);
     }
 
     private StorageFilterComponent getComponent(ItemStack stack) {
@@ -72,10 +67,14 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
     public void onCraftToBook(ItemStack page, ItemStack book) {
         super.onCraftToBook(page, book);
 
-        NbtCompound attributes = getAttributes(book);
+        NbtCompound attributes = getAttributes(book).copy();
 
         attributes.putInt(MAX_STACKS_TAG, 2);
         attributes.putInt(MAX_TYPES_TAG, 4);
+
+        book.set(ModDataComponentTypes.PAGE_ITEM_ATTRIBUTES, attributes);
+        book.set(COMPONENT_TYPE, new StorageFilterComponent(List.of(), 0, 0));
+        book.set(ModDataComponentTypes.OVERSTACKING_STORAGE, new OverstackingStorageComponent(List.of()));
     }
 
     public int getMaxTypes(ItemStack book) {
@@ -88,9 +87,9 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
 
     public ContentsIndex getContents(ItemStack book) {
         ContentsIndex result = new ContentsIndex();
-        ContainerComponent containerComponent = book.get(DataComponentTypes.CONTAINER);
+        var containerComponent = book.get(ModDataComponentTypes.OVERSTACKING_STORAGE);
         if (containerComponent != null) {
-            containerComponent.iterateNonEmptyCopy().forEach(result::add);
+            containerComponent.stacks().forEach(result::add);
         }
         return result;
     }
@@ -110,10 +109,10 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
         return 1;
     }
 
-    private Optional<ItemStack> canMergeStack(ItemStack stack, List<ItemStack> items) {
+    private Optional<OverstackingStorageComponent.TypeStack> canMergeStack(ItemStack stack, List<OverstackingStorageComponent.TypeStack> items) {
         return items.stream()
-          .filter(item -> ItemStack.areItemsAndComponentsEqual(item, stack))
-          .findFirst();
+                .filter(item -> ItemStack.areItemsAndComponentsEqual(item.stack(), stack))
+                .findFirst();
     }
 
     public boolean isFiltered(ItemStack book) {
@@ -125,16 +124,15 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
     public boolean isFilteredTo(ItemStack book, ItemStack stack) {
         var filters = getComponent(book).items();
 
-        return filters != null && filters.contains(Registries.ITEM.getId(stack.getItem()));
+        return filters != null && filters.contains(stack.getItem());
     }
 
     public List<Item> getFilteredItems(ItemStack book) {
         var filters = getComponent(book).items();
 
         return filters.stream()
-          .filter(Objects::nonNull)
-          .map(Registries.ITEM::get)
-          .collect(ImmutableList.toImmutableList());
+                .filter(Objects::nonNull)
+                .collect(ImmutableList.toImmutableList());
     }
 
     public void addFilteredItem(ItemStack book, Item item) {
@@ -142,7 +140,7 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
         var filters = component.items();
 
         var newFilters = new ArrayList<>(filters);
-        filters.add(Registries.ITEM.getId(item));
+        newFilters.add(item);
 
         book.set(COMPONENT_TYPE, component.withItems(newFilters));
     }
@@ -152,7 +150,7 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
         var filters = component.items();
 
         var newFilters = new ArrayList<>(filters);
-        filters.remove(i);
+        newFilters.remove(i);
 
         book.set(COMPONENT_TYPE, component.withItems(newFilters));
     }
@@ -162,8 +160,7 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
     }
 
     public void setFilteredItems(ItemStack book, List<Item> items) {
-        var newFilters = new ArrayList<Identifier>();
-        items.forEach(item -> newFilters.add(Registries.ITEM.getId(item)));
+        var newFilters = ImmutableList.copyOf(items);
 
         book.set(COMPONENT_TYPE, getComponent(book).withItems(newFilters));
     }
@@ -195,12 +192,12 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
             return 0;
         }
 
-        ContainerComponent containerComponent = book.get(DataComponentTypes.CONTAINER);
-
-        var itemsList = DefaultedList.<ItemStack>of();
-        if (containerComponent != null) {
-            containerComponent.copyTo(itemsList);
+        var containerComponent = book.get(ModDataComponentTypes.OVERSTACKING_STORAGE);
+        if (containerComponent == null) {
+            return 0;
         }
+
+        var itemsList = containerComponent.stacks();
 
         int maxFullness = getMaxStack(book) * 64;
         int fullnessLeft = maxFullness - getFullness(book);
@@ -209,28 +206,25 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
             return 0;
         }
 
-        Optional<ItemStack> mergeAbleStack = canMergeStack(stack, itemsList);
+        var mergeAbleStack = canMergeStack(stack, itemsList);
         if (mergeAbleStack.isPresent()) {
-            ItemStack mergeStack = mergeAbleStack.get();
-            mergeStack.setCount(mergeStack.getCount() + canBeTakenAmount);
+            var mergeStack = mergeAbleStack.get();
             itemsList.remove(mergeStack);
-            itemsList.addFirst(mergeStack);
+            mergeStack.with(mergeStack.count() + canBeTakenAmount).ifPresent(itemsList::addFirst);
         } else {
             if (itemsList.size() >= getMaxTypes(book)) {
                 return 0;
             }
 
-            ItemStack insertStack = stack.copy();
-            insertStack.setCount(canBeTakenAmount);
-
-            itemsList.addFirst(insertStack);
+            ItemStack insertStack = stack.copyWithCount(canBeTakenAmount);
+            itemsList.addFirst(OverstackingStorageComponent.TypeStack.from(insertStack));
         }
 
-        book.set(DataComponentTypes.CONTAINER, ContainerComponent.fromStacks(itemsList));
+        book.set(ModDataComponentTypes.OVERSTACKING_STORAGE, containerComponent.with(itemsList));
 
         saveOccupancy(book,
-          maxFullness - fullnessLeft + canBeTakenAmount * getItemOccupancy(stack.getItem()),
-          itemsList.size());
+                maxFullness - fullnessLeft + canBeTakenAmount * getItemOccupancy(stack.getItem()),
+                itemsList.size());
 
         return canBeTakenAmount;
     }
@@ -254,37 +248,33 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
     }
 
     public Optional<ItemStack> removeFirstStack(ItemStack book, Integer maxAmount) {
-        var containerComponent = book.get(DataComponentTypes.CONTAINER);
+        var containerComponent = book.get(ModDataComponentTypes.OVERSTACKING_STORAGE);
         if (containerComponent == null) {
             return Optional.empty();
         }
 
-        ItemStack firstItem = containerComponent.copyFirstStack();
-        if (firstItem.isEmpty()) {
+        var newStacks = containerComponent.stacks();
+        if (newStacks.isEmpty()) {
             return Optional.empty();
         }
 
-        int itemCount = firstItem.getCount();
-        int takeCount = Math.min(itemCount, firstItem.getMaxCount());
+        var firstItem = newStacks.getFirst();
+
+        int itemCount = firstItem.count();
+        int takeCount = Math.min(itemCount, firstItem.stack().getMaxCount());
         if (maxAmount != null) {
             takeCount = Math.min(takeCount, maxAmount);
         }
 
-        firstItem.setCount(takeCount);
+        var extracted = firstItem.stack().copyWithCount(takeCount);
 
-        if (takeCount >= itemCount) {
-            var newStacks = DefaultedList.<ItemStack>of();
-            containerComponent.copyTo(newStacks);
-            newStacks.removeFirst();
+        newStacks.removeFirst();
+        firstItem.with(itemCount - takeCount).ifPresent(newStacks::addFirst);
 
-            firstItem.set(DataComponentTypes.CONTAINER, ContainerComponent.fromStacks(newStacks));
-        } else {
-            firstItem.setCount(itemCount - takeCount);
-        }
+        book.set(ModDataComponentTypes.OVERSTACKING_STORAGE, containerComponent.with(newStacks));
+        saveOccupancy(book, getFullness(book), Math.toIntExact(newStacks.size()));
 
-        saveOccupancy(book, getFullness(book), Math.toIntExact(containerComponent.stream().filter(stack -> !stack.isEmpty()).count()));
-
-        return Optional.of(firstItem);
+        return Optional.of(extracted);
     }
 
     public Optional<ItemStack> tryRemoveFirstStack(ItemStack book, int amount, Predicate<ItemStack> condition) {
@@ -301,50 +291,52 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
             return Collections.emptyList();
         }
 
-        var containerComponent = book.get(DataComponentTypes.CONTAINER);
+        var containerComponent = book.get(ModDataComponentTypes.OVERSTACKING_STORAGE);
 
         if (containerComponent == null) {
             return Collections.emptyList();
         }
 
-        var itemsList = DefaultedList.<ItemStack>of();
-        containerComponent.copyTo(itemsList);
+        var itemsList = containerComponent.stacks();
 
         if (itemsList.isEmpty())
             return Collections.emptyList();
 
-        ImmutableList.Builder<ItemStack> builder = ImmutableList.builder();
+        ImmutableList.Builder<ItemStack> result = ImmutableList.builder();
+        var remainder = new ArrayList<OverstackingStorageComponent.TypeStack>();
 
-        containerComponent.iterateNonEmptyCopy().forEach(itemStack -> {
-            if (request.matches(itemStack.getItem())) {
-                int itemCount = itemStack.getCount();
+        for (OverstackingStorageComponent.TypeStack typeStack : itemsList) {
+            if (request.matches(typeStack.stack().getItem())) {
+                int itemCount = typeStack.count();
                 int extractAmount = Math.min(itemCount, request.getAmountUnsatisfied());
-                int stackSize = itemStack.getItem().getMaxCount();
+                int stackSize = typeStack.stack().getItem().getMaxCount();
 
                 request.satisfy(extractAmount);
                 if (apply) {
-                    if (extractAmount >= itemCount) {
-                        itemsList.remove(itemStack);
-                    } else {
-                        itemStack.setCount(itemCount - extractAmount);
-                    }
+                    typeStack.with(itemCount - extractAmount).ifPresent(remainder::add);
+                } else {
+                    remainder.add(typeStack);
                 }
 
                 while (extractAmount > 0) {
                     int extractAmountStack = Math.min(extractAmount, stackSize);
 
-                    ItemStack extractStack = itemStack.copy();
+                    ItemStack extractStack = typeStack.stack().copy();
                     extractStack.setCount(extractAmountStack);
-                    builder.add(extractStack);
+                    result.add(extractStack);
 
                     extractAmount -= extractAmountStack;
                 }
+
+                continue;
             }
-        });
+            remainder.add(typeStack);
+        }
 
-        saveOccupancy(book, getFullness(book), itemsList.size());
+        book.set(ModDataComponentTypes.OVERSTACKING_STORAGE, containerComponent.with(remainder));
+        saveOccupancy(book, getFullness(book), remainder.size());
 
-        return builder.build();
+        return result.build();
     }
 
     public void saveOccupancy(ItemStack book, int stacks, int types) {
@@ -353,21 +345,21 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
 
     public void playRemoveOneSound(PlayerEntity player) {
         ArcaneRepository.playUISound(
-          player, SoundEvents.ITEM_BUNDLE_REMOVE_ONE, SoundCategory.PLAYERS, player.getEyePos());
+                player, SoundEvents.ITEM_BUNDLE_REMOVE_ONE, SoundCategory.PLAYERS, player.getEyePos());
         ArcaneRepository.playUISound(
-          player, SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.PLAYERS, player.getEyePos(), 0.4f);
+                player, SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.PLAYERS, player.getEyePos(), 0.4f);
     }
 
     public void playInsertSound(PlayerEntity player) {
         ArcaneRepository.playUISound(
-          player, SoundEvents.ITEM_BUNDLE_INSERT, SoundCategory.PLAYERS, player.getEyePos());
+                player, SoundEvents.ITEM_BUNDLE_INSERT, SoundCategory.PLAYERS, player.getEyePos());
         ArcaneRepository.playUISound(
-          player, SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.PLAYERS, player.getEyePos(), 0.4f);
+                player, SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.PLAYERS, player.getEyePos(), 0.4f);
     }
 
     public boolean isEmpty(ItemStack book) {
-        var containerComponent = book.get(DataComponentTypes.CONTAINER);
-        return containerComponent == null || containerComponent.copyFirstStack().isEmpty();
+        var containerComponent = book.get(ModDataComponentTypes.OVERSTACKING_STORAGE);
+        return containerComponent == null || containerComponent.stacks().isEmpty();
     }
 
     @Override
@@ -414,12 +406,12 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
         if (isFiltered(book)) {
             tooltip.add(Text.literal(""));
             tooltip.add(Text.translatable("item.arcane_repository.repository_book.tooltip.type.item_storage.filtered")
-              .formatted(Formatting.GRAY));
+                    .formatted(Formatting.GRAY));
 
             tooltip.addAll(getFilteredItems(book).stream()
-              .map(Item::getName)
-              .map(text -> Text.literal(" ").append(text).formatted(Formatting.GRAY))
-              .toList()
+                    .map(Item::getName)
+                    .map(text -> Text.literal(" ").append(text).formatted(Formatting.GRAY))
+                    .toList()
             );
         }
     }
@@ -436,27 +428,28 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
         double typesFullRatio = (double) typesOccupied / typesTotal;
 
         tooltip.add(Text.translatable("item.arcane_repository.repository_book.tooltip.type.item_storage.stacks",
-            stacksOccupied, stacksTotal)
-          .formatted(stacksFullRatio < 0.75 ? Formatting.GREEN :
-            stacksFullRatio == 1 ? Formatting.RED : Formatting.GOLD));
+                        stacksOccupied, stacksTotal)
+                .formatted(stacksFullRatio < 0.75 ? Formatting.GREEN :
+                        stacksFullRatio == 1 ? Formatting.RED : Formatting.GOLD));
         tooltip.add(Text.translatable("item.arcane_repository.repository_book.tooltip.type.item_storage.types",
-            typesOccupied, typesTotal)
-          .formatted(typesFullRatio < 0.75 ? Formatting.GREEN :
-            typesFullRatio == 1 ? Formatting.RED : Formatting.GOLD));
+                        typesOccupied, typesTotal)
+                .formatted(typesFullRatio < 0.75 ? Formatting.GREEN :
+                        typesFullRatio == 1 ? Formatting.RED : Formatting.GOLD));
     }
 
     @Override
     public boolean book$onInventoryScroll(ItemStack book, PlayerEntity player, byte scrollDirection) {
-        var containerComponent = book.get(DataComponentTypes.CONTAINER);
+        var containerComponent = book.get(ModDataComponentTypes.OVERSTACKING_STORAGE);
 
         if (containerComponent == null) return false;
 
-        var itemsList = DefaultedList.<ItemStack>of();
-        containerComponent.copyTo(itemsList);
+        var itemsList = containerComponent.stacks();
 
         if (itemsList.isEmpty()) return false;
 
         Collections.rotate(itemsList, -scrollDirection);
+        book.set(ModDataComponentTypes.OVERSTACKING_STORAGE, containerComponent.with(itemsList));
+
         if (player.getWorld().isClient()) {
             player.playSoundToPlayer(SoundEvents.ITEM_BUNDLE_INSERT, SoundCategory.PLAYERS, 0.4f, 0.8f);
         }
@@ -508,8 +501,8 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
     @Override
     public void lectern$onPlaced(MysticalLecternBlockEntity lectern) {
         lectern.items = getFilteredItems(lectern.getBook()).stream()
-          .map(Item::getDefaultStack)
-          .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+                .map(Item::getDefaultStack)
+                .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
     }
 
     public static abstract class ItemStorageAttributePage extends AttributePageItem {
@@ -550,10 +543,10 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
 
             if (stacks != 1)
                 tooltip.add(Text.translatable("item.arcane_repository.page.tooltip.type.item_storage.stacks", stacks)
-                  .formatted(Formatting.DARK_GREEN));
+                        .formatted(Formatting.DARK_GREEN));
             if (types != 1)
                 tooltip.add(Text.translatable("item.arcane_repository.page.tooltip.type.item_storage.types", types)
-                  .formatted(Formatting.DARK_GREEN));
+                        .formatted(Formatting.DARK_GREEN));
         }
     }
 }
