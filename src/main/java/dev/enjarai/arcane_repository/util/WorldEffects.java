@@ -1,6 +1,7 @@
 package dev.enjarai.arcane_repository.util;
 
 import dev.enjarai.arcane_repository.ArcaneRepository;
+import dev.enjarai.arcane_repository.network.BlockParticlesPacket;
 import dev.enjarai.arcane_repository.util.request.IndexInteractable;
 import dev.enjarai.arcane_repository.util.request.Request;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -72,13 +73,8 @@ public class WorldEffects {
 
     public static void blockParticles(World world, BlockPos pos, ParticleEffect effect) {
         if (world != null && !world.isClient()) {
-            var buf = PacketByteBufs.create();
-
-            buf.writeBlockPos(pos);
-            buf.writeIdentifier(Registries.PARTICLE_TYPE.getId(effect.getType()));
-
             for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) world, pos)) {
-                ServerPlayNetworking.send(player, ArcaneRepository.BLOCK_PARTICLES_CHANNEL, buf);
+                ServerPlayNetworking.send(player, new BlockParticlesPacket(pos, effect.getType()));
             }
         }
     }

@@ -13,6 +13,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public class IndexSlaveTypePage extends IndexingTypePage {
     public IndexSlaveTypePage(String id) {
         super(id);
@@ -45,14 +47,11 @@ public class IndexSlaveTypePage extends IndexingTypePage {
 
     @Nullable
     public BlockPos getMasterPos(ItemStack book) {
-        var nbt = book.getOrCreateNbt();
-        var links = nbt.getList(LINKED_BLOCKS_TAG, NbtElement.LIST_TYPE);
+        var links = book.getOrDefault(LINKED_BLOCKS_TAG, List.<BlockPos>of());
 
         if (links.isEmpty()) return null;
-        var master = links.getList(0);
 
-        if (master.size() != 3) return null;
-        return blockPosFromList(master);
+        return links.getFirst();
     }
 
     @Nullable
@@ -67,7 +66,7 @@ public class IndexSlaveTypePage extends IndexingTypePage {
                 var masterBookItem = (MysticalBookItem) masterBook.getItem();
                 var masterPage = masterBookItem.getTypePage(masterBook);
 
-                if (masterPage instanceof IndexingTypePage masterIndexingPage && masterLectern.typeState != null) {
+                if (masterPage.orElse(null) instanceof IndexingTypePage masterIndexingPage && masterLectern.typeState != null) {
                     return masterIndexingPage.getLecternIndex(masterLectern);
                 }
             }

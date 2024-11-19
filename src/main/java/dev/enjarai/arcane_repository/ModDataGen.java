@@ -7,6 +7,9 @@ import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.FoodComponent;
+import net.minecraft.component.type.FoodComponents;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
@@ -42,7 +45,7 @@ public class ModDataGen implements DataGeneratorEntrypoint {
             var foodItems = getOrCreateTagBuilder(FOOD_ITEMS);
 
             Registries.ITEM.stream().filter(BlockItem.class::isInstance).forEach(blockItems::add);
-            Registries.ITEM.stream().filter(Item::isFood).forEach(foodItems::add);
+            Registries.ITEM.stream().filter(item -> item.getComponents().get(DataComponentTypes.FOOD) != null).forEach(foodItems::add);
 
             createTagByFilter(TYPE_PAGES, TypePageItem.class::isInstance);
             createTagByFilter(ACTION_PAGES, ActionPageItem.class::isInstance);

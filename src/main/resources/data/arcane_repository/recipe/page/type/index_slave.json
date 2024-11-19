@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " q ",
+    "epe",
+    " e "
+  ],
+  "key": {
+    "p": {
+      "item": "arcane_repository:indexing_type_page"
+    },
+    "q": {
+      "item": "minecraft:quartz"
+    },
+    "e": {
+      "item": "arcane_repository:ender_pearl_shard"
+    }
+  },
+  "result": {
+    "id": "arcane_repository:index_slave_type_page",
+    "count": 1
+  }
+}

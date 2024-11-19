@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "pbp",
+    "ggg"
+  ],
+  "key": {
+    "p": {
+      "item": "arcane_repository:empty_page"
+    },
+    "g": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "b": {
+      "item": "minecraft:book"
+    }
+  },
+  "result": {
+    "id": "arcane_repository:links_page",
+    "count": 2
+  }
+}

@@ -17,10 +17,10 @@ import java.util.stream.Stream;
 @Mixin(EnderPearlItem.class)
 public abstract class EnderPearlItemMixin extends ItemMixin {
     @Override
-    protected Stream<ItemStack> getItemEntityDestroyedDrops(ServerWorld serverWorld, ItemEntity entity) {
+    protected Iterable<ItemStack> getItemEntityDestroyedDrops(ServerWorld serverWorld, ItemEntity entity) {
         var lootContext = new LootContextParameterSet.Builder(serverWorld).build(LootContextTypes.EMPTY);
-        var lootTable = serverWorld.getServer().getLootManager().getLootTable(ModLootTables.DROP_ENDER_PEARL_SHARDS);
-        return lootTable.generateLoot(lootContext).stream();
+        var lootTable = serverWorld.getServer().getReloadableRegistries().getLootTable(ModLootTables.DROP_ENDER_PEARL_SHARDS);
+        return lootTable.generateLoot(lootContext);
     }
 
     @Override

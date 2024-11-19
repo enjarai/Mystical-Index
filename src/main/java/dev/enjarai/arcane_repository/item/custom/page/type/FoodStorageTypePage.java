@@ -1,6 +1,8 @@
 package dev.enjarai.arcane_repository.item.custom.page.type;
 
 import dev.enjarai.arcane_repository.item.custom.page.TypePageItem;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.FoodComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Formatting;
@@ -31,7 +33,7 @@ public class FoodStorageTypePage extends ItemStorageTypePage {
 
     @Override
     protected boolean canInsert(ItemStack book, ItemStack itemStack) {
-        if (!itemStack.isFood()) return false;
+        if (itemStack.get(DataComponentTypes.FOOD) == null) return false;
 
         return super.canInsert(book, itemStack);
     }

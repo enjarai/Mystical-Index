@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 @Mixin(Item.class)
@@ -36,8 +37,8 @@ public abstract class ItemMixin {
         }
     }
 
-    protected Stream<ItemStack> getItemEntityDestroyedDrops(ServerWorld serverWorld, ItemEntity entity) {
-        return Stream.of();
+    protected Iterable<ItemStack> getItemEntityDestroyedDrops(ServerWorld serverWorld, ItemEntity entity) {
+        return List.of();
     }
 
     @Nullable

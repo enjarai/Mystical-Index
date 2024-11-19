@@ -1,0 +1,9 @@
+{
+  "values": [
+    "arcane_repository:item_storage_type_page",
+    "arcane_repository:food_storage_type_page",
+    "arcane_repository:block_storage_type_page",
+    "arcane_repository:indexing_type_page",
+    "arcane_repository:index_slave_type_page"
+  ]
+}

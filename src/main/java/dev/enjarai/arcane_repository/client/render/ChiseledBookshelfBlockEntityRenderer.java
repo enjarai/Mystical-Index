@@ -4,6 +4,7 @@ import dev.enjarai.arcane_repository.item.custom.book.MysticalBookItem;
 import dev.enjarai.arcane_repository.item.custom.page.type.ItemStorageTypePage;
 import dev.enjarai.arcane_repository.util.BigStack;
 import dev.enjarai.arcane_repository.util.ModifiedChiseledBookshelfBlockEntity;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.ChiseledBookshelfBlock;
 import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.block.entity.ChiseledBookshelfBlockEntity;
@@ -14,9 +15,11 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
 
 import java.util.List;
+import java.util.OptionalInt;
 
 public class ChiseledBookshelfBlockEntityRenderer extends MildlyLessCringeBlockEntityRenderer<ChiseledBookshelfBlockEntity> {
     private final ItemCirclesRenderer circleRenderer = new ItemCirclesRenderer(true);
@@ -38,7 +41,10 @@ public class ChiseledBookshelfBlockEntityRenderer extends MildlyLessCringeBlockE
             ChiseledBookshelfBlock.getHitPos(blockHitResult, facing).ifPresent(hitPos -> {
 
 
-                var slot = ChiseledBookshelfBlock.getSlotForHitPos(hitPos);
+                int i = hitPos.y >= 0.5F ? 0 : 1;
+                int j = ChiseledBookshelfBlock.getColumn(hitPos.x);
+
+                var slot = j + i * 3;
                 var bookStack = entity.getStack(slot);
                 var book = bookStack.getItem();
 
@@ -46,7 +52,7 @@ public class ChiseledBookshelfBlockEntityRenderer extends MildlyLessCringeBlockE
                 mEntity.setLastSlot(slot);
                 mEntity.setLastHitPos(blockHitResult.getBlockPos());
 
-                if (book instanceof MysticalBookItem bookItem && bookItem.getTypePage(bookStack) instanceof ItemStorageTypePage storagePage) {
+                if (book instanceof MysticalBookItem bookItem && bookItem.getTypePage(bookStack).orElse(null) instanceof ItemStorageTypePage storagePage) {
                     var stacks = storagePage.getContents(bookStack).getAll();
                     if (stacks.isEmpty()) stacks = List.of(new BigStack(Items.AIR.getDefaultStack()));
                     var x = (slot % 3 / 3f + 1f / 6f) / 16f * 15f + 1f / 32f;

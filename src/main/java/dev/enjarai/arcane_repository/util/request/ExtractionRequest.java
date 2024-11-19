@@ -38,7 +38,7 @@ public class ExtractionRequest extends QueryBasedRequest {
 
                 var book = source.getBook();
                 if (book.getItem() instanceof MysticalBookItem bookItem) {
-                    if (bookItem.getTypePage(book) instanceof ItemStorageTypePage page) {
+                    if (bookItem.getTypePage(book).orElse(null) instanceof ItemStorageTypePage page) {
                         builder.addAll(page.extractItems(book, this, shouldApply()));
 
                         source.onInteractionComplete();

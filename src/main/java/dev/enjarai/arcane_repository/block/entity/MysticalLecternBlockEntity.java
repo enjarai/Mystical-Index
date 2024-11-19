@@ -13,15 +13,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static net.minecraft.block.LecternBlock.HAS_BOOK;
 
@@ -40,23 +43,21 @@ public class MysticalLecternBlockEntity extends LecternBlockEntity { // TODO sep
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.readNbt(nbt, registryLookup);
         items = nbt.getList("items", NbtElement.COMPOUND_TYPE).stream()
                 .map(NbtCompound.class::cast)
-                .map(ItemStack::fromNbt)
+                .map(nbtCompound -> ItemStack.fromNbt(registryLookup, nbtCompound))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.writeNbt(nbt, registryLookup);
         var itemsNbt = items.stream()
-                .map((stack) -> {
-                    var compound = new NbtCompound();
-                    stack.writeNbt(compound);
-                    return compound;
-                })
+                .map((stack) -> ItemStack.CODEC.encodeStart(registryLookup.getOps(NbtOps.INSTANCE), stack).getOrThrow())
                 .collect(NbtList::new, NbtList::add, NbtList::addAll);
         nbt.put("items", itemsNbt);
     }
@@ -68,8 +69,8 @@ public class MysticalLecternBlockEntity extends LecternBlockEntity { // TODO sep
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return createNbt();
+    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
+        return createNbt(registryLookup);
     }
 
     private void initState() {
@@ -77,8 +78,8 @@ public class MysticalLecternBlockEntity extends LecternBlockEntity { // TODO sep
         var typePage = bookItem.getTypePage(getBook());
         var actionPage = bookItem.getActionPage(getBook());
 
-        if (typePage != null) typeState = typePage.lectern$getState(this);
-        if (actionPage != null) actionState = actionPage.lectern$getState(this);
+        typePage.ifPresent(p -> typeState = p.lectern$getState(this));
+        actionPage.ifPresent(p -> actionState = p.lectern$getState(this));
 
         bookItem.lectern$afterPlaced(this);
     }
@@ -86,7 +87,7 @@ public class MysticalLecternBlockEntity extends LecternBlockEntity { // TODO sep
     public static void serverTick(World world, BlockPos pos, BlockState state, MysticalLecternBlockEntity lectern) {
         if (!world.isClient()) {
             if (state.get(HAS_BOOK)) {
-                if (lectern.tick == 0) {
+                if (lectern.typeState == null) {
                     lectern.initState();
                 }
             }

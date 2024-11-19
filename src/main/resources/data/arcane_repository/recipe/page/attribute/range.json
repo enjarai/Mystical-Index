@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "pep",
+    "ggg"
+  ],
+  "key": {
+    "p": {
+      "item": "arcane_repository:empty_page"
+    },
+    "g": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "e": {
+      "item": "arcane_repository:ender_pearl_shard"
+    }
+  },
+  "result": {
+    "id": "arcane_repository:range_page",
+    "count": 2
+  }
+}

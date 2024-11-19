@@ -2,6 +2,10 @@ package dev.enjarai.arcane_repository.item.custom.page.type;
 
 import com.google.common.collect.ImmutableList;
 import dev.enjarai.arcane_repository.client.tooltip.ItemStorageTooltipData;
+import dev.enjarai.arcane_repository.item.ItemSettings;
+import dev.enjarai.arcane_repository.item.ModDataComponentTypes;
+import dev.enjarai.arcane_repository.item.component.OverstackingStorageComponent;
+import dev.enjarai.arcane_repository.item.component.StorageFilterComponent;
 import dev.enjarai.arcane_repository.util.request.ExtractionRequest;
 import dev.enjarai.arcane_repository.ArcaneRepository;
 import dev.enjarai.arcane_repository.block.entity.MysticalLecternBlockEntity;
@@ -12,17 +16,14 @@ import dev.enjarai.arcane_repository.util.BigStack;
 import dev.enjarai.arcane_repository.util.ContentsIndex;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.client.item.TooltipData;
+import net.minecraft.component.ComponentType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipData;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
-import net.minecraft.registry.Registries;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -36,16 +37,20 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import static dev.enjarai.arcane_repository.item.ModItems.*;
 
 public class ItemStorageTypePage extends TypePageItem implements ItemInsertableTypePage {
+    private static final ComponentType<StorageFilterComponent> COMPONENT_TYPE = ModDataComponentTypes.STORAGE_FILTERS;
     public static final String MAX_STACKS_TAG = "max_stacks";
     public static final String MAX_TYPES_TAG = "max_types";
 
     public ItemStorageTypePage(String id) {
-        super(id);
+        super(new ItemSettings(), id);
+    }
+
+    private StorageFilterComponent getComponent(ItemStack stack) {
+        return stack.get(COMPONENT_TYPE);
     }
 
     @Override
@@ -58,21 +63,18 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
         return super.getTypeDisplayName().formatted(Formatting.DARK_AQUA);
     }
 
-    public static final String OCCUPIED_STACKS_TAG = "occupied_stacks";
-    public static final String OCCUPIED_TYPES_TAG = "occupied_types";
-
-    public static final String FILTERS_TAG = "filters";
-    public static final String ITEM_FILTERS_TAG = "item";
-    public static final String TAG_FILTERS_TAG = "tag";
-
     @Override
     public void onCraftToBook(ItemStack page, ItemStack book) {
         super.onCraftToBook(page, book);
 
-        NbtCompound attributes = getAttributes(book);
+        NbtCompound attributes = getAttributes(book).copy();
 
         attributes.putInt(MAX_STACKS_TAG, 2);
         attributes.putInt(MAX_TYPES_TAG, 4);
+
+        book.set(ModDataComponentTypes.PAGE_ITEM_ATTRIBUTES, attributes);
+        book.set(COMPONENT_TYPE, new StorageFilterComponent(List.of(), 0, 0));
+        book.set(ModDataComponentTypes.OVERSTACKING_STORAGE, new OverstackingStorageComponent(List.of()));
     }
 
     public int getMaxTypes(ItemStack book) {
@@ -84,14 +86,10 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
     }
 
     public ContentsIndex getContents(ItemStack book) {
-        NbtCompound nbtCompound = book.getNbt();
         ContentsIndex result = new ContentsIndex();
-        if (nbtCompound != null) {
-            NbtList nbtList = nbtCompound.getList("Items", 10);
-            Stream<NbtElement> nbtStream = nbtList.stream();
-            Objects.requireNonNull(NbtCompound.class);
-            nbtStream.map(NbtCompound.class::cast).forEach(
-                    nbt -> result.add(ItemStack.fromNbt(nbt.getCompound("Item")), nbt.getInt("Count")));
+        var containerComponent = book.get(ModDataComponentTypes.OVERSTACKING_STORAGE);
+        if (containerComponent != null) {
+            containerComponent.stacks().forEach(result::add);
         }
         return result;
     }
@@ -111,58 +109,60 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
         return 1;
     }
 
-    private Optional<NbtCompound> canMergeStack(ItemStack stack, NbtList items) {
+    private Optional<OverstackingStorageComponent.TypeStack> canMergeStack(ItemStack stack, List<OverstackingStorageComponent.TypeStack> items) {
         return items.stream()
-                .filter(NbtCompound.class::isInstance)
-                .map(NbtCompound.class::cast)
-                .filter(item -> ItemStack.canCombine(ItemStack.fromNbt(item.getCompound("Item")), stack))
+                .filter(item -> ItemStack.areItemsAndComponentsEqual(item.stack(), stack))
                 .findFirst();
     }
 
     public boolean isFiltered(ItemStack book) {
-        return !book.getOrCreateSubNbt(FILTERS_TAG).getList(ITEM_FILTERS_TAG, NbtElement.STRING_TYPE).isEmpty();
+        var filters = getComponent(book).items();
+
+        return filters != null && !filters.isEmpty();
     }
 
     public boolean isFilteredTo(ItemStack book, ItemStack stack) {
-        NbtCompound filters = book.getOrCreateNbt().getCompound(FILTERS_TAG);
+        var filters = getComponent(book).items();
 
-        return filters.getList(ITEM_FILTERS_TAG, NbtElement.STRING_TYPE)
-                .contains(NbtString.of(Registries.ITEM.getId(stack.getItem()).toString()));
+        return filters != null && filters.contains(stack.getItem());
     }
 
     public List<Item> getFilteredItems(ItemStack book) {
-        NbtCompound filters = book.getOrCreateNbt().getCompound(FILTERS_TAG);
-        return filters.getList(ITEM_FILTERS_TAG, NbtElement.STRING_TYPE).stream()
-                .map(NbtString.class::cast)
-                .map(NbtString::asString)
-                .map(Identifier::tryParse)
+        var filters = getComponent(book).items();
+
+        return filters.stream()
                 .filter(Objects::nonNull)
-                .map(Registries.ITEM::get)
                 .collect(ImmutableList.toImmutableList());
     }
 
     public void addFilteredItem(ItemStack book, Item item) {
-        NbtCompound filters = book.getOrCreateSubNbt(FILTERS_TAG);
-        NbtList itemFilters = filters.getList(ITEM_FILTERS_TAG, NbtElement.STRING_TYPE);
-        itemFilters.add(NbtString.of(Registries.ITEM.getId(item).toString()));
-        filters.put(ITEM_FILTERS_TAG, itemFilters);
+        var component = getComponent(book);
+        var filters = component.items();
+
+        var newFilters = new ArrayList<>(filters);
+        newFilters.add(item);
+
+        book.set(COMPONENT_TYPE, component.withItems(newFilters));
     }
 
     public void removeFilteredItem(ItemStack book, int i) {
-        NbtCompound filters = book.getOrCreateSubNbt(FILTERS_TAG);
-        filters.getList(ITEM_FILTERS_TAG, NbtElement.STRING_TYPE).remove(i);
+        var component = getComponent(book);
+        var filters = component.items();
+
+        var newFilters = new ArrayList<>(filters);
+        newFilters.remove(i);
+
+        book.set(COMPONENT_TYPE, component.withItems(newFilters));
     }
 
     public void clearFilteredItems(ItemStack book) {
-        NbtCompound filters = book.getOrCreateSubNbt(FILTERS_TAG);
-        filters.put(ITEM_FILTERS_TAG, new NbtList());
+        book.set(COMPONENT_TYPE, getComponent(book).withItems(List.of()));
     }
 
     public void setFilteredItems(ItemStack book, List<Item> items) {
-        NbtCompound filters = book.getOrCreateSubNbt(FILTERS_TAG);
-        NbtList itemFilters = new NbtList();
-        items.forEach(item -> itemFilters.add(NbtString.of(Registries.ITEM.getId(item).toString())));
-        filters.put(ITEM_FILTERS_TAG, itemFilters);
+        var newFilters = ImmutableList.copyOf(items);
+
+        book.set(COMPONENT_TYPE, getComponent(book).withItems(newFilters));
     }
 
     protected boolean canInsert(ItemStack book, ItemStack itemStack) {
@@ -191,10 +191,13 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
         if (stack.isEmpty() || !canInsertFiltered(book, stack)) {
             return 0;
         }
-        NbtCompound bookNbt = book.getOrCreateNbt();
-        if (!bookNbt.contains("Items")) {
-            bookNbt.put("Items", new NbtList());
+
+        var containerComponent = book.get(ModDataComponentTypes.OVERSTACKING_STORAGE);
+        if (containerComponent == null) {
+            return 0;
         }
+
+        var itemsList = containerComponent.stacks();
 
         int maxFullness = getMaxStack(book) * 64;
         int fullnessLeft = maxFullness - getFullness(book);
@@ -203,27 +206,23 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
             return 0;
         }
 
-        NbtList itemsList = bookNbt.getList("Items", 10);
-        Optional<NbtCompound> mergeAbleStack = canMergeStack(stack, itemsList);
+        var mergeAbleStack = canMergeStack(stack, itemsList);
         if (mergeAbleStack.isPresent()) {
-            NbtCompound mergeStack = mergeAbleStack.get();
-            mergeStack.putInt("Count", mergeStack.getInt("Count") + canBeTakenAmount);
+            var mergeStack = mergeAbleStack.get();
             itemsList.remove(mergeStack);
-            itemsList.add(0, mergeStack);
+            mergeStack.with(mergeStack.count() + canBeTakenAmount).ifPresent(itemsList::addFirst);
         } else {
             if (itemsList.size() >= getMaxTypes(book)) {
                 return 0;
             }
 
-            ItemStack insertStack = stack.copy();
-            insertStack.setCount(1);
-            NbtCompound insertNbt = new NbtCompound();
-            insertNbt.put("Item", insertStack.writeNbt(new NbtCompound()));
-            insertNbt.putInt("Count", canBeTakenAmount);
-            itemsList.add(0, insertNbt);
+            ItemStack insertStack = stack.copyWithCount(canBeTakenAmount);
+            itemsList.addFirst(OverstackingStorageComponent.TypeStack.from(insertStack));
         }
 
-        saveOccupancy(bookNbt,
+        book.set(ModDataComponentTypes.OVERSTACKING_STORAGE, containerComponent.with(itemsList));
+
+        saveOccupancy(book,
                 maxFullness - fullnessLeft + canBeTakenAmount * getItemOccupancy(stack.getItem()),
                 itemsList.size());
 
@@ -249,36 +248,33 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
     }
 
     public Optional<ItemStack> removeFirstStack(ItemStack book, Integer maxAmount) {
-        NbtCompound bookNbt = book.getOrCreateNbt();
-        if (!bookNbt.contains("Items")) {
+        var containerComponent = book.get(ModDataComponentTypes.OVERSTACKING_STORAGE);
+        if (containerComponent == null) {
             return Optional.empty();
         }
-        NbtList itemsList = bookNbt.getList("Items", 10);
-        if (itemsList.isEmpty()) {
+
+        var newStacks = containerComponent.stacks();
+        if (newStacks.isEmpty()) {
             return Optional.empty();
         }
-        NbtCompound firstItem = itemsList.getCompound(0);
-        ItemStack itemStack = ItemStack.fromNbt(firstItem.getCompound("Item"));
-        int itemCount = firstItem.getInt("Count");
-        int takeCount = Math.min(itemCount, itemStack.getMaxCount());
+
+        var firstItem = newStacks.getFirst();
+
+        int itemCount = firstItem.count();
+        int takeCount = Math.min(itemCount, firstItem.stack().getMaxCount());
         if (maxAmount != null) {
             takeCount = Math.min(takeCount, maxAmount);
         }
 
-        itemStack.setCount(takeCount);
+        var extracted = firstItem.stack().copyWithCount(takeCount);
 
-        if (takeCount >= itemCount) {
-            itemsList.remove(0);
-            if (itemsList.isEmpty()) {
-                book.removeSubNbt("Items");
-            }
-        } else {
-            firstItem.putInt("Count", itemCount - takeCount);
-        }
+        newStacks.removeFirst();
+        firstItem.with(itemCount - takeCount).ifPresent(newStacks::addFirst);
 
-        saveOccupancy(bookNbt, getFullness(book), itemsList.size());
+        book.set(ModDataComponentTypes.OVERSTACKING_STORAGE, containerComponent.with(newStacks));
+        saveOccupancy(book, getFullness(book), Math.toIntExact(newStacks.size()));
 
-        return Optional.of(itemStack);
+        return Optional.of(extracted);
     }
 
     public Optional<ItemStack> tryRemoveFirstStack(ItemStack book, int amount, Predicate<ItemStack> condition) {
@@ -291,62 +287,60 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
     }
 
     public List<ItemStack> extractItems(ItemStack book, ExtractionRequest request, boolean apply) {
-        if (request.isSatisfied())
+        if (request.isSatisfied()) {
             return Collections.emptyList();
+        }
 
-        NbtCompound bookNbt = book.getOrCreateNbt();
-        if (!bookNbt.contains("Items"))
+        var containerComponent = book.get(ModDataComponentTypes.OVERSTACKING_STORAGE);
+
+        if (containerComponent == null) {
             return Collections.emptyList();
+        }
 
-        NbtList itemsList = bookNbt.getList("Items", 10);
+        var itemsList = containerComponent.stacks();
+
         if (itemsList.isEmpty())
             return Collections.emptyList();
 
-        ImmutableList.Builder<ItemStack> builder = ImmutableList.builder();
+        ImmutableList.Builder<ItemStack> result = ImmutableList.builder();
+        var remainder = new ArrayList<OverstackingStorageComponent.TypeStack>();
 
-        for (int i = 0; i < itemsList.size(); i++) {
-            NbtCompound nbtItem = itemsList.getCompound(i);
-            ItemStack itemStack = ItemStack.fromNbt(nbtItem.getCompound("Item"));
-
-            if (request.matches(itemStack.getItem())) {
-                int itemCount = nbtItem.getInt("Count");
+        for (OverstackingStorageComponent.TypeStack typeStack : itemsList) {
+            if (request.matches(typeStack.stack().getItem())) {
+                int itemCount = typeStack.count();
                 int extractAmount = Math.min(itemCount, request.getAmountUnsatisfied());
-                int stackSize = itemStack.getItem().getMaxCount();
+                int stackSize = typeStack.stack().getItem().getMaxCount();
 
                 request.satisfy(extractAmount);
                 if (apply) {
-                    if (extractAmount >= itemCount) {
-                        itemsList.remove(i);
-                        i -= 1;
-                    } else {
-                        nbtItem.putInt("Count", itemCount - extractAmount);
-                    }
+                    typeStack.with(itemCount - extractAmount).ifPresent(remainder::add);
+                } else {
+                    remainder.add(typeStack);
                 }
 
                 while (extractAmount > 0) {
                     int extractAmountStack = Math.min(extractAmount, stackSize);
 
-                    ItemStack extractStack = itemStack.copy();
+                    ItemStack extractStack = typeStack.stack().copy();
                     extractStack.setCount(extractAmountStack);
-                    builder.add(extractStack);
+                    result.add(extractStack);
 
                     extractAmount -= extractAmountStack;
                 }
+
+                continue;
             }
+            remainder.add(typeStack);
         }
 
-        if (itemsList.isEmpty()) {
-            book.removeSubNbt("Items");
-        }
+        book.set(ModDataComponentTypes.OVERSTACKING_STORAGE, containerComponent.with(remainder));
+        saveOccupancy(book, getFullness(book), remainder.size());
 
-        saveOccupancy(bookNbt, getFullness(book), itemsList.size());
-
-        return builder.build();
+        return result.build();
     }
 
-    public void saveOccupancy(NbtCompound bookNbt, int stacks, int types) {
-        bookNbt.putInt(OCCUPIED_STACKS_TAG, stacks);
-        bookNbt.putInt(OCCUPIED_TYPES_TAG, types);
+    public void saveOccupancy(ItemStack book, int stacks, int types) {
+        book.set(COMPONENT_TYPE, getComponent(book).withOccupiedStacks(stacks).withOccupiedTypes(types));
     }
 
     public void playRemoveOneSound(PlayerEntity player) {
@@ -364,7 +358,8 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
     }
 
     public boolean isEmpty(ItemStack book) {
-        return !book.getOrCreateNbt().contains("Items");
+        var containerComponent = book.get(ModDataComponentTypes.OVERSTACKING_STORAGE);
+        return containerComponent == null || containerComponent.stacks().isEmpty();
     }
 
     @Override
@@ -407,7 +402,7 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
     }
 
     @Override
-    public void book$appendTooltip(ItemStack book, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+    public void book$appendTooltip(ItemStack book, @Nullable TooltipContext world, List<Text> tooltip, TooltipType type) {
         if (isFiltered(book)) {
             tooltip.add(Text.literal(""));
             tooltip.add(Text.translatable("item.arcane_repository.repository_book.tooltip.type.item_storage.filtered")
@@ -422,35 +417,41 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
     }
 
     @Override
-    public void book$appendPropertiesTooltip(ItemStack book, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        var nbt = book.getOrCreateNbt();
+    public void book$appendPropertiesTooltip(ItemStack book, @Nullable TooltipContext context, List<Text> tooltip, TooltipType type) {
+        var component = getComponent(book);
 
-        var stacksOccupied = nbt.getInt(OCCUPIED_STACKS_TAG);
+        var stacksOccupied = component.occupiedStacks();
         var stacksTotal = getMaxStack(book) * 64;
         double stacksFullRatio = (double) stacksOccupied / stacksTotal;
-        var typesOccupied = nbt.getInt(OCCUPIED_TYPES_TAG);
+        var typesOccupied = component.occupiedTypes();
         var typesTotal = getMaxTypes(book);
         double typesFullRatio = (double) typesOccupied / typesTotal;
 
         tooltip.add(Text.translatable("item.arcane_repository.repository_book.tooltip.type.item_storage.stacks",
-                stacksOccupied, stacksTotal)
+                        stacksOccupied, stacksTotal)
                 .formatted(stacksFullRatio < 0.75 ? Formatting.GREEN :
                         stacksFullRatio == 1 ? Formatting.RED : Formatting.GOLD));
         tooltip.add(Text.translatable("item.arcane_repository.repository_book.tooltip.type.item_storage.types",
-                typesOccupied, typesTotal)
+                        typesOccupied, typesTotal)
                 .formatted(typesFullRatio < 0.75 ? Formatting.GREEN :
                         typesFullRatio == 1 ? Formatting.RED : Formatting.GOLD));
     }
 
     @Override
     public boolean book$onInventoryScroll(ItemStack book, PlayerEntity player, byte scrollDirection) {
-        var nbt = book.getOrCreateNbt();
-        var itemsList = nbt.getList("Items", NbtElement.COMPOUND_TYPE);
+        var containerComponent = book.get(ModDataComponentTypes.OVERSTACKING_STORAGE);
+
+        if (containerComponent == null) return false;
+
+        var itemsList = containerComponent.stacks();
+
         if (itemsList.isEmpty()) return false;
 
         Collections.rotate(itemsList, -scrollDirection);
+        book.set(ModDataComponentTypes.OVERSTACKING_STORAGE, containerComponent.with(itemsList));
+
         if (player.getWorld().isClient()) {
-            player.playSound(SoundEvents.ITEM_BUNDLE_INSERT, SoundCategory.PLAYERS, 0.4f, 0.8f);
+            player.playSoundToPlayer(SoundEvents.ITEM_BUNDLE_INSERT, SoundCategory.PLAYERS, 0.4f, 0.8f);
         }
 
         return true;
@@ -462,28 +463,27 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
     }
 
     @Override
-    public ActionResult lectern$onUse(MysticalLecternBlockEntity lectern, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        var handStack = player.getStackInHand(hand);
+    public ItemActionResult lectern$onUseWithItem(MysticalLecternBlockEntity lectern, ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         var book = lectern.getBook();
 
-        if (handStack.getItem() instanceof MysticalBookItem bookItem) {
-            if (bookItem.getTypePage(handStack) instanceof ItemStorageTypePage handPage) {
+        if (stack.getItem() instanceof MysticalBookItem bookItem) {
+            if (bookItem.getTypePage(stack).orElse(null) instanceof ItemStorageTypePage handPage) {
                 var ownFilters = getFilteredItems(book);
-                handPage.setFilteredItems(handStack, ownFilters);
+                handPage.setFilteredItems(stack, ownFilters);
                 player.sendMessage(Text.translatable("chat.arcane_repository.copied_filters"), true);
-                return ActionResult.SUCCESS;
+                return ItemActionResult.SUCCESS;
             }
         } else {
-            if (!(canInsert(book, handStack) || handStack.isEmpty())) return ActionResult.CONSUME;
+            if (!(canInsert(book, stack) || stack.isEmpty())) return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
 
             var filters = getFilteredItems(book);
-            var i = handStack.isEmpty() ? filters.size() - 1 : filters.indexOf(handStack.getItem());
+            var i = stack.isEmpty() ? filters.size() - 1 : filters.indexOf(stack.getItem());
 
             if (i == -1) {
-                if (handStack.isEmpty()) return ActionResult.CONSUME;
+                if (stack.isEmpty()) return ItemActionResult.CONSUME;
 
-                addFilteredItem(book, handStack.getItem());
-                lectern.items.add(handStack.getItem().getDefaultStack());
+                addFilteredItem(book, stack.getItem());
+                lectern.items.add(stack.getItem().getDefaultStack());
             } else {
                 removeFilteredItem(book, i);
                 lectern.items.remove(i);
@@ -492,10 +492,10 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
             lectern.markDirty();
             world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
 
-            return ActionResult.success(world.isClient());
+            return ItemActionResult.success(world.isClient());
         }
 
-        return ActionResult.PASS;
+        return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override
@@ -535,16 +535,18 @@ public class ItemStorageTypePage extends TypePageItem implements ItemInsertableT
         }
 
         @Override
-        public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-            super.appendTooltip(stack, world, tooltip, context);
+        public void appendTooltip(ItemStack stack, @Nullable TooltipContext context, List<Text> tooltip, TooltipType type) {
+            super.appendTooltip(stack, context, tooltip, type);
 
             var stacks = getStacksMultiplier(stack);
             var types = getTypesMultiplier(stack);
 
-            if (stacks != 1) tooltip.add(Text.translatable("item.arcane_repository.page.tooltip.type.item_storage.stacks", stacks)
-                    .formatted(Formatting.DARK_GREEN));
-            if (types != 1) tooltip.add(Text.translatable("item.arcane_repository.page.tooltip.type.item_storage.types", types)
-                    .formatted(Formatting.DARK_GREEN));
+            if (stacks != 1)
+                tooltip.add(Text.translatable("item.arcane_repository.page.tooltip.type.item_storage.stacks", stacks)
+                        .formatted(Formatting.DARK_GREEN));
+            if (types != 1)
+                tooltip.add(Text.translatable("item.arcane_repository.page.tooltip.type.item_storage.types", types)
+                        .formatted(Formatting.DARK_GREEN));
         }
     }
 }

@@ -9,7 +9,6 @@ import dev.enjarai.arcane_repository.item.custom.page.attribute.*;
 import dev.enjarai.arcane_repository.item.custom.page.type.*;
 import dev.enjarai.arcane_repository.util.PageRegistry;
 import io.wispforest.lavender.book.LavenderBookItem;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.Item;
@@ -22,18 +21,18 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class ModItems {
-    public static final LavenderBookItem GUIDE_BOOK = LavenderBookItem.registerForBook(ArcaneRepository.id("guide_book"), new FabricItemSettings().maxCount(1));
+    public static final LavenderBookItem GUIDE_BOOK = LavenderBookItem.registerForBook(ArcaneRepository.id("guide_book"), new Item.Settings().maxCount(1));
 
     public static final ItemGroup MYSTICAL_INDEX_GROUP = FabricItemGroup.builder()
             .icon(GUIDE_BOOK::getDefaultStack)
             .displayName(Text.translatable("item_group.arcane_repository.arcane_repository"))
             .build();
 
-    public static final Item ENDER_PEARL_SHARD = registerItem("ender_pearl_shard", new Item(new FabricItemSettings()));
+    public static final Item ENDER_PEARL_SHARD = registerItem("ender_pearl_shard", new Item(new Item.Settings()));
 
-    public static final MysticalBookItem MYSTICAL_BOOK = registerItem("repository_book", new MysticalBookItem(new FabricItemSettings().maxCount(1)));
-    public static final Item EMPTY_PAGE = registerItem("empty_page", new Item(new FabricItemSettings()));
-    public static final Item TATTERED_PAGE = registerItem("tattered_page", new Item(new FabricItemSettings()));
+    public static final MysticalBookItem MYSTICAL_BOOK = registerItem("repository_book", new MysticalBookItem(new Item.Settings().maxCount(1)));
+    public static final Item EMPTY_PAGE = registerItem("empty_page", new Item(new Item.Settings()));
+    public static final Item TATTERED_PAGE = registerItem("tattered_page", new Item(new Item.Settings()));
 
     // Type Pages
     public static final ItemStorageTypePage ITEM_STORAGE_TYPE_PAGE = registerPageItem("item_storage_type_page", new ItemStorageTypePage("item_storage"));
@@ -63,11 +62,11 @@ public class ModItems {
     }
 
     private static <T extends Item> T registerItem(String name, T item){
-        return Registry.register(Registries.ITEM, new Identifier(ArcaneRepository.MOD_ID, name), item);
+        return Registry.register(Registries.ITEM, Identifier.of(ArcaneRepository.MOD_ID, name), item);
     }
 
     public static void registerModItems(){
-        ArcaneRepository.LOGGER.info("Registering items for " + ArcaneRepository.MOD_ID);
+        ArcaneRepository.LOGGER.debug("Registering items for " + ArcaneRepository.MOD_ID);
 
         Registry.register(Registries.ITEM_GROUP, ArcaneRepository.id("arcane_repository"), MYSTICAL_INDEX_GROUP);
         ItemGroupEvents.modifyEntriesEvent(RegistryKey.of(RegistryKeys.ITEM_GROUP, ArcaneRepository.id("arcane_repository"))).register(entries -> {

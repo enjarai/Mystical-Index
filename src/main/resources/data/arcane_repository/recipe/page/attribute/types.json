@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "pbp",
+    "gpg",
+    " g "
+  ],
+  "key": {
+    "p": {
+      "item": "arcane_repository:empty_page"
+    },
+    "g": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "b": {
+      "item": "minecraft:barrel"
+    }
+  },
+  "result": {
+    "id": "arcane_repository:types_page",
+    "count": 3
+  }
+}

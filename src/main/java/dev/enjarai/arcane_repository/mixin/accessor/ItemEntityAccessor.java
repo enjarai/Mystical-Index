@@ -9,7 +9,5 @@ import java.util.UUID;
 
 @Mixin(ItemEntity.class)
 public interface ItemEntityAccessor {
-    @Accessor
-    @Nullable
-    UUID getThrower();
+    @Accessor @Nullable UUID getThrowerUuid();
 }

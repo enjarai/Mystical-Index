@@ -33,7 +33,7 @@ public class BuildingActionPage extends ActionPageItem {
         var book = context.getStack();
         var bookItem = (MysticalBookItem) book.getItem();
 
-        if (bookItem.getTypePage(book) instanceof BlockStorageTypePage page) {
+        if (bookItem.getTypePage(book).orElse(null) instanceof BlockStorageTypePage page) {
             var stack = page.tryRemoveFirstStack(
                     book, 1,
                     itemStack -> itemStack.getItem() instanceof BlockItem

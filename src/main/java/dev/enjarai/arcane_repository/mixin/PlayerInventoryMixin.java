@@ -31,9 +31,9 @@ public abstract class PlayerInventoryMixin {
 
         for (ItemStack bookStack : foundBooks){
             var bookitem = (MysticalBookItem) bookStack.getItem();
-            if (bookitem.getTypePage(bookStack) instanceof ItemInsertableTypePage storageTypePage) {
+            if (bookitem.getTypePage(bookStack).orElse(null) instanceof ItemInsertableTypePage storageTypePage) {
                 var foundPage = bookitem.getAttributePage(bookStack,"pickup");
-                if (foundPage != null && bookitem.getAttributePage(bookStack, "pickup") instanceof PickupAttributePage pickupAttributePage) {
+                if (foundPage != null && bookitem.getAttributePage(bookStack, "pickup").orElse(null) instanceof PickupAttributePage pickupAttributePage) {
                     storageTypePage.book$tryInsertItemStack(bookStack, player, itemPickedUp);
                     return itemPickedUp.getCount() <= 0;
                 }

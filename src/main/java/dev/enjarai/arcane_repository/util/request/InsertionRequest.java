@@ -26,7 +26,7 @@ public class InsertionRequest extends Request {
         sources.sort(Comparator.comparingInt((source) -> {
             var book = source.getBook();
             if (book.getItem() instanceof MysticalBookItem bookItem) {
-                if (bookItem.getTypePage(book) instanceof ItemStorageTypePage page) {
+                if (bookItem.getTypePage(book).orElse(null) instanceof ItemStorageTypePage page) {
                     return page.getInsertPriority(book, getItemStack());
                 }
             }
@@ -40,7 +40,7 @@ public class InsertionRequest extends Request {
 
             var book = source.getBook();
             if (book.getItem() instanceof MysticalBookItem bookItem) {
-                if (bookItem.getTypePage(book) instanceof ItemStorageTypePage page) {
+                if (bookItem.getTypePage(book).orElse(null) instanceof ItemStorageTypePage page) {
                     int amountInserted = page.tryAddItem(book, getItemStack());
                     satisfy(amountInserted);
 
