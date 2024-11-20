@@ -7,7 +7,6 @@ import dev.enjarai.arcane_repository.item.custom.page.AttributePageItem;
 import dev.enjarai.arcane_repository.item.custom.page.TypePageItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
 
 import java.util.List;
 import java.util.Optional;

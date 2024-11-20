@@ -9,7 +9,6 @@
     "ItemEntityMixin",
     "ItemMixin",
     "LecternBlockMixin",
-    "PlayerInventoryMixin",
     "accessor.ItemEntityAccessor",
     "accessor.ItemUsageContextAccessor",
     "accessor.LootTablesAccessor",
